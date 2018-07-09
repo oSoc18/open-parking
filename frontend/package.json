@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0-alpha.6",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
