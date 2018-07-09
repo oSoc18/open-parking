@@ -5,11 +5,11 @@ import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 
 const nodes = [{
-    value: 'mars',
-    label: 'Mars',
+    value: 'Drenthe',
+    label: 'Drenthe',
     children: [
-        { value: 'phobos', label: 'Phobos' },
-        { value: 'deimos', label: 'Deimos' },
+        { value: 'Assen', label: 'Assen' },
+        { value: 'Coevorden', label: 'Coevorden' },
     ],
 }];
 
