@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
 import './SideBar.css';
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css'; 
+
+
+const nodes = [{
+    value: 'mars',
+    label: 'Mars',
+    children: [
+        { value: 'phobos', label: 'Phobos' },
+        { value: 'deimos', label: 'Deimos' },
+    ],
+}];
 
 class SideBar extends Component {
+
+    constructor() {
+        super();
+
+        this.state = {
+            checked: [],
+            expanded: [],
+        };
+    }
 
   renderedSideBar(){
 
@@ -12,6 +33,15 @@ class SideBar extends Component {
       // content
       <div className="sideBar">
         <h1 className="title">Open Parking</h1>
+        <CheckboxTree
+                nodes={nodes}
+                checked={this.state.checked}
+                expanded={this.state.expanded}
+                onCheck={checked => this.setState({ checked })}
+                onExpand={expanded => this.setState({ expanded })}
+                showNodeIcon={false}
+                nativeCheckboxes={true}
+            />
       </div>
     );
   }

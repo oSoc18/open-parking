@@ -7,6 +7,7 @@
     width: 250px;
     background-color: #5683cd; 
     height: 100vh;
+    float: left;
 } 
 
 .sideBar h1 {
@@ -14,6 +15,7 @@
     font-size: 2.5em;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     text-transform: uppercase;
+ 
 }
 
 
