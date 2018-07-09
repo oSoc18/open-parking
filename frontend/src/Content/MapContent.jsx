@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 
-class Test3 extends Component{
-
-   
+import './MapContent.css'
+class MapContent extends Component{
 
     componentDidMount(){
         var test = L.map('mapid', {
@@ -18,12 +17,10 @@ class Test3 extends Component{
 
 
     render(){
-
-        
-         
+     
         return (
         
-            <div height={500} width={800}>
+            <div id="mapParent">
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
             integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
             crossorigin=""/>
@@ -33,4 +30,4 @@ class Test3 extends Component{
     }
 }
 
-export default Test3;
+export default MapContent;

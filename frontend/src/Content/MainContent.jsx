@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import MapContent from './MapContent';
 
 
 class MainContent extends Component {
   render() {
     return (
       <div className="MainContent" >
-        content fmdsjfkmdsjfkdsmfjskmfjs
-      </div>
+        <MapContent/>
+      </div> 
     );
-  }
+  } 
 }
 
 export default MainContent;
