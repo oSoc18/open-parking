@@ -1,0 +1,29 @@
+.heatCell{
+    white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;
+}
+
+th{
+
+    width: 75px;
+}
+
+.nameCell th {
+    width: 120px; 
+}
+
+.heatMap .table {
+   width: 0;
+   max-width: 100%;
+}
+
+.table{
+    width: 0 !important; 
+}
+
+.invalidCell {
+    background-color: red;
+}
+
+.validCell{
+    background-color: green;
+}
