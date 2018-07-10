@@ -19,3 +19,15 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = ParkingData.objects.all()
     serializer_class = ParkingDataSerializer
+
+
+class NameView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with currently name.
+        """
+        parkingname = self.kwargs['name']
+        return ParkingData.objects.filter(name=parkingname)
