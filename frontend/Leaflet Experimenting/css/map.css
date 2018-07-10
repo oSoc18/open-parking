@@ -1,0 +1,16 @@
+html, body{
+    height: 100%;
+}
+#mapid{
+    height: 100%;
+    width: 100%;
+}
+#filters {
+    position: fixed;
+    z-index: 400;
+    width: 100px;
+    height: 43px;
+    background: white;
+    top: 15px;
+    right: 15px;
+}
