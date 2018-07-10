@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import MapContent from './MapContent';
 import Dashboard from './Dashboard'
 
+import './MainContent.css'
+
 
 class MainContent extends Component {
 
