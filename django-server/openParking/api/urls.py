@@ -8,7 +8,7 @@ urlpatterns = {
     url(r'^parkingdata/$', CreateView.as_view(), name="create"),
     url(r'^parkingdata/(?P<pk>[0-9]+)/$',
         DetailsView.as_view(), name="details"),
-    url(r'^parkingdata/(?P<name>.+)/$', NameView.as_view()),
+    url(r'^parkingdata/(?P<name>.+)/$', NameView.as_view(), name="name"),
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -27,7 +27,7 @@ class NameView(generics.ListAPIView):
     def get_queryset(self):
         """
         This view should return a list of all the parkingdata
-        with currently name.
+        with current name.
         """
         parkingname = self.kwargs['name']
         return ParkingData.objects.filter(name=parkingname)
