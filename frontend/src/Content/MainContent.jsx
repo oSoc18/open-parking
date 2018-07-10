@@ -12,6 +12,10 @@ class MainContent extends Component {
     this.state = {typeView: "Dashboard" }
   }
 
+  componentDidMount(){
+    
+  }
+
   render() {
     let contentVis = (<MapContent/>)
     if(this.state.typeView === "Dashboard"){
