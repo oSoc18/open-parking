@@ -4,7 +4,6 @@ from .serializers import ParkingDataSerializer
 from .models import ParkingData
 
 
-
 # views and urls for handling the POST request.
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
