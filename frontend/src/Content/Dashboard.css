@@ -2,8 +2,8 @@
     white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;
 }
 
-th{
-
+.table th{
+    padding: 3px !important;
     width: 75px;
 }
 
@@ -20,10 +20,20 @@ th{
     width: 0 !important; 
 }
 
-.invalidCell {
-    background-color: red;
+.table td {
+    border: 1px solid #eceeef;
 }
 
-.validCell{
-    background-color: green;
+.table .invalidCell {
+    background-color: red;
+    padding: 3px !important;
+}
+
+.table .validCell{
+    background-color: #65e05f;
+    padding: 3px !important;
+}
+
+.table .heatCellName {
+    padding: 3px !important;
 }
