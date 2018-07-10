@@ -27,8 +27,7 @@ for facility in index_facilities:
             with open(join(cache_dir, facility["uuid"] + ".json"), "w") as file:
                 json.dump(facility, file, indent=2)
             cache_list["cached"].append(facility["uuid"])
+            with open(cache_list_filename, "w") as file:
+                json.dump(cache_list, file)
     except KeyboardInterrupt:
         break
-
-with open(cache_list_filename, "w") as file:
-    json.dump(cache_list, file)

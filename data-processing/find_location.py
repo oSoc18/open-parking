@@ -1,5 +1,9 @@
 import json
 from sys import argv
+from os import listdir
+from os.path import isfile, join
+import requests
+from time import time, sleep
 
 def get_value(object, keys):
     try:
@@ -9,62 +13,71 @@ def get_value(object, keys):
     except (KeyError, IndexError) as e:
         return None
 
-def geojson_to_geojson(object):
-    return object
-
-def coord_to_coord(coord):
-    # Nothing to do here
-    return coord
-
 def address_to_coord(address):
-    # Shoud use OSM nominatim here;
-    return address
+    # Use nominatim to translate from address to geolocation
+    # Make sure not to make more than one request per second or so
+    if address_to_coord.last_request is None:
+        address_to_coord.last_request = time()
+    delay_between_requests = 1.1
+    now = time()
+    time_to_wait = delay_between_requests - (now - address_to_coord.last_request)
+    if time_to_wait > 0:
+        sleep(time_to_wait)
+    address_to_coord.last_request = now
 
-input_filename = argv[1]
-output_filename = argv[2]
+    try:
+        request = "https://nominatim.openstreetmap.org/search?limit=1&format=json" + \
+            "&q={}, {}, {}".format(
+            (address["houseNumber"] + " " + address["streetName"] if "houseNumber" in address else address["streetName"]),
+            address["city"], address["country"])
+    except KeyError as e:
+        return None
+
+
+
+    print("Requesting", request)
+    result = requests.get(request)
+
+    if result.status_code == requests.codes.ok:
+        result = result.json()
+        if len(result) > 0:
+            return {"latitude": result[0]["lat"],
+                    "longitude": result[0]["lon"]}
+    return None
+
+address_to_coord.last_request = None
+
+directory = argv[1]
 
 fields_to_try = [
-    (["locationForDisplay"], coord_to_coord),
-    (["accessPoints", 0, "accessPointLocation"], coord_to_coord),
+    (["locationForDisplay"], lambda x: x),
+    (["accessPoints", 0, "accessPointLocation"], lambda x: x),
     (["accessPoints", 0, "accessPointAddress"], address_to_coord),
-    (["sellingPoints", 0, "sellingPointLocation"], coord_to_coord),
-    (["specifications", 0, "areaGeometry"], geojson_to_geojson)
+    (["sellingPoints", 0, "sellingPointLocation"], lambda x: x),
+    (["specifications", 0, "areaGeometry"], lambda x: x)
 ]
-input_json = json.load(open(input_filename))
-output_json = {"ParkingFacilities": []}
 
-report = {
-    "staticData": 0,
-    "locationForDisplay": 0,
-    "accessPointLocation": 0,
-    "accessPointAddress": 0,
-    "sellingPointLocation": 0,
-    "areaGeometry": 0
-}
+file_list = [f for f in listdir(directory) if isfile(join(directory, f))]
 
-for facility in input_json["ParkingFacilities"]:
-    static_data = facility["staticData"]
-    if static_data is None:
-        continue
-    report["staticData"] += 1
+for filename in file_list:
+    try:
+        facility  = json.load(open(join(directory, filename)))
+    except json.decoder.JSONDecodeError as e:
+        print(e)
+        print(filename)
 
-    foundLocation = False
-    for field, convert_function in fields_to_try:
-        try:
-            value = get_value(static_data, field)
-            if value is not None:
-                if foundLocation is False:
-                    facility["location"] = convert_function(value)
-                foundLocation = True
-                report[field[-1]] += 1
-                print(facility)
-        except Exception:
+    if "location" not in facility:
+        static_data = facility["staticData"]
+        if static_data is None:
             continue
 
-    output_json["ParkingFacilities"].append(facility)
+        facility["location"] = None
+        for field, convert_function in fields_to_try:
+            value = get_value(static_data, field)
+            if value is not None:
+                facility["location"] = convert_function(value)
+                print(str(facility["location"])[:100])
+                break
 
-for k, v in report.items():
-    print("{}: {}/{}".format(k, v, len(input_json["ParkingFacilities"])))
-
-with open(output_filename, "w") as file:
-    json.dump(output_json, file, indent=2)
+        with open(join(directory, filename), "w") as file:
+            json.dump(facility, file, indent=2)

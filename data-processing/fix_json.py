@@ -39,7 +39,7 @@ def dict_check_duplicates(ordered_pairs):
         duplicates[key].append(value)
     for key in duplicates:
         if len(duplicates[key]) > 1:
-            print("Duplicate on key", key)
+            print("Duplicate on key {} for facility named {}:".format(key, duplicates["name"]))
             for value in duplicates[key]:
                 print("\t", value)
     # Keep the first value only
