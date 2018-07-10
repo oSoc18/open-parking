@@ -31,3 +31,30 @@ class NameView(generics.ListAPIView):
         """
         parkingname = self.kwargs['name']
         return ParkingData.objects.filter(name=parkingname)
+
+
+class NoNameView(generics.ListAPIView):
+    """wrote this class to test dhe exclude() method"""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with current name.
+        """
+        parkingname = self.kwargs['name']
+        return ParkingData.objects.exclude(name=parkingname)
+
+
+class IDsView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        queryset = ParkingData.objects.all()
+        """
+        This view should return a list of all the parkingdata
+        with current name.
+        """
+        for x in range(int(self.kwargs['id1']), int(self.kwargs['id2'])):
+            queryset = queryset.exclude(id=x)
+        return queryset
