@@ -5,27 +5,32 @@ export default class MainNav extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
+    //this.activateContent = this.activateContent.bind(this)
     this.state = {
       dropdownOpen: false
     };
   }
+  
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    });
+  activateContent(val){
+
+    if(this.props.onChangeContent){
+      this.props.onChangeContent(val)
+      
+    }
   }
+
+ 
 
   render() {
     return (
       <div>
         <Nav tabs>
           <NavItem>
-            <NavLink href="#" active>Map</NavLink>
+            <NavLink href="#" onClick={()  => this.activateContent("map")} >Map</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="#" active>Dashboard</NavLink>
+          <NavLink href="#" onClick={()  => this.activateContent("dash")} >Dashboard</NavLink>
           </NavItem>
         </Nav>
       </div>

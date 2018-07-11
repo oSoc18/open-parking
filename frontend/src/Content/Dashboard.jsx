@@ -151,7 +151,6 @@ class Dashboard extends Component {
       else {
 
         try{
-            console.log("ICI = " + JSON.stringify(node["parkingFacilityInformation"][key]))
             return (JSON.stringify(node["parkingFacilityInformation"][key]))
         }
         catch(e){
