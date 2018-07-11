@@ -95,7 +95,7 @@ class Dashboard extends Component {
       }
       else if(columns[j] === "geoLocation"){
         classN += " heatCell"//colored heatcell
-        classN += (node["geoLocation"]? " validCell" : " invalidCell") // is this field in the json?
+        classN += ((node["geoLocation"])? " validCell" : " invalidCell") // is this field in the json?
 
         tr.append('td')
         .attr("class", classN)
@@ -114,7 +114,7 @@ class Dashboard extends Component {
           let v = this.getValueJsonResult(columns[j], resultJson)
           console.log("V==" + v)
 
-          if(v){
+          if(v && this.notEmptyArray(v)){
             classN += " validCell"  // is this field in the json?
           }
           else{
@@ -131,6 +131,12 @@ class Dashboard extends Component {
        
       }
     } // close for
+  }
+
+  notEmptyArray(v){
+  
+
+    return (v!== "[]" )
   }
 
   getValueJsonResult(key, node){
@@ -151,6 +157,7 @@ class Dashboard extends Component {
       else {
 
         try{
+          
             return (JSON.stringify(node["parkingFacilityInformation"][key]))
         }
         catch(e){
@@ -163,12 +170,36 @@ class Dashboard extends Component {
 
      
 
+    async setAllParkings(tbody, column){
+
+       
+      let allP = []
+
+      for(let i = 1; i < 20; i++){
+        let url = "http://localhost:8000/parkingdata"
+        let resultJson = null
+        url += "/" + i + "?format=json"
+      await fetch(url)
+        .then(response => response.json())
+        .then(json => {
+        console.log(json);
+        resultJson = json
+        this.generateRow(tbody, column, resultJson )
+      }    )
+    allP.push(resultJson)
+
+    }
+   
+    }
 
   generateTable() {
 
     var table = d3.select('.heatMap')
     var thead = table.append('thead') // create the header
     var tbody = table.append('tbody');
+    
+    alert("TEST")    
+    
 
     let columns = ["name"].concat(this.requiredAttr)
 
@@ -178,9 +209,10 @@ class Dashboard extends Component {
       .append('th')
       .text(function (column) { return column; });
 
-      for(let i = 0; i < realJson.length; i++){
-        this.generateRow(tbody, columns, realJson[i] )
-      }
+      this.setAllParkings(tbody, columns)
+      /*for(let i = 0; i < allParking.length; i++){
+        this.generateRow(tbody, columns, allParking[i] )
+      }*/
     /*for (let i = 0; i < TESTJSON.length; i++) {
 
       this.generateRow(tbody, columns )

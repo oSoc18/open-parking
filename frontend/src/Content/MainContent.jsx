@@ -27,7 +27,9 @@ class MainContent extends Component {
     }
     return (
       <div className="MainContent" >
+        <div className="mainChild">
         {contentVis}
+        </div>
       </div> 
     );
   } 

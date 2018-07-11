@@ -1,14 +1,16 @@
 .heatCell{
-    white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;
+    white-space: nowrap; text-overflow:ellipsis; overflow: hidden; 
+    /*max-width:1px;*/
 }
 
 .table th{
     padding: 3px !important;
-    width: 75px;
+    width: 100px;
 }
 
 .nameCell th {
     width: 120px; 
+    
 }
 
 .heatMap .table {
@@ -31,14 +33,48 @@
 .table .invalidCell {
     background-color: red;
     padding: 3px !important;
+    width: 100px;
 }
 
 .table .validCell{
     background-color: #65e05f;
     padding: 3px !important;
+    width: 100px;
 }
 
 .table .heatCellName {
     padding: 3px !important;
+    width: 100px;
+    white-space: nowrap; text-overflow:ellipsis; overflow: hidden;
 
+}
+
+thead, tbody, tr, td, th { display: block; }
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+
+    /*text-align: left;*/
+}
+
+tbody {
+  
+    overflow-y: auto;
+}
+
+thead {
+    /* fallback */
+}
+
+
+tbody td, thead th {
+ 
+    float: left;
 }
