@@ -1,11 +1,8 @@
-from django.shortcuts import render
 from rest_framework import generics
 from .serializers import ParkingDataSerializer
 from .models import ParkingData
 import requests
-from django.http import JsonResponse
 import json
-from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
