@@ -15,6 +15,7 @@ class ParkingData(models.Model):
         max_length=6, blank=False, unique=False)
     latitude = models.FloatField(blank=True, null=True, unique=False)
     longitude = models.FloatField(blank=True, null=True, unique=False)
+    facilityType = models.CharField(max_length=255, blank=False, null=False, unique=False, default="offstreet")
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
