@@ -147,6 +147,9 @@ class Dashboard extends Component {
       if(key === "capacity" && node["parkingFacilityInformation"] && node["parkingFacilityInformation"]["specifications"] && node["parkingFacilityInformation"]["specifications"].length > 0){
           let nodeCapacity = node["parkingFacilityInformation"]["specifications"][0]
 
+          if(!nodeCapacity )
+            return null
+
           if (nodeCapacity["capacity"]) {
             return nodeCapacity["capacity"]
 
@@ -175,7 +178,7 @@ class Dashboard extends Component {
        
       let allP = []
 
-      for(let i = 1; i < 20; i++){
+      for(let i = 1; i < 200; i++){
         let url = "http://localhost:8000/parkingdata"
         let resultJson = null
         url += "/" + i + "?format=json"
@@ -197,8 +200,7 @@ class Dashboard extends Component {
     var table = d3.select('.heatMap')
     var thead = table.append('thead') // create the header
     var tbody = table.append('tbody');
-    
-    alert("TEST")    
+   
     
 
     let columns = ["name"].concat(this.requiredAttr)

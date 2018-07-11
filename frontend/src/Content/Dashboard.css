@@ -1,6 +1,7 @@
 .heatCell{
     white-space: nowrap; text-overflow:ellipsis; overflow: hidden; 
     /*max-width:1px;*/
+    height: 26px;
 }
 
 .table th{
