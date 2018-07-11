@@ -5,10 +5,12 @@ from django.db import models
 
 class ParkingData(models.Model):
     """This class represents the parkingdata model."""
-    name = models.CharField(max_length=255, blank=True, null=True, unique=False)
+    name = models.CharField(max_length=255, blank=True,
+                            null=True, unique=False)
     uuid = models.CharField(max_length=255, blank=False, unique=True)
     staticDataUrl = models.CharField(max_length=255, blank=False, unique=False)
-    dynamicDataUrl = models.CharField(max_length=255, blank=True, null=True, unique=False)
+    dynamicDataUrl = models.CharField(
+        max_length=255, blank=True, null=True, unique=False)
     limitedAccess = models.BooleanField(
         max_length=6, blank=False, unique=False)
     latitude = models.FloatField(blank=True, null=True, unique=False)
