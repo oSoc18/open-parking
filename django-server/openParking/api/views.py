@@ -4,26 +4,11 @@ from .models import ParkingData
 import requests
 import json
 from django.http import HttpResponse
-# views and urls for handling the POST request.
+from rest_framework.decorators import api_view
 
 
-class CreateView(generics.ListCreateAPIView):
-    """This class defines the create behavior of our rest api."""
-    queryset = ParkingData.objects.all()
-    serializer_class = ParkingDataSerializer
-
-    def perform_create(self, serializer):
-        """Save the post data when creating a new parkingdata."""
-        serializer.save()
-
-
-class DetailsView(generics.RetrieveUpdateDestroyAPIView):
+class DetailsView(generics.RetrieveAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
-    queryset = ParkingData.objects.all()
-    serializer_class = ParkingDataSerializer
-
-
-class NameView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -31,35 +16,8 @@ class NameView(generics.ListAPIView):
         This view should return a list of all the parkingdata
         with current name.
         """
-        parkingname = self.kwargs['name']
-        return ParkingData.objects.filter(name=parkingname)
-
-
-class NoNameView(generics.ListAPIView):
-    """wrote this class to test dhe exclude() method"""
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        with current name.
-        """
-        parkingname = self.kwargs['name']
-        return ParkingData.objects.exclude(name=parkingname)
-
-
-class IDsView(generics.ListAPIView):
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        queryset = ParkingData.objects.all()
-        """
-        This view should return a list of all the parkingdata
-        with current name.
-        """
-        for x in range(int(self.kwargs['id1']), int(self.kwargs['id2'])):
-            queryset = queryset.exclude(id=x)
-        return queryset
+        parking_id = self.kwargs['pk']
+        return ParkingData.objects.filter(id=parking_id)
 
 
 class UuidView(generics.ListAPIView):
@@ -75,9 +33,10 @@ class UuidView(generics.ListAPIView):
         return ParkingData.objects.filter(uuid=parking_uuid)
 
 
-def staticUrl(request, id):
+@api_view(['GET'])
+def getStaticUrl(request, uuid):
     url = ParkingData.objects.get(
-        id=id).staticDataUrl
+        uuid=uuid).staticDataUrl
     r = requests.get(url)
     dump = json.dumps(r.json())
     return HttpResponse(dump, content_type='application/json')
@@ -89,15 +48,33 @@ class RectangleView(generics.ListAPIView):
     def get_queryset(self):
         """
         This view should return a list of all the parkingdata
-        with current name.
+        in a certain rectangle.
         """
         southwest_lng = float(self.kwargs['southwest_lng'])
         southwest_lat = float(self.kwargs['southwest_lat'])
         northeast_lng = float(self.kwargs['northeast_lng'])
         northeast_lat = float(self.kwargs['northeast_lat'])
 
-        return ParkingData.objects.filter(
-            longitude__gte=southwest_lng,
-            latitude__gte=southwest_lat,
-            longitude__lte=northeast_lng,
-            latitude__lte=northeast_lat)
+        return ParkingData.objects.filter(longitude__gte=southwest_lng, latitude__gte=southwest_lat, longitude__lte=northeast_lng, latitude__lte=northeast_lat)
+
+
+class StaticView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with only static data.
+        """
+        return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
+
+
+class DynamicView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with only static data.
+        """
+        return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
