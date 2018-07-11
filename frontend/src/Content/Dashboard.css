@@ -22,8 +22,12 @@
 
 .table td {
     border: 1px solid #eceeef;
+    font-size: 12px;
 }
 
+.table th {
+    font-size: 12px;
+}
 .table .invalidCell {
     background-color: red;
     padding: 3px !important;
@@ -36,4 +40,5 @@
 
 .table .heatCellName {
     padding: 3px !important;
+
 }

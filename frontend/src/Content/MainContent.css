@@ -3,5 +3,11 @@
     height: 100%;
     width: 100%;
     padding: 20px;
+    position: absolute;
+    left: 250px;
+
+    position: fixed;
+    left: 250px;
+    width: 100%;
 }
 
