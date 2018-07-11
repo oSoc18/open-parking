@@ -23,7 +23,14 @@
 .table td {
     border: 1px solid #eceeef;
 }
+<<<<<<< HEAD
 
+=======
+ 
+.table th {
+    font-size: 12px;
+}
+>>>>>>> staticvisuals
 .table .invalidCell {
     background-color: red;
     padding: 3px !important;

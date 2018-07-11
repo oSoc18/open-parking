@@ -17,6 +17,11 @@ export default class MainNav extends React.Component {
     });
   }
 
+<<<<<<< HEAD
+=======
+ 
+ 
+>>>>>>> staticvisuals
   render() {
     return (
       <div>

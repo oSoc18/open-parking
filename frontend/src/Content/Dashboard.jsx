@@ -8,6 +8,7 @@ import './Dashboard.css'
 const  DATA = import('../data/data_index_1_3_sample.json')
 
 const TESTJSON = [{
+<<<<<<< HEAD
     "name": "parkingMuseum",
     "price": "5-25",
     "location": "2222",
@@ -24,6 +25,57 @@ const TESTJSON = [{
     "restrictions": "none",
     "capacity": "5000"
   }
+=======
+  "name": "parkingMuseum",
+  "price": "5-25",
+  "location": "2222",
+  "owner": "available",
+  "restrictions": "none",
+  "capacity": "5000",
+  "hours": "22222222222222222222"
+},
+{
+  "name": "Parking2",
+  "price": "",
+  "location": null,
+  "owner": "available",
+  "restrictions": "none",
+  "capacity": "5000"
+}
+
+]
+
+const realJson = [
+
+  
+{
+  "id": 520,
+  "name": "Piet Heingarage (Amsterdam)",
+  "uuid": "e08d6a7e-cfcf-4cbd-a59a-8821766c016c",
+  "staticDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/static/e08d6a7e-cfcf-4cbd-a59a-8821766c016c",
+  "dynamicDataUrl": "http://opd.it-t.nl/Data/parkingdata/v1/amsterdam/dynamic/900000002_parkinglocation.json",
+  "limitedAccess": false,
+  "geoLocation": "[{'latitude': 52.377626, 'coordinatesType': 'WGS84', 'validityStartOfPeriod': 1414800000, 'longitude': 4.91488}]"
+},
+{
+  "id": 69,
+  "name": "Parpeergarage Stadhuisplein",
+  "uuid": "fe644297-9f7e-4a47-9ed6-e0804788a523",
+  "staticDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/static/fe644297-9f7e-4a47-9ed6-e0804788a523",
+  "dynamicDataUrl": "http://opd.it-t.nl/Data/parkingdata/v1/amersfoort/dynamic/fe644297-9f7e-4a47-9ed6-e0804788a523.json",
+  "limitedAccess": false,
+  "geoLocation": "{'latitude': '52.1559901', 'coordinatesType': 'WGS84', 'longitude': '5.3853387'}"
+},
+{ 
+  "id": 19,
+  "name": "Parkeerterrein Gedempte Haven",
+  "uuid": "ffa8ca84-94c7-46e2-9f5d-0fbe5d485810",
+  "staticDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/static/ffa8ca84-94c7-46e2-9f5d-0fbe5d485810",
+  "dynamicDataUrl": "http://opd.it-t.nl/data/parkingdata/v1/veere/dynamic/8f1b501e-4681-494b-bbf4-39c00a41e129.json",
+  "limitedAccess": false,
+  "geoLocation": null
+}
+>>>>>>> staticvisuals
 
 ] 
 
