@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import CreateView
-from .views import DetailsView, NameView, IDsView, NoNameView, UuidView, staticUrl
+from .views import DetailsView, NameView, IDsView, NoNameView, UuidView, staticUrl, RectangleView
 
 
 urlpatterns = {
@@ -22,6 +22,11 @@ urlpatterns = {
         UuidView.as_view(), name="uuid"),
     url(r'^parkingdata/request/static/(?P<id>[0-9]+)/$',
         staticUrl, name="staticUrl"),
+    url(r"^parkingdata/rectangle/(?P<southwest_lng>[+-]?([0-9]*[.])?[0-9]+)," +\
+        r"(?P<southwest_lat>[+-]?([0-9]*[.])?[0-9]+)," +\
+        r"(?P<northeast_lng>[+-]?([0-9]*[.])?[0-9]+)," +\
+        r"(?P<northeast_lat>[+-]?([0-9]*[.])?[0-9]+)/$",
+        RectangleView.as_view(), name="rectangle")
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

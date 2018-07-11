@@ -79,9 +79,28 @@ class UuidView(generics.ListAPIView):
 
 
 def staticUrl(request, id):
-    parking_place_url = ParkingData.objects.filter(
-        id=id).values("staticDataUrl").first()
-    url = parking_place_url["staticDataUrl"]
+    url = ParkingData.objects.get(
+        id=id).staticDataUrl
     r = requests.get(url)
     dump = json.dumps(r.json())
     return HttpResponse(dump, content_type='application/json')
+
+
+class RectangleView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with current name.
+        """
+        southwest_lng = float(self.kwargs['southwest_lng'])
+        southwest_lat = float(self.kwargs['southwest_lat'])
+        northeast_lng = float(self.kwargs['northeast_lng'])
+        northeast_lat = float(self.kwargs['northeast_lat'])
+        print("sw: ", southwest_lng, type(southwest_lng))
+        print("sw: ", southwest_lat, type(southwest_lat))
+        print("ne long: ", northeast_lng, type(northeast_lng))
+        print("ne lat: ", northeast_lat, type(northeast_lat))
+
+        return ParkingData.objects.filter(longitude__gte=southwest_lng, latitude__gte=southwest_lat, longitude__lte=northeast_lng, latitude__lte=northeast_lat)
