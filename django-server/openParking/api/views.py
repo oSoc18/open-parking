@@ -1,11 +1,8 @@
-from django.shortcuts import render
 from rest_framework import generics
 from .serializers import ParkingDataSerializer
 from .models import ParkingData
 import requests
-from django.http import JsonResponse
 import json
-from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 # views and urls for handling the POST request.
 
@@ -98,9 +95,9 @@ class RectangleView(generics.ListAPIView):
         southwest_lat = float(self.kwargs['southwest_lat'])
         northeast_lng = float(self.kwargs['northeast_lng'])
         northeast_lat = float(self.kwargs['northeast_lat'])
-        print("sw: ", southwest_lng, type(southwest_lng))
-        print("sw: ", southwest_lat, type(southwest_lat))
-        print("ne long: ", northeast_lng, type(northeast_lng))
-        print("ne lat: ", northeast_lat, type(northeast_lat))
 
-        return ParkingData.objects.filter(longitude__gte=southwest_lng, latitude__gte=southwest_lat, longitude__lte=northeast_lng, latitude__lte=northeast_lat)
+        return ParkingData.objects.filter(
+            longitude__gte=southwest_lng,
+            latitude__gte=southwest_lat,
+            longitude__lte=northeast_lng,
+            latitude__lte=northeast_lat)
