@@ -25,7 +25,7 @@ const TESTJSON = [{
     "capacity": "5000"
   }
 
-]
+] 
 
 
 class Dashboard extends Component {
