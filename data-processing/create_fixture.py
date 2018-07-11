@@ -23,7 +23,8 @@ for filename in file_list:
             "staticDataUrl": facility["staticDataUrl"],
             "dynamicDataUrl": facility.get("dynamicDataUrl", None),
             "limitedAccess": facility["limitedAccess"],
-            "geoLocation": facility.get("location", None)
+            "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,
+            "longitude": facility["geoLocation"]["longitude"] if facility["geoLocation"] is not None else None
         }
     })
     pk += 1
