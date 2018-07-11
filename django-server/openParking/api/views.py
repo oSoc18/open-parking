@@ -58,3 +58,16 @@ class IDsView(generics.ListAPIView):
         for x in range(int(self.kwargs['id1']), int(self.kwargs['id2'])):
             queryset = queryset.exclude(id=x)
         return queryset
+
+
+class UuidView(generics.ListAPIView):
+    """wrote this class to test dhe exclude() method"""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the parkingdata
+        with current name.
+        """
+        parking_uuid = self.kwargs['uuid']
+        return ParkingData.objects.filter(uuid=parking_uuid)
