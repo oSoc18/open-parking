@@ -7,28 +7,15 @@ import  {Container} from 'reactstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
-
-  constructor(props){
-    super(props)
-    //this.handleNavigation = this.handleNavigation.bind(this)
-    this.state = { mainContent: "map"}
-  }
-
-  handleNavigation(value){
-    this.setState({mainContent: value})
-
-
-  }
-
   render() {
     return (
       <div className="App">
-        <MainNav onChangeContent={this.handleNavigation.bind(this)} />
+        <MainNav/>
 
 
 <div>
-        <SideBar  /> 
-        <MainContent tab={this.state.mainContent} /> 
+        <SideBar /> 
+        <MainContent  /> 
         </div>
       </div>
     );

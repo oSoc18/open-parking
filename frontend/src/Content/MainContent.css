@@ -1,24 +1,7 @@
 .MainContent {
     float: left;
     height: 100%;
-    
-    /*padding: 20px;
-    */position: absolute;
-    left: 250px;
-
-    position: fixed;
-    left: 250px;
-    max-width: 100%;
-    min-width: 1111px;
-   
-
+    width: 100%;
+    padding: 20px;
 }
-
-.mainChild {
-    position: relative;
-    overflow:auto;
-    max-height: 600px;
-    overflow-y:auto;
-}
-
 
