@@ -9,7 +9,7 @@ class MainContent extends Component {
     super(props);
 
 
-    this.state = {typeView: "Dashboard" }
+    this.state = {typeView: "" }
   }
 
   componentDidMount(){
@@ -17,7 +17,7 @@ class MainContent extends Component {
   }
 
   render() {
-    let contentVis = (<MapContent/>)
+    let contentVis = (<MapContent/>);
     if(this.state.typeView === "Dashboard"){
       contentVis = <Dashboard/>
     }
