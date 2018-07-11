@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import CreateView
-from .views import DetailsView, NameView, IDsView, NoNameView, UuidView
+from .views import DetailsView, NameView, IDsView, NoNameView, UuidView, staticUrl
 
 
 urlpatterns = {
@@ -20,6 +20,8 @@ urlpatterns = {
     # all parkingplaces except for these in interval: use parkingplaces/uuid/27ec369b-68d1-4b74-b62c-78969d6ff706
     url(r'^parkingdata/uuid/(?P<uuid>.+)/$',
         UuidView.as_view(), name="uuid"),
+    url(r'^parkingdata/request/static/(?P<id>[0-9]+)/$',
+        staticUrl, name="staticUrl"),
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
