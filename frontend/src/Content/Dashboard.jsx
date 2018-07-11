@@ -63,7 +63,7 @@ const realJson = [
   "geoLocation": null
 }
 
-]
+] 
 
 
 class Dashboard extends Component {
