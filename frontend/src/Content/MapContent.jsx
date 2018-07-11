@@ -14,16 +14,7 @@ class MapContent extends Component {
         return map;
     }
 
-    // async loadData(){
-    //     let facilities = [];
-    //     for (let i = 0; i < 200; i++) {
-    //         facilities = await $.get("http://127.0.0.1:8000/parkingdata/"+i+"/");
-    //     }
-    //     return facilities;
-    // }
-
-    componentDidMount() {
-        let map = this.renderMap();
+    loadData(coordinate){
         class ParkingFacility {
             get id() {
                 return this._id;
@@ -49,11 +40,15 @@ class MapContent extends Component {
                 return this._limitedAccess;
             }
 
-            get geolocation() {
-                return this._geolocation;
+            get latitude() {
+                return this._latitude;
             }
 
-            constructor(id, name, uuid, staticDataUrl, dynamicDataUrl, limitedAccess, geolocation) {
+            get longitude() {
+                return this._longitude;
+            }
+
+            constructor(id, name, uuid, staticDataUrl, dynamicDataUrl, limitedAccess, latitude, longitude) {
 
                 this._id = id;
                 this._name = name;
@@ -61,14 +56,32 @@ class MapContent extends Component {
                 this._staticDataUrl = staticDataUrl;
                 this._dynamicDataUrl = dynamicDataUrl;
                 this._limitedAccess = limitedAccess;
-                this._geolocation = geolocation;
+                this._latitude = latitude;
+                this._longitude = longitude;
             }
         }
         let facilities = [];
-        map.on("moveend", function () {
-            console.log(map.getBounds().toBBoxString());
-        });
+        let markers = [];
+        let data = $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+coordinate+"/?format=json", function (json) {
 
+            for (let coordinate of json) {
+                facilities.push(new ParkingFacility(json.id, json.name, json.uuid, json.staticDataUrl, json.dynamicDataUrl, json.limitedAccess, json.latitude, json.longitude))
+            }
+
+            mar
+        });
+    }
+
+
+    componentDidMount() {
+        let map = this.renderMap();
+        let main = this;
+
+        let responses = [];
+        let facilities = [];
+        map.on("moveend", function () {
+            responses = main.loadData(map.getBounds().toBBoxString());
+        });
 
 
 
