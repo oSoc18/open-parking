@@ -53,7 +53,7 @@ const realJson = [
   "limitedAccess": false,
   "geoLocation": "{'latitude': '52.1559901', 'coordinatesType': 'WGS84', 'longitude': '5.3853387'}"
 },
-{
+{ 
   "id": 19,
   "name": "Parkeerterrein Gedempte Haven",
   "uuid": "ffa8ca84-94c7-46e2-9f5d-0fbe5d485810",
