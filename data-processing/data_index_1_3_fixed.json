@@ -20560,8 +20560,8 @@
       "name": "Hart van Zuid",
       "geoLocation": {
         "coordinatesType": "WGS84",
-        "longitude": 448916.0,
-        "latitude": 51885776.0
+        "longitude": 4.489160,
+        "latitude": 51.8857760
       },
       "limitedAccess": true,
       "dynamicDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/dynamic/bec4a95b-3e7d-4aa0-bb1d-c601138a434e",
@@ -20608,7 +20608,7 @@
       "name": "Schiecentrale",
       "geoLocation": {
         "coordinatesType": "WGS84",
-        "longitude": 4458429.0,
+        "longitude": 4.458429,
         "latitude": 51.90413
       },
       "limitedAccess": true,
@@ -35825,8 +35825,8 @@
       "name": "Boston en Seattle",
       "geoLocation": {
         "coordinatesType": "WGS84",
-        "longitude": 4489247.0,
-        "latitude": 5190662.0
+        "longitude": 4.489247,
+        "latitude": 51.90662
       },
       "limitedAccess": true,
       "dynamicDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/dynamic/19374849-cd1d-442b-83a0-460bbf97cbc8",
@@ -36573,8 +36573,8 @@
       "name": "Kazerneplein",
       "geoLocation": {
         "coordinatesType": "WGS84",
-        "longitude": 5985406.0,
-        "latitude": 51198668.0
+        "longitude": 5.985406,
+        "latitude": 51.198668
       },
       "limitedAccess": true,
       "dynamicDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/dynamic/3aa08588-45c9-47d9-963c-14f7abbc7c09",
@@ -36585,8 +36585,8 @@
       "name": "Stationspark",
       "geoLocation": {
         "coordinatesType": "WGS84",
-        "longitude": 5995895.0,
-        "latitude": 51192500.0
+        "longitude": 5.995895,
+        "latitude": 51.192500
       },
       "limitedAccess": true,
       "dynamicDataUrl": "https://npropendata.rdw.nl/parkingdata/v2/dynamic/1d4127fa-ff23-41ee-8876-4a19181dd911",

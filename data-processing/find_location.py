@@ -4,13 +4,39 @@ from os import listdir
 from os.path import isfile, join
 import requests
 from time import time, sleep
+from shapely.geometry import shape
 
 def get_value(object, keys):
     try:
         for key in keys:
             object = object[key]
         return object
-    except (KeyError, IndexError) as e:
+    except (KeyError, IndexError, TypeError):
+        return None
+
+def coord_to_coord(object):
+    if isinstance(object, list):
+        object = object[0]
+    if object is not None and (abs(object["latitude"]) > 90 or abs(object["longitude"]) > 180):
+        lat = str(object["latitude"])
+        lat = float(lat[:2] + "." + lat[2:-2])
+        lon = str(object["longitude"])
+        lon = float(lon[:1] + "." + lon[1:-2])
+        print("Invalid coordinates:", object)
+        object["latitude"] = input("Correct latitude ? " + str(lat) + " ")
+        object["longitude"] = input("Correct longitude ? " + str(lon) + " ")
+        object["longitude"] = lon if object["longitude"] == "" else float(object["longitude"])
+        object["latitude"] = lat if object["latitude"] == "" else float(object["latitude"])
+    return object
+
+def shape_to_coord(object):
+    try:
+        geodata = shape(object).centroid
+        if geodata.is_empty:
+            return None
+        else:
+            return {"longitude": geodata.x, "latitude": geodata.y}
+    except:
         return None
 
 def address_to_coord(address):
@@ -50,34 +76,33 @@ address_to_coord.last_request = None
 directory = argv[1]
 
 fields_to_try = [
-    (["locationForDisplay"], lambda x: x),
-    (["accessPoints", 0, "accessPointLocation"], lambda x: x),
+    (["locationForDisplay"], coord_to_coord),
+    (["accessPoints", 0, "accessPointLocation"], coord_to_coord),
     (["accessPoints", 0, "accessPointAddress"], address_to_coord),
-    (["sellingPoints", 0, "sellingPointLocation"], lambda x: x),
-    (["specifications", 0, "areaGeometry"], lambda x: x)
+    (["sellingPoints", 0, "sellingPointLocation"], coord_to_coord),
+    (["specifications", 0, "areaGeometry"], shape_to_coord),
 ]
 
-file_list = [f for f in listdir(directory) if isfile(join(directory, f))]
+file_list = [join(directory, f) for f in listdir(directory) if isfile(join(directory, f))]
 
 for filename in file_list:
     try:
-        facility  = json.load(open(join(directory, filename)))
+        facility  = json.load(open(filename))
     except json.decoder.JSONDecodeError as e:
         print(e)
         print(filename)
 
-    if "location" not in facility:
+    if "geoLocation" not in facility:
         static_data = facility["staticData"]
         if static_data is None:
             continue
 
-        facility["location"] = None
+        facility["geoLocation"] = None
         for field, convert_function in fields_to_try:
             value = get_value(static_data, field)
             if value is not None:
-                facility["location"] = convert_function(value)
-                print(str(facility["location"])[:100])
+                facility["geoLocation"] = convert_function(value)
                 break
 
-        with open(join(directory, filename), "w") as file:
+        with open(filename, "w") as file:
             json.dump(facility, file, indent=2)

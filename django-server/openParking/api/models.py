@@ -11,8 +11,9 @@ class ParkingData(models.Model):
     dynamicDataUrl = models.CharField(max_length=255, blank=True, null=True, unique=False)
     limitedAccess = models.BooleanField(
         max_length=6, blank=False, unique=False)
-    geoLocation = models.CharField(max_length=255, blank=True, null=True, unique=False)
-
+    latitude = models.FloatField(blank=True, null=True, unique=False)
+    longitude = models.FloatField(blank=True, null=True, unique=False)
+    
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format("self.name")
