@@ -36,7 +36,10 @@ for filename in file_list:
             "limitedAccess": facility["limitedAccess"],
             "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,
             "longitude": facility["geoLocation"]["longitude"] if facility["geoLocation"] is not None else None,
-            "facilityType": get_facility_type(facility)
+            "facilityType": get_facility_type(facility),
+            "city": facility["city"],
+            "province": facility["province"],
+            "country_code": facility["country_code"]
         }
     })
     pk += 1
