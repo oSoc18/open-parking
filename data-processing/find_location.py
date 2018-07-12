@@ -125,6 +125,7 @@ fields_to_try = [
 
 file_list = [join(directory, f) for f in listdir(directory) if isfile(join(directory, f))]
 
+i = 0
 for filename in file_list:
     try:
         facility  = json.load(open(filename))
@@ -151,3 +152,5 @@ for filename in file_list:
         facility.update(get_address_fields(facility))
         with open(filename, "w") as file:
             json.dump(facility, file, indent=2)
+        print(i, "/", len(file_list))
+    i += 1

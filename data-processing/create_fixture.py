@@ -37,9 +37,9 @@ for filename in file_list:
             "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,
             "longitude": facility["geoLocation"]["longitude"] if facility["geoLocation"] is not None else None,
             "facilityType": get_facility_type(facility),
-            "city": facility["city"],
-            "province": facility["province"],
-            "country_code": facility["country_code"]
+            "city": facility["city"] if "city" in facility else None,
+            "province": facility["province"] if "province" in facility else None,
+            "country_code": facility["country_code"] if "country_code" in facility else None
         }
     })
     pk += 1
