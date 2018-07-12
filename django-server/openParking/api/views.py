@@ -57,6 +57,7 @@ class StaticView(generics.ListAPIView):
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
 
+
 class DynamicView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
@@ -90,3 +91,11 @@ class CityView(generics.ListAPIView):
     def get_queryset(self):
 
         return
+
+
+class OffstreetView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return ParkingData.objects.filter(facilityType="offstreet")
