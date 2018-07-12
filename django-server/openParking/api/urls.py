@@ -25,10 +25,12 @@ urlpatterns = {
     # all parkingplaces with dynamic data link: http://127.0.0.1:8000/parkingdata/dynamic/all/
     url(r'^parkingdata/dynamic/all/$',
         DynamicView.as_view(), name="dynamicParkings"),
-    url(r'^parkingdata/country/(?P<uuid>.+)/$',
-        CountryView.as_view(), name="country_uuid"),
-    url(r'^parkingdata/state//$',
-        DynamicView.as_view(), name="dynamicParkings"),
+    url(r'^parkingdata/country/(?P<country_code>.+)/$',
+        CountryView.as_view(), name="countryParkings"),
+    url(r'^parkingdata/province/(?P<provinceName>.+)/$',
+        ProvinceView.as_view(), name="ProvinceParkings"),
+    url(r'^parkingdata/city/(?P<cityName>.+)/$',
+        CityView.as_view(), name="stateParkings"),
     url(r'^parkingdata/offstreet/all/$',
         OffstreetView.as_view(), name="offstreetParkings"),
 }
