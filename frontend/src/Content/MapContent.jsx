@@ -11,7 +11,7 @@ class MapContent extends Component {
             center: [52.1326, 5.2913],
             zoom: 8
         });
-        L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('https://c.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         return map;
     }
 
@@ -20,7 +20,9 @@ class MapContent extends Component {
 
         let map = this.renderMap();
         let markers = [];
-        let cluster = L.markerClusterGroup();
+        let cluster = L.markerClusterGroup({
+            disableClusteringAtZoom: 17
+        });
 
         $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+ map.getBounds().toBBoxString() +"/?format=json", function (json) {
             for (let mark of markers) {
@@ -39,6 +41,7 @@ class MapContent extends Component {
             map.addLayer(cluster);
 
         });
+
 
         map.on("moveend", function () {
             $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+ map.getBounds().toBBoxString() +"/?format=json", function (json) {
