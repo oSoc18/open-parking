@@ -78,3 +78,27 @@ class DynamicView(generics.ListAPIView):
         with only static data.
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
+
+
+class CountryView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return
+
+
+class ProvinceView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return
+
+
+class CityView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return
