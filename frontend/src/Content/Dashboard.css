@@ -19,10 +19,6 @@
    max-width: 100%;
 }
 
-.table{
-    width: 0 !important; 
-}
-
 .table td {
     border: 1px solid #eceeef;
     font-size: 12px;
