@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
+import 'leaflet.markercluster';
 
 import './MapContent.css'
 class MapContent extends Component {
 
     renderMap() {
-        var map = L.map('mapid', {
+        let map = L.map('mapid', {
             center: [52.1326, 5.2913],
             zoom: 8
         });
@@ -14,78 +15,50 @@ class MapContent extends Component {
         return map;
     }
 
-    loadData(coordinate){
-        class ParkingFacility {
-            get id() {
-                return this._id;
-            }
-
-            get name() {
-                return this._name;
-            }
-
-            get uuid() {
-                return this._uuid;
-            }
-
-            get staticDataUrl() {
-                return this._staticDataUrl;
-            }
-
-            get dynamicDataUrl() {
-                return this._dynamicDataUrl;
-            }
-
-            get limitedAccess() {
-                return this._limitedAccess;
-            }
-
-            get latitude() {
-                return this._latitude;
-            }
-
-            get longitude() {
-                return this._longitude;
-            }
-
-            constructor(id, name, uuid, staticDataUrl, dynamicDataUrl, limitedAccess, latitude, longitude) {
-
-                this._id = id;
-                this._name = name;
-                this._uuid = uuid;
-                this._staticDataUrl = staticDataUrl;
-                this._dynamicDataUrl = dynamicDataUrl;
-                this._limitedAccess = limitedAccess;
-                this._latitude = latitude;
-                this._longitude = longitude;
-            }
-        }
-        let facilities = [];
-        let markers = [];
-        let data = $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+coordinate+"/?format=json", function (json) {
-
-            for (let coordinate of json) {
-                facilities.push(new ParkingFacility(json.id, json.name, json.uuid, json.staticDataUrl, json.dynamicDataUrl, json.limitedAccess, json.latitude, json.longitude))
-            }
-
-            mar
-        });
-    }
-
 
     componentDidMount() {
-        let map = this.renderMap();
-        let main = this;
 
-        let responses = [];
-        let facilities = [];
-        map.on("moveend", function () {
-            responses = main.loadData(map.getBounds().toBBoxString());
+        let map = this.renderMap();
+        let markers = [];
+        let cluster = L.markerClusterGroup();
+
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+ map.getBounds().toBBoxString() +"/?format=json", function (json) {
+            for (let mark of markers) {
+                mark.remove();
+                markers = [];
+                cluster.clearLayers();
+            }
+
+            json.map(function (facility) {
+                let mark = L.marker([facility.latitude, facility.longitude]);
+                mark.bindPopup("<b>"+facility.name+"</b>");
+                markers.push(mark);
+
+            });
+            cluster.addLayers(markers);
+            map.addLayer(cluster);
+
         });
 
+        map.on("moveend", function () {
+            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/"+ map.getBounds().toBBoxString() +"/?format=json", function (json) {
+                for (let mark of markers) {
+                    mark.remove();
+                    markers = [];
+                    cluster.clearLayers();
+                }
 
+                json.map(function (facility) {
+                    let mark = L.marker([facility.latitude, facility.longitude])
+                    mark.bindPopup("<b>"+facility.name+"</b>")
+                    markers.push(mark);
 
+                });
+                cluster.addLayers(markers);
+                map.addLayer(cluster);
 
+            });
+        });
 
     }
 
@@ -98,6 +71,8 @@ class MapContent extends Component {
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
                       integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
                       crossorigin=""/>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css"/>
 
 
                 <div id="mapid"></div>
