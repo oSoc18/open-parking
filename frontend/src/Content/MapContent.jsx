@@ -11,7 +11,7 @@ class MapContent extends Component {
             center: [52.1326, 5.2913],
             zoom: 8
         });
-        L.tileLayer('https://c.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         return map;
     }
 
@@ -37,6 +37,7 @@ class MapContent extends Component {
                 markers.push(mark);
 
             });
+
             cluster.addLayers(markers);
             map.addLayer(cluster);
 
@@ -51,12 +52,26 @@ class MapContent extends Component {
                     cluster.clearLayers();
                 }
 
-                json.map(function (facility) {
-                    let mark = L.marker([facility.latitude, facility.longitude])
-                    mark.bindPopup("<b>"+facility.name+"</b>")
-                    markers.push(mark);
+                json.forEach(function (facility) {
+                    let mark = L.marker([facility.latitude, facility.longitude]);
+                    mark.bindPopup("<b>"+facility.name+"</b><br>" + facility.id);
+                    mark.on("popupopen", function () {
+                        $.get(facility.staticDataUrl, function (data) {
+                            console.log(data);
+                        });
 
+                        if(facility.dynamicDataUrl !== null) {
+                            $.get(facility.dynamicDataUrl, function (data) {
+                                //TODO: Get dynamic data
+                                //mark.getPopup().setContent("<b>"+facility.name+"</b><br/>vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + " " + data.parkingFacilityDynamicInformation.facilityActualStatus.capacity);
+                                console.log(data);
+                            });
+                        }
+                    });
+                    markers.push(mark);
                 });
+
+
                 cluster.addLayers(markers);
                 map.addLayer(cluster);
 
