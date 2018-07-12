@@ -82,7 +82,7 @@ class ProvinceView(generics.ListAPIView):
 
     def get_queryset(self):
         provinceName = self.kwargs['provinceName']
-        return ParkingData.objects.filter(Province=provinceName)
+        return ParkingData.objects.filter(province=provinceName)
 
 
 class CityView(generics.ListAPIView):
@@ -90,7 +90,7 @@ class CityView(generics.ListAPIView):
 
     def get_queryset(self):
         cityName = self.kwargs['cityName']
-        return ParkingData.objects.filter(City=cityName)
+        return ParkingData.objects.filter(city=cityName)
 
 
 class OffstreetView(generics.ListAPIView):
@@ -99,3 +99,14 @@ class OffstreetView(generics.ListAPIView):
     def get_queryset(self):
 
         return ParkingData.objects.filter(facilityType="offstreet")
+
+
+@api_view(['GET'])
+def getMultipleStaticUrl(request, from_id, to_id):
+    static_jsons = []
+    for id in range(int(from_id), int(to_id)):
+        url = ParkingData.objects.get(
+            id=id).staticDataUrl
+        r = requests.get(url).json()
+        static_jsons.append(r)
+    return HttpResponse(json.dumps(static_jsons), content_type='application/json')
