@@ -1,5 +1,6 @@
 .App {
-  text-align: center;
+	text-align: center;
+	width: 100%;
 }
 
 .App-logo {
@@ -55,6 +56,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -75,3 +77,4 @@ table {
 html, body {
 	height: 100%;
 }
+

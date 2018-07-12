@@ -13,6 +13,7 @@ class MapContent extends Component {
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         return map;
+
     }
 
 
@@ -98,7 +99,8 @@ class MapContent extends Component {
 
             </div>)
 
+
     }
-}
+}          
 
 export default MapContent;

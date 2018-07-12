@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import MapContent from './MapContent';
 import Dashboard from './Dashboard'
 
+import './MainContent.css'
+ 
 
 class MainContent extends Component {
 
@@ -10,6 +12,7 @@ class MainContent extends Component {
 
 
     this.state = {typeView: "" }
+
   }
 
   componentDidMount(){
@@ -17,13 +20,20 @@ class MainContent extends Component {
   }
 
   render() {
-    let contentVis = (<MapContent/>);
-    if(this.state.typeView === "Dashboard"){
+
+    let tab = "map"
+    if(this.props.tab){
+      tab = this.props.tab
+         }
+    let contentVis = (<MapContent/>)
+    if(tab === "dash"){
       contentVis = <Dashboard/>
     }
     return (
       <div className="MainContent" >
+        <div className="mainChild">
         {contentVis}
+        </div>
       </div> 
     );
   } 
