@@ -41,6 +41,7 @@ urlpatterns = {
     # testing purposes
     url(r'^parkingdata/requests/(?P<from_id>[0-9]+),(?P<to_id>[0-9]+)/$',
         getMultipleStaticUrl, name="multipleStaticUrl"),
+
 }
 
 
