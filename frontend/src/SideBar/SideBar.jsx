@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './SideBar.css';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css'; 
- 
+
  
 const nodes = [{
     value: 'Drenthe',
