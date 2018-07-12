@@ -8,27 +8,19 @@ from rest_framework.decorators import api_view
 
 
 class DetailsView(generics.RetrieveAPIView):
-    """This class handles the http GET, PUT and DELETE requests."""
+    """Get one instance from its ID."""
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        with current name.
-        """
         parking_id = self.kwargs['pk']
         return ParkingData.objects.filter(id=parking_id)
 
 
 class UuidView(generics.ListAPIView):
-    """wrote this class to test dhe exclude() method"""
+    """ Get an instance by its UUID."""
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        with current name.
-        """
         parking_uuid = self.kwargs['uuid']
         return ParkingData.objects.filter(uuid=parking_uuid)
 
@@ -43,13 +35,10 @@ def getStaticUrl(request, uuid):
 
 
 class RectangleView(generics.ListAPIView):
+    """Get all instances located in a rectangle defined by two points."""
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        in a certain rectangle.
-        """
         southwest_lng = float(self.kwargs['southwest_lng'])
         southwest_lat = float(self.kwargs['southwest_lat'])
         northeast_lng = float(self.kwargs['northeast_lng'])
@@ -64,10 +53,9 @@ class StaticView(generics.ListAPIView):
     def get_queryset(self):
         """
         This view should return a list of all the parkingdata
-        with only static data.
+        with no dynamic data link .
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
-
 
 class DynamicView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
@@ -75,7 +63,7 @@ class DynamicView(generics.ListAPIView):
     def get_queryset(self):
         """
         This view should return a list of all the parkingdata
-        with only static data.
+        with a dynamic data link.
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
 

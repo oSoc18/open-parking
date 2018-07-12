@@ -3,6 +3,17 @@ from sys import argv
 from os import listdir
 from os.path import isfile, join
 
+def get_facility_type(facility):
+    if facility["staticData"] is not None \
+            and "specifications" in facility["staticData"] \
+            and len(facility["staticData"]["specifications"]) > 0 \
+            and facility["staticData"]["specifications"][0] is not None \
+            and "areaGeometry" in facility["staticData"]["specifications"][0] \
+            and "coordinates" in facility["staticData"]["specifications"][0]["areaGeometry"]:
+        return "onstreet"
+    else:
+        return "offstreet"
+
 input_directory = argv[1]
 output_filename = argv[2]
 
@@ -24,7 +35,8 @@ for filename in file_list:
             "dynamicDataUrl": facility.get("dynamicDataUrl", None),
             "limitedAccess": facility["limitedAccess"],
             "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,
-            "longitude": facility["geoLocation"]["longitude"] if facility["geoLocation"] is not None else None
+            "longitude": facility["geoLocation"]["longitude"] if facility["geoLocation"] is not None else None,
+            "facilityType": get_facility_type(facility)
         }
     })
     pk += 1

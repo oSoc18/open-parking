@@ -9,4 +9,4 @@ class ParkingDataSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = ParkingData
         fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
-                  'limitedAccess', 'latitude', 'longitude')
+                  'limitedAccess', 'latitude', 'longitude', 'facilityType')
