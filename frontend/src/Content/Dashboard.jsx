@@ -71,7 +71,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.requiredAttr = ["geoLocation", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
+    this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
   }
 
   componentDidMount() {
@@ -93,9 +93,9 @@ class Dashboard extends Component {
         .attr("class", classN)
         .text(node[columns[j]])
       }
-      else if(columns[j] === "geoLocation"){
+      else if(columns[j] === "longitude"){
         classN += " heatCell"//colored heatcell
-        classN += ((node["geoLocation"])? " validCell" : " invalidCell") // is this field in the json?
+        classN += ((node["longitude"])? " validCell" : " invalidCell") // is this field in the json?
 
         tr.append('td')
         .attr("class", classN)
