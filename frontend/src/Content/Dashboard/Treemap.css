@@ -1,10 +1,26 @@
 rect {
-    fill: cadetblue;
-    opacity: 0.3;
+    fill: rgb(177, 180, 180);
+    opacity: 0.55;
     stroke: white;
   }
 
 svg.TreemapData {
     height: 100vh;
     width: 100vw;
+}
+
+.badBG {
+
+    fill: #ca001f;
+    opacity: 1.0;
+}
+
+.avgBG{
+    fill: #bab110;
+    opacity: 1.0;
+}
+
+.goodBG{
+    fill: #22a2a8;
+    opacity: 1.0;
 }

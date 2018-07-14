@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import * as d3 from "d3";
 import './Treemap.css'
 
-
+var colorDict = {
+    "good": "goodBG",
+    "average": "avgBG",
+    "bad": "badBG"
+}
 var data = 	{
     name: "Nederland",	
     children: [
@@ -49,6 +53,7 @@ class Treemap extends Component {
   }
 
   createTreemap(){
+    let thiss = this
     var treemap = d3.treemap()
     treemap.tile(d3.treemapSquarify)
 
@@ -73,6 +78,7 @@ class Treemap extends Component {
   .append('rect')
   .attr('width', function(d) { return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
+  .attr('class', d => thiss.getColorByName(d.data.name))
 
   nodes
   .append('text')
@@ -83,7 +89,9 @@ class Treemap extends Component {
   })
   }
 
-  
+getColorByName(name){
+    return colorDict[name]
+}  
 
   render() {
 
