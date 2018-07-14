@@ -6,6 +6,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import { Table } from 'reactstrap';
 import './Dashboard.css'
+import Treemap from './Dashboard/Treemap';
 
 require('whatwg-fetch') //browser only!
 
@@ -142,6 +143,7 @@ class Dashboard extends Component {
   getValueJsonResult(key, node){
 
     //capacity is a special one
+  
 
 
       if(key === "capacity" && node["parkingFacilityInformation"] && node["parkingFacilityInformation"]["specifications"] && node["parkingFacilityInformation"]["specifications"].length > 0){
@@ -244,6 +246,17 @@ class Dashboard extends Component {
     }
 
 
+    getTable(){
+      
+      let debug = false
+      if(debug){
+        return <Table className="heatMap" width={0}>
+        </Table>
+      }
+      else{
+        return <div/>
+      }
+    }
   
 
   render() {
@@ -251,10 +264,12 @@ class Dashboard extends Component {
     // for each selected facility
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
+    let getTable = this.getTable()
     return (
-      <Table className="heatMap" width={0}>
-
-      </Table>
+      
+        <Treemap/>
+    
+      
     );
   }
 }
