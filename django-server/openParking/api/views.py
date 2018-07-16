@@ -148,9 +148,11 @@ def getMultipleStaticUrl(request, from_id, to_id):
         static_jsons.append(r)
     return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
+
 def is_not_none(value, key, is_array=False):
     """Checks whether a value is contained in the object, and that it is not None."""
     return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
+
 
 def generic_summary_view(field_name, area_name, lower_field_name):
     parkings = ParkingData.objects.filter(**{field_name: area_name})
@@ -167,18 +169,18 @@ def generic_summary_view(field_name, area_name, lower_field_name):
         if parking.staticData is not None:
             staticData = json.loads(parking.staticData)
             if staticData is not None:
-                for field in ("specifications", "tariffs", "contactPersons", "openingHours"):
+                for field in ("tariffs", "contactPersons", "openingHours"):
                     if is_not_none(staticData, field, True):
                         numberFields += 1
                 if is_not_none(staticData, "specification", True):
                     specs = staticData["specifications"]
-                    for field in ("capacity", "minimumHeightInMeters", "disabledAccess"):
+                    for field in ("capacity", "minimumHeightInMeters"):
                         if is_not_none(specs, field):
                             numberFields += 1
         mark = "bad"
-        if numberFields > 6:
+        if numberFields > 5:
             mark = "good"
-        elif numberFields > 3:
+        elif numberFields > 2:
             mark = "average"
         areas[lower_field][mark] += 1
 
@@ -186,7 +188,7 @@ def generic_summary_view(field_name, area_name, lower_field_name):
         "name": area_name,
         "children": [{
             "name": area,
-            "children":[
+            "children": [
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
