@@ -3,7 +3,6 @@ from sys import argv
 from os import listdir
 from os.path import isfile, join
 
-
 def get_facility_type(facility):
     if facility["staticData"] is not None \
             and "specifications" in facility["staticData"] \
@@ -53,6 +52,7 @@ for filename in file_list:
             "name": facility["name"],
             "uuid": facility["uuid"],
             "staticDataUrl": facility["staticDataUrl"],
+            "staticData": facility["staticData"],
             "dynamicDataUrl": facility.get("dynamicDataUrl", None),
             "limitedAccess": facility["limitedAccess"],
             "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,

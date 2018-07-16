@@ -129,13 +129,11 @@ def getMultipleStaticUrl(request, from_id, to_id):
 
 @api_view(['GET'])
 def summaryCountryView(request, country_code):
-    parkings = ParkingData.objects.get(
-        country_code=country_code.lower)
+    parkings = ParkingData.objects.filter(country_code=country_code.lower())
     data = {"name": country_code,
         "children": []
     }
-    for parking in parkings:
-        print(parking)
+    print(parkings)
 
     dump = json.dumps(data)
     return HttpResponse(dump, content_type='application/json')

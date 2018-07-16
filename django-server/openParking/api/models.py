@@ -9,6 +9,7 @@ class ParkingData(models.Model):
                             null=True, unique=False)
     uuid = models.CharField(max_length=255, blank=False, unique=True)
     staticDataUrl = models.CharField(max_length=255, blank=False, unique=False)
+    staticData = models.TextField(blank=True, null=True, unique=False)
     dynamicDataUrl = models.CharField(
         max_length=255, blank=True, null=True, unique=False)
     limitedAccess = models.BooleanField(
