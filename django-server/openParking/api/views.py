@@ -126,14 +126,50 @@ def getMultipleStaticUrl(request, from_id, to_id):
         static_jsons.append(r)
     return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
+def is_not_none(value, key, is_array=False):
+    """Checks whether a value is contained in the object, and that it is not None."""
+    return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
 
 @api_view(['GET'])
 def summaryCountryView(request, country_code):
     parkings = ParkingData.objects.filter(country_code=country_code.lower())
-    data = {"name": country_code,
-        "children": []
-    }
-    print(parkings)
+    regions = {}
+    for parking in parkings:
+        regions.setdefault(parking.region, {"good": 0, "average": 0, "bad": 0})
+        numberFields = 0
+        # Checks geolocation fields
+        if parking.longitude is not None and parking.latitude is not None:
+            numberFields += 1
 
-    dump = json.dumps(data)
+        # Dive in static data
+        if parking.staticData is not None:
+            staticData = json.loads(parking.staticData)
+            if staticData is not None:
+                for field in ("specifications", "tariffs", "contactPersons", "openingHours"):
+                    if is_not_none(staticData, field, True):
+                        numberFields += 1
+                if is_not_none(staticData, "specification", True):
+                    specs = staticData["specifications"]
+                    for field in ("capacity", "minimumHeightInMeters", "disabledAccess"):
+                        if is_not_none(specs, field):
+                            numberFields += 1
+        mark = "bad"
+        if numberFields > 6:
+            mark = "good"
+        elif numberFields > 3:
+            mark = "average"
+        regions[parking.region][mark] += 1
+
+
+    dump = json.dumps({
+        "name": country_code,
+        "children": [{
+            "name": region,
+            "children":[
+                {"name": "good", "value": regions[region]["good"]},
+                {"name": "average", "value": regions[region]["average"]},
+                {"name": "bad", "value": regions[region]["bad"]}
+            ]
+        } for region in regions]
+    })
     return HttpResponse(dump, content_type='application/json')
