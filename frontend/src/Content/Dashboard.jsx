@@ -152,6 +152,17 @@ class Dashboard extends Component {
     return (v!== "[]" )
   }
 
+  onZoomChange(){
+    let sub = "region/Noordwest-Nederland"
+    let url = "http://localhost:8000/parkingdata/summary/" + sub
+    let thiss = this
+    fetch(url) 
+    .then(response => response.json())
+    .then(json => {
+      thiss.setTreeMap(json)
+  }    )
+  }
+
   getValueJsonResult(key, node){
 
     //capacity is a special one
@@ -295,10 +306,9 @@ class Dashboard extends Component {
           this.setState({treemapData: json})
     }
 
-
-
-
-  
+    onZoomChange2(name){
+        this.onZoomChange()
+    }
 
   render() {
     //set headers
@@ -308,7 +318,7 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
-        <Treemap level={this.state.level} data={this.state.treemapData}/>
+        <Treemap level={this.state.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)}/>
     
       
     );
