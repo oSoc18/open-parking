@@ -1,8 +1,8 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
-        CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
-        summaryCountryView, getStaticUrl, getMultipleStaticUrl
+    CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
+    summaryCountryView, getStaticUrl, getMultipleStaticUrl
 
 
 urlpatterns = {
@@ -48,6 +48,7 @@ urlpatterns = {
     # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/nl/
     url(r'^parkingdata/summary/country/(?P<country_code>[a-zA-Z0-9]+)/$',
         summaryCountryView, name="countrySummary")
+
 }
 
 
