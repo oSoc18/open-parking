@@ -66,3 +66,16 @@ class DynamicView(generics.ListAPIView):
         with a dynamic data link.
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
+
+@api_view(['GET'])
+def summaryView(request, country_code):
+    parkings = ParkingData.objects.get(
+        country_code=country_code.lower)
+    data = {"name": country_code,
+        "children": []
+    }
+    for parking in parkings:
+        print(parking)
+
+    dump = json.dumps(data)
+    return HttpResponse(dump, content_type='application/json')

@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import DetailsView, UuidView, getStaticUrl, RectangleView, StaticView, DynamicView
+from .views import DetailsView, UuidView, getStaticUrl, RectangleView, \
+        StaticView, DynamicView, summaryView
 
 
 urlpatterns = {
@@ -24,7 +25,10 @@ urlpatterns = {
         StaticView.as_view(), name="staticParkings"),
     # all parkingplaces with dynamic data link: http://127.0.0.1:8000/parkingdata/dynamic/all/
     url(r'^parkingdata/dynamic/all/$',
-        DynamicView.as_view(), name="dynamicParkings")
+        DynamicView.as_view(), name="dynamicParkings"),
+    # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/nl/
+    url(r'^parkingdata/summary/(?P<country_code>[a-zA-Z0-9]+)/$',
+        summaryView, name="dynamicParkings")
 }
 
 
