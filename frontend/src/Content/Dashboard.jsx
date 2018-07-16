@@ -74,8 +74,9 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.state.level = 0 // default = land
+   
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
+    this.state = ({level: 0})  // default = land
   }
 
   componentDidMount() {
