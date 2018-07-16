@@ -9,7 +9,10 @@ class MainContent extends Component {
 
   constructor(props){
     super(props);
-    //this.state = {typeView: "map" }
+
+
+    this.state = {typeView: "" }
+
   }
 
   componentDidMount(){
@@ -17,6 +20,7 @@ class MainContent extends Component {
   }
 
   render() {
+
     let tab = "map"
     if(this.props.tab){
       tab = this.props.tab
