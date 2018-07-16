@@ -133,7 +133,6 @@ def is_not_none(value, key, is_array=False):
 def generic_summary_view(field_name, area_name, lower_field_name):
     parkings = ParkingData.objects.filter(**{field_name: area_name})
     areas = {}
-    print(parkings)
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
         areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
