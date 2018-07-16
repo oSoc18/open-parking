@@ -98,8 +98,8 @@ class RegionView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        regionName = self.kwargs['regionName']
-        return ParkingData.objects.filter(region=regionName)
+        region_Name = self.kwargs['regionName']
+        return ParkingData.objects.filter(region=region_Name)
 
 
 class ProvinceView(generics.ListAPIView):
@@ -109,8 +109,8 @@ class ProvinceView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        provinceName = self.kwargs['provinceName']
-        return ParkingData.objects.filter(province=provinceName)
+        province_Name = self.kwargs['province_Name']
+        return ParkingData.objects.filter(province=province_Name)
 
 
 class CityView(generics.ListAPIView):
@@ -120,8 +120,8 @@ class CityView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        cityName = self.kwargs['cityName']
-        return ParkingData.objects.filter(city=cityName)
+        city_Name = self.kwargs['city_Name']
+        return ParkingData.objects.filter(city=city_Name)
 
 
 class OffstreetView(generics.ListAPIView):
