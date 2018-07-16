@@ -7,6 +7,45 @@ var colorDict = {
     "average": "avgBG",
     "bad": "badBG"
 }
+
+var zwnl =  {
+    name: "Zuidwest-Nederland",    
+    children: [
+        { name: "Zuid-Holland",  
+        children: 
+        [
+            { name: "good", value: 8},
+            { name: "average", value: 15},
+            { name: "bad", value: 222}
+        ]
+    },
+        { name: "Zeeland",   children: 
+        [
+            { name: "good", value: 54},
+            { name: "average", value: 1},
+            { name: "bad", value: 333}
+        ] }  
+    ]
+    }
+    
+var zuidHolland = {
+    name: "Zuid-Holland",
+    children: [
+        {name: "Aardam",
+        children: [
+            {name: "good", value: 44 },
+            {name: "average", value: 44 },
+            {name: "bad", value: 546 } 
+        ]},
+        {name: "Bloklan",
+        children: [
+            {name: "good", value: 252 },
+            {name: "average", value: 55 },
+            {name: "bad", value: 15 } 
+        ]}
+
+    ]
+}
 var data = 	{
     name: "Nederland",	
     children: [
@@ -52,7 +91,10 @@ class Treemap extends Component {
     this.createTreemap()
   }
 
-  createTreemap(){
+  drawMap(data){
+    this.root = d3.hierarchy(data);
+    let svgGroup = d3.select('svg g')
+    svgGroup.selectAll("*").remove();
     let thiss = this
     var treemap = d3.treemap()
     treemap.tile(d3.treemapSquarify)
@@ -79,6 +121,45 @@ class Treemap extends Component {
   .attr('width', function(d) { return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
   .attr('class', d => thiss.getColorByName(d.data.name))
+
+  nodes
+  .append('text')
+  .attr('dx', 4)
+  .attr('dy', 14)
+  .text(function(d) {
+    return d.data.name;
+  })
+  }
+
+  createTreemap(){
+    let thiss = this
+    var treemap = d3.treemap()
+    treemap.tile(d3.treemapSquarify)
+
+    treemap.size([960, 570])
+    .paddingTop(20)
+    .paddingInner(2);
+
+    this.root.sum(function(d){
+        return d.value;
+    })
+
+    treemap(this.root);
+
+   let nodes = d3.select('svg g')
+   .selectAll('g')
+   .data(this.root.descendants())
+   .enter()
+   .append('g')
+   .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
+   .on('click', () => thiss.drawMap(zwnl))
+
+   nodes
+  .append('rect')
+  .attr('width', function(d) { return d.x1 - d.x0; })
+  .attr('height', function(d) { return d.y1 - d.y0; })
+  .attr('class', d => thiss.getColorByName(d.data.name))
+ 
 
   nodes
   .append('text')

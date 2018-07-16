@@ -66,18 +66,28 @@ const realJson = [
 
 ]
 
+const levels = [ "land", "region", "province", "city", "facility"];
+
 
 class Dashboard extends Component {
 
   constructor(props) {
     super(props);
 
+    this.state.level = 0 // default = land
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
   }
 
   componentDidMount() {
     this.generateTable()
   }
+
+  changeLevel(up){
+    let highCoef = up ? 1 : -1
+    let current = this.state.level 
+    this.setState({level: current + highCoef })
+  }
+
 
   async  generateRow(tbody, columns, node){
 
@@ -267,7 +277,7 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
-        <Treemap/>
+        <Treemap level={this.state.level}/>
     
       
     );
