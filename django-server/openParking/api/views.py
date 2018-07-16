@@ -57,6 +57,7 @@ class StaticView(generics.ListAPIView):
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
 
+
 class DynamicView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
@@ -67,8 +68,60 @@ class DynamicView(generics.ListAPIView):
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
 
+
+class CountryView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        country_code = self.kwargs['country_code']
+        return ParkingData.objects.filter(country_code=country_code)
+
+
+class RegionView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        regionName = self.kwargs['regionName']
+        return ParkingData.objects.filter(region=regionName)
+
+
+class ProvinceView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        provinceName = self.kwargs['provinceName']
+        return ParkingData.objects.filter(province=provinceName)
+
+
+class CityView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        cityName = self.kwargs['cityName']
+        return ParkingData.objects.filter(city=cityName)
+
+
+class OffstreetView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return ParkingData.objects.filter(facilityType="offstreet")
+
+
 @api_view(['GET'])
-def summaryView(request, country_code):
+def getMultipleStaticUrl(request, from_id, to_id):
+    static_jsons = []
+    for id in range(int(from_id), int(to_id)):
+        url = ParkingData.objects.get(
+            id=id).staticDataUrl
+        r = requests.get(url).json()
+        static_jsons.append(r)
+    return HttpResponse(json.dumps(static_jsons), content_type='application/json')
+
+
+@api_view(['GET'])
+def summaryCountryView(request, country_code):
     parkings = ParkingData.objects.get(
         country_code=country_code.lower)
     data = {"name": country_code,

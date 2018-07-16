@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import DetailsView, UuidView, getStaticUrl, RectangleView, \
-        StaticView, DynamicView, summaryView
+from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
+        CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
+        summaryCountryView, getStaticUrl, getMultipleStaticUrl
 
 
 urlpatterns = {
@@ -26,9 +27,27 @@ urlpatterns = {
     # all parkingplaces with dynamic data link: http://127.0.0.1:8000/parkingdata/dynamic/all/
     url(r'^parkingdata/dynamic/all/$',
         DynamicView.as_view(), name="dynamicParkings"),
+
+    # URLS for clickthrough thing
+    url(r'^parkingdata/country/(?P<country_code>.+)/$',
+        CountryView.as_view(), name="countryParkings"),
+    url(r'^parkingdata/region/(?P<regionName>.+)/$',
+        RegionView.as_view(), name="regionParkings"),
+    url(r'^parkingdata/province/(?P<provinceName>.+)/$',
+        ProvinceView.as_view(), name="ProvinceParkings"),
+    url(r'^parkingdata/city/(?P<cityName>.+)/$',
+        CityView.as_view(), name="stateParkings"),
+
+    url(r'^parkingdata/offstreet/all/$',
+        OffstreetView.as_view(), name="offstreetParkings"),
+
+    # testing purposes
+    url(r'^parkingdata/requests/(?P<from_id>[0-9]+),(?P<to_id>[0-9]+)/$',
+        getMultipleStaticUrl, name="multipleStaticUrl"),
+
     # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/nl/
-    url(r'^parkingdata/summary/(?P<country_code>[a-zA-Z0-9]+)/$',
-        summaryView, name="dynamicParkings")
+    url(r'^parkingdata/summary/country/(?P<country_code>[a-zA-Z0-9]+)/$',
+        summaryCountryView, name="countrySummary")
 }
 
 

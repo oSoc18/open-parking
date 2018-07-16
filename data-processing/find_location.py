@@ -14,6 +14,46 @@ def get_value(object, keys):
     except (KeyError, IndexError, TypeError):
         return None
 
+def get_address_fields(facility):
+    country_code = None
+    city = None
+    province = None
+    if "geoLocation" in facility and facility["geoLocation"] is not None:
+        print(facility["uuid"])
+        # Make sure not to make more than one request per second or so
+        if get_address_fields.last_request is None:
+            get_address_fields.last_request = time()
+        delay_between_requests = 1.1
+        now = time()
+        time_to_wait = delay_between_requests - (now - get_address_fields.last_request)
+        if time_to_wait > 0:
+            sleep(time_to_wait)
+        get_address_fields.last_request = now
+
+        request = "https://nominatim.openstreetmap.org/reverse?format=json&lat={}&lon={}".format(
+                facility["geoLocation"]["latitude"], facility["geoLocation"]["longitude"])
+        print(request)
+        result = requests.get(request)
+        if result.status_code == requests.codes.ok:
+            result = result.json()
+            if "address" in result:
+                country_code = result["address"]["country_code"]
+                if "city" in result["address"]:
+                    city = result["address"]["city"]
+                elif "city" in result["address"]:
+                    city = result["address"]["town"]
+                elif "suburb" in result["address"]:
+                    city = result["address"]["suburb"]
+                province = result["address"]["state"]
+
+    return {
+        "country_code": country_code,
+        "city": city,
+        "province": province
+    }
+
+get_address_fields.last_request = None
+
 def coord_to_coord(object):
     if isinstance(object, list):
         object = object[0]
@@ -85,6 +125,7 @@ fields_to_try = [
 
 file_list = [join(directory, f) for f in listdir(directory) if isfile(join(directory, f))]
 
+i = 0
 for filename in file_list:
     try:
         facility  = json.load(open(filename))
@@ -106,3 +147,10 @@ for filename in file_list:
 
         with open(filename, "w") as file:
             json.dump(facility, file, indent=2)
+
+    if "city" not in facility and facility["geoLocation"] is not None:
+        facility.update(get_address_fields(facility))
+        with open(filename, "w") as file:
+            json.dump(facility, file, indent=2)
+        print(i, "/", len(file_list))
+    i += 1
