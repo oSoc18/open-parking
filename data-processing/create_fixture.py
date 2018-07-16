@@ -3,6 +3,7 @@ from sys import argv
 from os import listdir
 from os.path import isfile, join
 
+
 def get_facility_type(facility):
     if facility["staticData"] is not None \
             and "specifications" in facility["staticData"] \
@@ -14,17 +15,35 @@ def get_facility_type(facility):
     else:
         return "offstreet"
 
+
+def get_region_name(facility):
+    if facility["province"] is not None:
+        if facility["province"] is "Noord-Holland" or facility["province"] is "Utrecht" or facility["province"] is "Flavoland":
+            return "Noordwest-Nederland"
+        else if facility["province"] is "Zuid-Holland" or facility["province"] is "Zeeland":
+            return "Zuidwest-Nederland"
+        else if facility["province"] is "Noord-Brabant" or facility["province"] is "Limburg":
+            return "Zuid-Nederland"
+        else if facility["province"] is "Gelderland" or facility["province"] is "Overijsel":
+            return "Oost-Nederland"
+        else if facility["province"] is "Groningen" or facility["province"] is "Friesland":
+            return "Noord-Nederland"
+        else return None
+    else return None
+
+
 input_directory = argv[1]
 output_filename = argv[2]
 
-file_list = [f for f in listdir(input_directory) if isfile(join(input_directory, f))]
+file_list = [f for f in listdir(input_directory)
+             if isfile(join(input_directory, f))]
 
 output_json = []
 
 print("Loading data from {}...".format(input_directory))
 pk = 1
 for filename in file_list:
-    facility  = json.load(open(join(input_directory, filename)))
+    facility = json.load(open(join(input_directory, filename)))
     output_json.append({
         "model": "api.parkingdata",
         "pk": pk,
@@ -39,6 +58,7 @@ for filename in file_list:
             "facilityType": get_facility_type(facility),
             "city": facility["city"] if "city" in facility else None,
             "province": facility["province"] if "province" in facility else None,
+            "region": get_region_name(facility),
             "country_code": facility["country_code"] if "country_code" in facility else None
         }
     })

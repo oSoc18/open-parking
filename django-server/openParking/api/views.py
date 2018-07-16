@@ -77,6 +77,14 @@ class CountryView(generics.ListAPIView):
         return ParkingData.objects.filter(country_code=country_code)
 
 
+class RegionView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        regionName = self.kwargs['regionName']
+        return ParkingData.objects.filter(country_code=country_code)
+
+
 class ProvinceView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 

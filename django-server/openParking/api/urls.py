@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, CountryView, ProvinceView, CityView, OffstreetView
+from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, CountryView, RegionView, ProvinceView, CityView, OffstreetView
 from .views import getStaticUrl, getMultipleStaticUrl
 
 
@@ -30,6 +30,8 @@ urlpatterns = {
     # URLS for clickthrough thing
     url(r'^parkingdata/country/(?P<country_code>.+)/$',
         CountryView.as_view(), name="countryParkings"),
+    url(r'^parkingdata/region/(?P<regionName>.+)/$',
+        RegionView.as_view(), name="regionParkings"),
     url(r'^parkingdata/province/(?P<provinceName>.+)/$',
         ProvinceView.as_view(), name="ProvinceParkings"),
     url(r'^parkingdata/city/(?P<cityName>.+)/$',
