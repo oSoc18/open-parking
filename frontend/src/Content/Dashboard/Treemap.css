@@ -11,16 +11,16 @@ svg.TreemapData {
 
 .badBG {
 
-    fill: #ca001f;
+    fill: #d7181d;
     opacity: 1.0;
 }
 
 .avgBG{
-    fill: #bab110;
+    fill: #fbc89b;
     opacity: 1.0;
 }
 
 .goodBG{
-    fill: #22a2a8;
+    fill: #92bfdc;
     opacity: 1.0;
 }

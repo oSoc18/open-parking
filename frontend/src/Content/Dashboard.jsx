@@ -76,11 +76,12 @@ class Dashboard extends Component {
 
    
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
-    this.state = ({level: 0})  // default = land
+    this.state = ({level: 0, treemapData: null})  // default = land
   }
 
   componentDidMount() {
-    this.generateTable()
+    //this.generateTable()
+    this.setNodesTreemap()
   }
 
   changeLevel(up){
@@ -194,7 +195,7 @@ class Dashboard extends Component {
        
       let allP = []
 
-      for(let i = 1; i < 200; i++){
+      for(let i = 1; i < 0; i++){
         let url = "http://localhost:8000/parkingdata"
         let resultJson = null
         url += "/id/" + i + "?format=json"
@@ -268,6 +269,35 @@ class Dashboard extends Component {
         return <div/>
       }
     }
+
+    getTreemapNode(){}
+
+     /**
+     * TO DO: Catch wrong response / time out
+     */
+     setNodesTreemap(){
+
+       
+      let allP = []
+      let thiss = this
+      let url = "http://localhost:8000/parkingdata/summary/country/nl/"
+      let resultJson = null
+       fetch(url) 
+        .then(response => response.json())
+        .then(json => {
+          thiss.setTreeMap(json)
+      }    )
+
+    }
+
+    setTreeMap(json){
+      if(this.state.treemapData !== json)
+          this.setState({treemapData: json})
+    }
+
+
+
+
   
 
   render() {
@@ -278,7 +308,7 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
-        <Treemap level={this.state.level}/>
+        <Treemap level={this.state.level} data={this.state.treemapData}/>
     
       
     );

@@ -84,15 +84,23 @@ class Treemap extends Component {
   constructor(props){
     super(props);
     this.state = {typeView: "" };
-    this.root = d3.hierarchy(data);
+    //this.root = d3.hierarchy(data);
   }
 
   componentDidMount(){
-    this.createTreemap()
+    if(this.props.data){
+        this.root = d3.hierarchy(this.props.data);
+        this.drawMap(this.root)
+    }
   }
 
   drawMap(data){
-    this.root = d3.hierarchy(data);
+      this.root = data
+
+      if(!this.root)
+        return
+
+ 
     let svgGroup = d3.select('svg g')
     svgGroup.selectAll("*").remove();
     let thiss = this
@@ -152,13 +160,14 @@ class Treemap extends Component {
    .enter()
    .append('g')
    .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
-   .on('click', () => thiss.drawMap(zwnl))
+   .on('click', () => alert("HIER"))
 
    nodes
   .append('rect')
   .attr('width', function(d) { return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
   .attr('class', d => thiss.getColorByName(d.data.name))
+  .on('click', d => alert(d.data.name)  )
  
 
   nodes
@@ -174,7 +183,25 @@ getColorByName(name){
     return colorDict[name]
 }  
 
+listenForZooms(name){
+
+    //this.props.function
+}
+
   render() {
+
+
+   /* if(this.props.data && !(this.root) ){
+        this.root = d3.hierarchy(this.props.data);
+       // this.setState({force: "State"})
+       console.log("TEST")
+        
+    }*/
+
+    if(this.props.data){
+        this.drawMap(d3.hierarchy(this.props.data))
+    }
+
 
     return (
       <svg className="TreemapData" >
