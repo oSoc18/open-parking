@@ -17,16 +17,16 @@ def get_facility_type(facility):
 
 
 def get_region_name(facility):
-    if facility["province"] is not None:
+    if "province" in facility and facility["province"] is not None:
         if facility["province"] in ("Noord-Holland", "Utrecht", "Flavoland"):
             return "Noordwest-Nederland"
-        else if facility["province"] in ("Zuid-Holland", "Zeeland"):
+        elif facility["province"] in ("Zuid-Holland", "Zeeland"):
             return "Zuidwest-Nederland"
-        else if facility["province"] in ("Noord-Brabant", "Limburg"):
+        elif facility["province"] in ("Noord-Brabant", "Limburg"):
             return "Zuid-Nederland"
-        else if facility["province"] in ( "Gelderland", "Overijsel"):
+        elif facility["province"] in ("Gelderland", "Overijsel"):
             return "Oost-Nederland"
-        else if facility["province"] in ("Groningen", "Friesland"):
+        elif facility["province"] in ("Groningen", "Friesland"):
             return "Noord-Nederland"
         else:
             return None
