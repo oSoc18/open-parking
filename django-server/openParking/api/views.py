@@ -42,7 +42,9 @@ def getStaticUrl(request, uuid):
 
 
 class RectangleView(generics.ListAPIView):
-    """Get all instances located in a rectangle defined by two points."""
+    """
+    Get all instances located in a rectangle defined by two points.
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -55,6 +57,9 @@ class RectangleView(generics.ListAPIView):
 
 
 class StaticView(generics.ListAPIView):
+    """
+    Get all the parkingplaces without dynamic data
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -66,17 +71,19 @@ class StaticView(generics.ListAPIView):
 
 
 class DynamicView(generics.ListAPIView):
+    """
+    Get all the parkingplaces with dynamic data
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        with a dynamic data link.
-        """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
 
 
 class CountryView(generics.ListAPIView):
+    """
+    Get all the parkingplaces from a specified country
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -85,6 +92,9 @@ class CountryView(generics.ListAPIView):
 
 
 class RegionView(generics.ListAPIView):
+    """
+    Get all the parkingplaces from a specified region
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -93,6 +103,9 @@ class RegionView(generics.ListAPIView):
 
 
 class ProvinceView(generics.ListAPIView):
+    """
+    Get all the parkingplaces from a specified province
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -101,6 +114,9 @@ class ProvinceView(generics.ListAPIView):
 
 
 class CityView(generics.ListAPIView):
+    """
+    Get all the parkingplaces from a specified city
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -109,6 +125,9 @@ class CityView(generics.ListAPIView):
 
 
 class OffstreetView(generics.ListAPIView):
+    """
+    Get all the offstreet parkings
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -118,6 +137,9 @@ class OffstreetView(generics.ListAPIView):
 
 @api_view(['GET'])
 def getMultipleStaticUrl(request, from_id, to_id):
+    """
+    Get the json of all parkingplaces (from_id to to_id)
+    """
     static_jsons = []
     for id in range(int(from_id), int(to_id)):
         url = ParkingData.objects.get(
@@ -130,12 +152,12 @@ def is_not_none(value, key, is_array=False):
     """Checks whether a value is contained in the object, and that it is not None."""
     return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
 
-@api_view(['GET'])
-def summaryCountryView(request, country_code):
-    parkings = ParkingData.objects.filter(country_code=country_code.lower())
-    regions = {}
+def generic_summary_view(field_name, area_name, lower_field_name):
+    parkings = ParkingData.objects.filter(**{field_name: area_name})
+    areas = {}
     for parking in parkings:
-        regions.setdefault(parking.region, {"good": 0, "average": 0, "bad": 0})
+        lower_field = getattr(parking, lower_field_name)
+        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
         numberFields = 0
         # Checks geolocation fields
         if parking.longitude is not None and parking.latitude is not None:
@@ -158,18 +180,17 @@ def summaryCountryView(request, country_code):
             mark = "good"
         elif numberFields > 3:
             mark = "average"
-        regions[parking.region][mark] += 1
-
+        areas[lower_field][mark] += 1
 
     dump = json.dumps({
-        "name": country_code,
+        "name": area_name,
         "children": [{
-            "name": region,
+            "name": area,
             "children":[
-                {"name": "good", "value": regions[region]["good"]},
-                {"name": "average", "value": regions[region]["average"]},
-                {"name": "bad", "value": regions[region]["bad"]}
+                {"name": "good", "value": areas[area]["good"]},
+                {"name": "average", "value": areas[area]["average"]},
+                {"name": "bad", "value": areas[area]["bad"]}
             ]
-        } for region in regions]
+        } for area in areas]
     })
     return HttpResponse(dump, content_type='application/json')
