@@ -2,7 +2,8 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
         CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
-        summaryCountryView, getStaticUrl, getMultipleStaticUrl
+        generic_summary_view, getStaticUrl, getMultipleStaticUrl
+from rest_framework.decorators import api_view
 
 
 urlpatterns = {
@@ -45,9 +46,16 @@ urlpatterns = {
     url(r'^parkingdata/requests/(?P<from_id>[0-9]+),(?P<to_id>[0-9]+)/$',
         getMultipleStaticUrl, name="multipleStaticUrl"),
 
-    # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/nl/
-    url(r'^parkingdata/summary/country/(?P<country_code>[a-zA-Z0-9]+)/$',
-        summaryCountryView, name="countrySummary")
+    # In the following
+    # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/country/nl/
+    url(r'^parkingdata/summary/country/(?P<country_code>.+)/$',
+        api_view(["GET"])(lambda request, country_code: generic_summary_view("country_code", country_code, "region")), name="countrySummary"),
+    # Summary of the region-level data: http://127.0.0.1:8000/parkingdata/summary/region/Zuid-Nederland/
+    url(r'^parkingdata/summary/region/(?P<region>.+)/$',
+        api_view(["GET"])(lambda request, region: generic_summary_view("region", region, "province")), name="regionSummary"),
+    # Summary of the province-level data: http://127.0.0.1:8000/parkingdata/summary/province/Zeeland/
+    url(r'^parkingdata/summary/province/(?P<province>.+)/$',
+        api_view(["GET"])(lambda request, province: generic_summary_view("province", province, "city")), name="provinceSummary")
 }
 
 

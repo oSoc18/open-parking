@@ -130,12 +130,13 @@ def is_not_none(value, key, is_array=False):
     """Checks whether a value is contained in the object, and that it is not None."""
     return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
 
-@api_view(['GET'])
-def summaryCountryView(request, country_code):
-    parkings = ParkingData.objects.filter(country_code=country_code.lower())
-    regions = {}
+def generic_summary_view(field_name, area_name, lower_field_name):
+    parkings = ParkingData.objects.filter(**{field_name: area_name})
+    areas = {}
+    print(parkings)
     for parking in parkings:
-        regions.setdefault(parking.region, {"good": 0, "average": 0, "bad": 0})
+        lower_field = getattr(parking, lower_field_name)
+        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
         numberFields = 0
         # Checks geolocation fields
         if parking.longitude is not None and parking.latitude is not None:
@@ -158,18 +159,17 @@ def summaryCountryView(request, country_code):
             mark = "good"
         elif numberFields > 3:
             mark = "average"
-        regions[parking.region][mark] += 1
-
+        areas[lower_field][mark] += 1
 
     dump = json.dumps({
-        "name": country_code,
+        "name": area_name,
         "children": [{
-            "name": region,
+            "name": area,
             "children":[
-                {"name": "good", "value": regions[region]["good"]},
-                {"name": "average", "value": regions[region]["average"]},
-                {"name": "bad", "value": regions[region]["bad"]}
+                {"name": "good", "value": areas[area]["good"]},
+                {"name": "average", "value": areas[area]["average"]},
+                {"name": "bad", "value": areas[area]["bad"]}
             ]
-        } for region in regions]
+        } for area in areas]
     })
     return HttpResponse(dump, content_type='application/json')
