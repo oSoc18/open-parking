@@ -123,14 +123,14 @@ class Treemap extends Component {
    .enter()
    .append('g')
    .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
-   .on('click', d => thiss.listenForZooms("region/" + d.data.name))
+   .on('click', d => thiss.listenForZooms( d.data.name))
 
    nodes
   .append('rect')
   .attr('width', function(d) { return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
   .attr('class', d => thiss.getColorByName(d.data.name))
-  .on('click', d => thiss.listenForZooms("region/" + d.data.name))
+  //.on('click', d => thiss.listenForZooms(d.data.name))
 
   nodes
   .append('text')
@@ -187,9 +187,9 @@ getColorByName(name){
 
 listenForZooms(name){
 
-    alert(name)
     if(this.props.onZoomChange){
         this.props.onZoomChange(name)
+    
     }
 }
 

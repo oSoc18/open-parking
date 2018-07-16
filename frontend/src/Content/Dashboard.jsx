@@ -66,13 +66,14 @@ const realJson = [
 
 ]
 
-const levels = [ "land", "region", "province", "city", "facility"];
+const levels = [ "country", "region", "province", "city", "facility"];
 
 
 class Dashboard extends Component {
 
   constructor(props) {
     super(props);
+    this.level = 0
 
    
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
@@ -152,8 +153,10 @@ class Dashboard extends Component {
     return (v!== "[]" )
   }
 
-  onZoomChange(){
-    let sub = "region/Noordwest-Nederland"
+  onZoomChange(name){
+    let levelIndex = ++(this.level)
+    alert(this.level)
+    let sub = levels[levelIndex] + "/" + name
     let url = "http://localhost:8000/parkingdata/summary/" + sub
     let thiss = this
     fetch(url) 
@@ -307,7 +310,7 @@ class Dashboard extends Component {
     }
 
     onZoomChange2(name){
-        this.onZoomChange()
+        this.onZoomChange(name)
     }
 
   render() {
