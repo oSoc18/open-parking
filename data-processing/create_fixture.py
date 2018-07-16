@@ -18,18 +18,20 @@ def get_facility_type(facility):
 
 def get_region_name(facility):
     if facility["province"] is not None:
-        if facility["province"] is "Noord-Holland" or facility["province"] is "Utrecht" or facility["province"] is "Flavoland":
+        if facility["province"] in ("Noord-Holland", "Utrecht", "Flavoland"):
             return "Noordwest-Nederland"
-        else if facility["province"] is "Zuid-Holland" or facility["province"] is "Zeeland":
+        else if facility["province"] in ("Zuid-Holland", "Zeeland"):
             return "Zuidwest-Nederland"
-        else if facility["province"] is "Noord-Brabant" or facility["province"] is "Limburg":
+        else if facility["province"] in ("Noord-Brabant", "Limburg"):
             return "Zuid-Nederland"
-        else if facility["province"] is "Gelderland" or facility["province"] is "Overijsel":
+        else if facility["province"] in ( "Gelderland", "Overijsel"):
             return "Oost-Nederland"
-        else if facility["province"] is "Groningen" or facility["province"] is "Friesland":
+        else if facility["province"] in ("Groningen", "Friesland"):
             return "Noord-Nederland"
-        else return None
-    else return None
+        else:
+            return None
+    else:
+        return None
 
 
 input_directory = argv[1]
