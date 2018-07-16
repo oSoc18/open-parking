@@ -4,6 +4,23 @@
 }
 
 #mapid{
-    height: 100vh;
-    width: 100vw;
+    height: 95vh;
+    width: 84vw;
+}
+
+/*fix pls*/
+#layers{
+    background: white;
+
+    position: fixed;
+
+    top: 50px;
+
+    right: 20px;
+
+    z-index: 400;
+
+    width: 125px;
+
+    height: 60px;
 }
