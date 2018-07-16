@@ -8,7 +8,9 @@ from rest_framework.decorators import api_view
 
 
 class DetailsView(generics.RetrieveAPIView):
-    """Get one instance from its ID."""
+    """
+    Get a detailed view of a parking by its ID
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -17,7 +19,9 @@ class DetailsView(generics.RetrieveAPIView):
 
 
 class UuidView(generics.ListAPIView):
-    """ Get an instance by its UUID."""
+    """
+    Get a detailed view of a parking by its UUID
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -27,6 +31,9 @@ class UuidView(generics.ListAPIView):
 
 @api_view(['GET'])
 def getStaticUrl(request, uuid):
+    """
+    Get the info of the static URL of a parking with a specified UUID
+    """
     url = ParkingData.objects.get(
         uuid=uuid).staticDataUrl
     r = requests.get(url)
@@ -57,6 +64,7 @@ class StaticView(generics.ListAPIView):
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
 
+
 class DynamicView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
@@ -66,3 +74,102 @@ class DynamicView(generics.ListAPIView):
         with a dynamic data link.
         """
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
+
+
+class CountryView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        country_code = self.kwargs['country_code']
+        return ParkingData.objects.filter(country_code=country_code)
+
+
+class RegionView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        regionName = self.kwargs['regionName']
+        return ParkingData.objects.filter(region=regionName)
+
+
+class ProvinceView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        provinceName = self.kwargs['provinceName']
+        return ParkingData.objects.filter(province=provinceName)
+
+
+class CityView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        cityName = self.kwargs['cityName']
+        return ParkingData.objects.filter(city=cityName)
+
+
+class OffstreetView(generics.ListAPIView):
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+
+        return ParkingData.objects.filter(facilityType="offstreet")
+
+
+@api_view(['GET'])
+def getMultipleStaticUrl(request, from_id, to_id):
+    static_jsons = []
+    for id in range(int(from_id), int(to_id)):
+        url = ParkingData.objects.get(
+            id=id).staticDataUrl
+        r = requests.get(url).json()
+        static_jsons.append(r)
+    return HttpResponse(json.dumps(static_jsons), content_type='application/json')
+
+def is_not_none(value, key, is_array=False):
+    """Checks whether a value is contained in the object, and that it is not None."""
+    return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
+
+@api_view(['GET'])
+def summaryCountryView(request, country_code):
+    parkings = ParkingData.objects.filter(country_code=country_code.lower())
+    regions = {}
+    for parking in parkings:
+        regions.setdefault(parking.region, {"good": 0, "average": 0, "bad": 0})
+        numberFields = 0
+        # Checks geolocation fields
+        if parking.longitude is not None and parking.latitude is not None:
+            numberFields += 1
+
+        # Dive in static data
+        if parking.staticData is not None:
+            staticData = json.loads(parking.staticData)
+            if staticData is not None:
+                for field in ("specifications", "tariffs", "contactPersons", "openingHours"):
+                    if is_not_none(staticData, field, True):
+                        numberFields += 1
+                if is_not_none(staticData, "specification", True):
+                    specs = staticData["specifications"]
+                    for field in ("capacity", "minimumHeightInMeters", "disabledAccess"):
+                        if is_not_none(specs, field):
+                            numberFields += 1
+        mark = "bad"
+        if numberFields > 6:
+            mark = "good"
+        elif numberFields > 3:
+            mark = "average"
+        regions[parking.region][mark] += 1
+
+
+    dump = json.dumps({
+        "name": country_code,
+        "children": [{
+            "name": region,
+            "children":[
+                {"name": "good", "value": regions[region]["good"]},
+                {"name": "average", "value": regions[region]["average"]},
+                {"name": "bad", "value": regions[region]["bad"]}
+            ]
+        } for region in regions]
+    })
+    return HttpResponse(dump, content_type='application/json')
