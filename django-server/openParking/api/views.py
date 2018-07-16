@@ -8,7 +8,9 @@ from rest_framework.decorators import api_view
 
 
 class DetailsView(generics.RetrieveAPIView):
-    """Get one instance from its ID."""
+    """
+    Get a detailed view of a parking by its ID
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -17,7 +19,9 @@ class DetailsView(generics.RetrieveAPIView):
 
 
 class UuidView(generics.ListAPIView):
-    """ Get an instance by its UUID."""
+    """
+    Get a detailed view of a parking by its UUID
+    """
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
@@ -27,6 +31,9 @@ class UuidView(generics.ListAPIView):
 
 @api_view(['GET'])
 def getStaticUrl(request, uuid):
+    """
+    Get the info of the static URL of a parking with a specified UUID
+    """
     url = ParkingData.objects.get(
         uuid=uuid).staticDataUrl
     r = requests.get(url)
