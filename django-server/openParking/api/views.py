@@ -82,7 +82,7 @@ class RegionView(generics.ListAPIView):
 
     def get_queryset(self):
         regionName = self.kwargs['regionName']
-        return ParkingData.objects.filter(country_code=country_code)
+        return ParkingData.objects.filter(region=regionName)
 
 
 class ProvinceView(generics.ListAPIView):
