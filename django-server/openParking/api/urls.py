@@ -1,14 +1,9 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
-    << << << < HEAD
-    CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
-        summaryCountryView, getStaticUrl, getMultipleStaticUrl
-== == == =
     CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
         generic_summary_view, getStaticUrl, getMultipleStaticUrl
 from rest_framework.decorators import api_view
->>>>>> > master
 
 
 urlpatterns = {
