@@ -117,7 +117,8 @@ class Treemap extends Component {
 
     treemap(this.root);
 
-   let nodes = d3.select('svg g')
+    // "parent"-rectangles
+   let nodes = d3.select('svg g') 
    .selectAll('g')
    .data(this.root.descendants())
    .enter()
@@ -125,61 +126,71 @@ class Treemap extends Component {
    .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
    .on('click', d => thiss.listenForZooms( d.data.name))
 
-   nodes
+   let dict = {}
+   //children
+   let childnodes = nodes
   .append('rect')
-  .attr('width', function(d) { return d.x1 - d.x0; })
+  .attr('width', function(d) { 
+    dict[d.data.name] = d.x1 - d.x0  
+    return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
   .attr('class', d => thiss.getColorByName(d.data.name))
+  
   //.on('click', d => thiss.listenForZooms(d.data.name))
 
   nodes
   .append('text')
   .attr('dx', 4)
   .attr('dy', 14)
-  .text(function(d) {
-    return d.data.name;
-  })
-  }
-
-  createTreemap(){
-    let thiss = this
-    var treemap = d3.treemap()
-    treemap.tile(d3.treemapSquarify)
-
-    treemap.size([960, 570])
-    .paddingTop(20)
-    .paddingInner(2);
-
-    this.root.sum(function(d){
-        return d.value;
-    })
-
-    treemap(this.root);
-
-   let nodes = d3.select('svg g')
-   .selectAll('g')
-   .data(this.root.descendants())
-   .enter()
-   .append('g')
-   .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
-   .on('click', () => alert("HIER"))
-
-   nodes
-  .append('rect')
-  .attr('width', function(d) { return d.x1 - d.x0; })
+  .attr('width', function(d) { return dict[d]; })
   .attr('height', function(d) { return d.y1 - d.y0; })
-  .attr('class', d => thiss.getColorByName(d.data.name))
-  .on('click', d => alert(d.name)  )
- 
-
-  nodes
-  .append('text')
-  .attr('dx', 4)
-  .attr('dy', 14)
   .text(function(d) {
-    return d.data.name;
-  })
-  }
+    
+      if(["bad", "average", "good"].indexOf(d.data.name) < 0){
+        
+        let dataname = d.data.name
+        if(d.data.name === null)
+            dataname = "Unknown"
+        while(thiss.textSize(dataname).width > dict[d.data.name]){
+            dataname = dataname.substring(0, dataname.length - 1)
+        }
+        return dataname;
+      }
+       else 
+            return ""
+  })/*.each(function(d){
+      let width = dict[d]  
+      let padding = 0
+    var self = d3.select(this),
+    textLength = self.node().getComputedTextLength(),
+    text = self.text();
+while (textLength > (width - 2 * padding) && text.length > 0) {
+    text = text.slice(0, -1);
+    self.text(text + '...');
+    textLength = self.node().getComputedTextLength();*/
+}
+  
+
+wrap(width, padding) {
+    var self = d3.select(this),
+        textLength = self.node().getComputedTextLength(),
+        text = self.text();
+    while (textLength > (width - 2 * padding) && text.length > 0) {
+        text = text.slice(0, -1);
+        self.text(text + '...');
+        textLength = self.node().getComputedTextLength();
+    }
+} 
+
+textSize(text) {
+    if (!d3) return;
+    var container = d3.select('body').append('div').append('svg');
+    container.append('text').attr( "x", -0).attr( "y", -0 ).text(text);
+    var size = container.node().getBBox();
+    container.remove();
+    return { width: size.width, height: size.height };
+}
+
 
 getColorByName(name){
     return colorDict[name]

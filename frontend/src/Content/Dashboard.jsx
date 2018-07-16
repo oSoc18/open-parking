@@ -155,7 +155,6 @@ class Dashboard extends Component {
 
   onZoomChange(name){
     let levelIndex = ++(this.level)
-    alert(this.level)
     let sub = levels[levelIndex] + "/" + name
     let url = "http://localhost:8000/parkingdata/summary/" + sub
     let thiss = this
