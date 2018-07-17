@@ -38,7 +38,7 @@ class SideBar extends Component {
         return (
             // side bar
             // content
-            
+
             <div className="sideBar">
                 <h1 className="title">Open Parking</h1>
                 <img id="logo" src={LogoImg} alt="logo" width="31" height="40"></img>
@@ -73,27 +73,27 @@ class SideBar extends Component {
                 <h4 className="title">Available information</h4>
 
                 <div>
-                    <input type="checkbox" id="capacity" name="capacity"
+                    <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
                         value="capacity" />
                     <label for="capacity">Capacity</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="tariffs" name="tariffs"
+                    <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
                         value="tariffs" />
                     <label for="tariffs">Tariffs</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="restrictions" name="restrictions"
+                    <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
                         value="restrictions" />
                     <label for="restrictions">Restrictions</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="openingHours" name="openingHours"
+                    <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
                         value="openingHours" />
                     <label for="openingHours">Opening hours</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="contactData" name="contactData"
+                    <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
                         value="contactData" />
                     <label for="contactData">Contact data</label>
                 </div>
