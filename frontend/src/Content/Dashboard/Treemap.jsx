@@ -160,10 +160,11 @@ wrap(width, padding) {
 
 textSize(text) {
     if (!d3) return;
-    var container = d3.select('body').append('div').append('svg');
+    var container0 = d3.select('body').append('div')
+    var container = container0.append('svg');
     container.append('text').attr( "x", -0).attr( "y", -0 ).text(text);
     var size = container.node().getBBox();
-    container.remove();
+    container0.remove();
     return { width: size.width, height: size.height };
 }
 
