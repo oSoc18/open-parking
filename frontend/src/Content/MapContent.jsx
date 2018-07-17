@@ -177,7 +177,9 @@ class MapContent extends Component {
 
     render() {
 
-            this.vis = this.props.filters.visFacilities // get visible facilities    
+            this.vis = this.props.filters.visFacilities // get visible facilities
+            
+            //this.updateOnOff
             
     
         return (

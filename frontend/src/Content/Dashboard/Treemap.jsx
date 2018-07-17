@@ -131,6 +131,7 @@ class Treemap extends Component {
    .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
    .on('click', d => thiss.listenForZooms( d.data.name))
    // onhover --> border thick
+   
 
    let dict = {}
    //children
