@@ -32,7 +32,7 @@ class UuidView(generics.ListAPIView):
 
 
 @api_view(['GET'])
-def getStaticUrl(request, uuid):
+def get_static_url(request, uuid):
     """
     Get the info of the static URL of a parking with a specified UUID
     """
@@ -145,12 +145,11 @@ class OffstreetView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-
         return ParkingData.objects.filter(facilityType="offstreet")
 
 
 @api_view(['GET'])
-def getMultipleStaticUrl(request, from_id, to_id):
+def get_multiple_static_url(request, from_id, to_id):
     """
     Get the json of all parkingplaces (from_id to to_id)
     """
@@ -175,7 +174,6 @@ def generic_summary_view(field_name, area_name, lower_field_name):
         "children": [{
             "name": area,
             "children": [
-                {"name": "onstreet", "value": areas[area]["onstreet"]},
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
