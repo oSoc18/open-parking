@@ -3,16 +3,6 @@ import './SideBar.css';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
-
-const nodes = [{
-    value: 'Drenthe',
-    label: 'Drenthe',
-    children: [
-        { value: 'Assen', label: 'Assen' },
-        { value: 'Coevorden', label: 'Coevorden' },
-    ],
-}];
-
 class SideBar extends Component {
 
     constructor() {

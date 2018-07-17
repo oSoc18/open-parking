@@ -250,7 +250,7 @@ drawMapView(data){
     return (
        <div>
            <Table className="heatMap" width={0}/>
-      <svg className="TreemapData" >
+      <svg className="TreemapData"  >
         
       </svg> 
       </div>
@@ -264,10 +264,8 @@ drawMapView(data){
     var table = d3.select('.heatMap')
     var thead = table.append('thead') // create the header
     var tbody = table.append('tbody');
-   
-    var thead = table.append('thead') // create the header
-    var tbody = table.append('tbody');
-   
+    d3.select('svg').selectAll("*").remove()
+
 
     let columns = ["name"].concat(this.requiredAttr)
 

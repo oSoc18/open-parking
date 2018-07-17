@@ -14,16 +14,11 @@ class App extends Component {
     this.state = { mainContent: "map"}
   }
 
-  handleNavigation(value){
-    this.setState({mainContent: value})
-
-
-  }
 
   render() {
     return (
       <div className="App">
-        <MainNav onChangeContent={this.handleNavigation.bind(this)} />
+     
 
 
 <div>
