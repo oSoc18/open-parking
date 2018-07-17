@@ -14,20 +14,20 @@ class App extends Component {
     this.state = { mainContent: "map"}
   }
 
-  handleNavigation(value){
-    this.setState({mainContent: value})
-
+  onOptionsChanged(values){
+    alert(values)
 
   }
+
 
   render() {
     return (
       <div className="App">
-        <MainNav onChangeContent={this.handleNavigation.bind(this)} />
+     
 
 
 <div>
-        <SideBar  /> 
+        <SideBar onChangeOptions={this.onOptionsChanged.bind(this)} /> 
         <MainContent tab={this.state.mainContent} /> 
         </div>
       </div>
