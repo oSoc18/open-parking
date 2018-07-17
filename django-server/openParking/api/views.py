@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.response import Response
 from .serializers import ParkingDataSerializer
 from .models import ParkingData
 import requests
@@ -6,6 +7,7 @@ import json
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
+import pprint
 
 class DetailsView(generics.RetrieveAPIView):
     """
@@ -53,7 +55,9 @@ class RectangleView(generics.ListAPIView):
         northeast_lng = float(self.kwargs['northeast_lng'])
         northeast_lat = float(self.kwargs['northeast_lat'])
 
-        return ParkingData.objects.filter(longitude__gte=southwest_lng, latitude__gte=southwest_lat, longitude__lte=northeast_lng, latitude__lte=northeast_lat)
+        return ParkingData.objects.filter(longitude__gte=southwest_lng,
+                latitude__gte=southwest_lat, longitude__lte=northeast_lng,
+                latitude__lte=northeast_lat)
 
 
 class StaticView(generics.ListAPIView):
@@ -158,47 +162,20 @@ def getMultipleStaticUrl(request, from_id, to_id):
         static_jsons.append(r)
     return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
-
-def is_not_none(value, key, is_array=False):
-    """Checks whether a value is contained in the object, and that it is not None."""
-    return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
-
-
 def generic_summary_view(field_name, area_name, lower_field_name):
     parkings = ParkingData.objects.filter(**{field_name: area_name})
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
-        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
-        numberFields = 0
-        # Checks geolocation fields
-        if parking.longitude is not None and parking.latitude is not None:
-            numberFields += 1
-
-        # Dive in static data
-        if parking.staticData is not None:
-            staticData = json.loads(parking.staticData)
-            if staticData is not None:
-                for field in ("tariffs", "contactPersons", "openingHours"):
-                    if is_not_none(staticData, field, True):
-                        numberFields += 1
-                if is_not_none(staticData, "specification", True):
-                    specs = staticData["specifications"]
-                    for field in ("capacity", "minimumHeightInMeters"):
-                        if is_not_none(specs, field):
-                            numberFields += 1
-        mark = "bad"
-        if numberFields > 5:
-            mark = "good"
-        elif numberFields > 2:
-            mark = "average"
-        areas[lower_field][mark] += 1
+        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0, "onstreet": 0})
+        areas[lower_field][parking.mark] += 1
 
     dump = json.dumps({
         "name": area_name,
         "children": [{
             "name": area,
             "children": [
+                {"name": "onstreet", "value": areas[area]["onstreet"]},
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
