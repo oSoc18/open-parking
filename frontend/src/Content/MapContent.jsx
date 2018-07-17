@@ -7,6 +7,9 @@ import './MapContent.css'
 
 class MapContent extends Component {
 
+    constructor(props){
+        super(props)
+    }
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
@@ -42,6 +45,7 @@ class MapContent extends Component {
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
         if (!$("#onstreet").prop("checked")) {
+
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].facilityType === "onstreet") {
                     delete markersToAdd[i];
@@ -173,6 +177,9 @@ class MapContent extends Component {
 
     render() {
 
+            this.vis = this.props.filters.visFacilities // get visible facilities    
+            
+    
         return (
 
             <div id="mapParent">

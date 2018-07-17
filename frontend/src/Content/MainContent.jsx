@@ -24,11 +24,15 @@ class MainContent extends Component {
     let tab = "map"
     if(this.state.tab){
       tab = this.state.tab
-         }
-    let contentVis = (<MapContent/>)
-    if(tab === "dash"){
-      contentVis = <Dashboard/>
     }
+
+    //lol, i know it's ugly
+    let contentVis = (<MapContent filters={this.props.filters}/>)
+    if(tab === "dash"){
+      contentVis = <Dashboard filters={this.props.filters}/>
+    }
+
+
     return (
       <div className="MainContent" >
     

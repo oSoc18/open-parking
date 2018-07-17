@@ -8,7 +8,7 @@ class SideBar extends Component {
 
     constructor(props) {
         super(props);
-
+        this.initFilters()
         this.state = {
             checked: [],
             expanded: [],
@@ -16,18 +16,40 @@ class SideBar extends Component {
         this.handleVisibleFacilities = this.handleVisibleFacilities.bind(this);
     }
 
+    initFilters(){
+        let jsn = {}
+        this.visibleFacilities =  ["parkAndRide", "residentsOnly", "garage", "company", "otherPlaces"]
+    
+        
+
+    
+    }
+
     handleVisibleFacilities(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+        let temp = this.visibleFacilities
+       
+            
 
-        this.setState({
-            [name]: value
-        });
+            
+                var index = temp.indexOf(name);    // <-- Not supported in <IE9
+                if (index !== -1) {
+                    temp.splice(index, 1);
+                }
+            
+            else{
+                temp.push(name)
+            }
+            this.visibleFacilities = temp
+        
 
 
-        if(this.props.onChangeOptions)
-            this.props.onChangeOptions(name)
+        if(this.props.onChangeVisFacilities)
+            this.props.onChangeVisFacilities(temp)
+
+    
       }
 
     renderedSideBar() {
@@ -46,27 +68,27 @@ class SideBar extends Component {
                 <h4 className="title">Visible facilities</h4>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="parkAndRide" name="parkAndRide"
-                        value="parkAndRide" onChange={this.handleVisibleFacilities} />
+                        value="parkAndRide" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="residentsOnly" name="residentsOnly"
-                        value="residentsOnly" onChange={this.handleVisibleFacilities} />
+                        value="residentsOnly" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="residentsOnly">Residents only</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
-                        value="garage" onChange={this.handleVisibleFacilities} />
+                        value="garage" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="garage">Garage</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="company" name="company"
-                        value="company" onChange={this.handleVisibleFacilities} />
+                        value="company" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="company">Company</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
-                        value="otherPlaces" onChange={this.handleVisibleFacilities} />
+                        value="otherPlaces" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="otherPlaces">Other places</label>
                 </div>
 
