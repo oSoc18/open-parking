@@ -167,15 +167,15 @@ def generic_summary_view(field_name, area_name, lower_field_name):
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
-        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
-        mark = get_mark(parking)
-        areas[lower_field][mark] += 1
+        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0, "onstreet": 0})
+        areas[lower_field][parking.mark] += 1
 
     dump = json.dumps({
         "name": area_name,
         "children": [{
             "name": area,
             "children": [
+                {"name": "onstreet", "value": areas[area]["onstreet"]},
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
