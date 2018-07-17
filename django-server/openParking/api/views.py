@@ -1,11 +1,13 @@
 from rest_framework import generics
-from .serializers import ParkingDataSerializer
+from rest_framework.response import Response
+from .serializers import ParkingDataSerializer, ParkingStaticDataSerializer
 from .models import ParkingData
 import requests
 import json
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
+import pprint
 
 class DetailsView(generics.RetrieveAPIView):
     """
@@ -53,7 +55,9 @@ class RectangleView(generics.ListAPIView):
         northeast_lng = float(self.kwargs['northeast_lng'])
         northeast_lat = float(self.kwargs['northeast_lat'])
 
-        return ParkingData.objects.filter(longitude__gte=southwest_lng, latitude__gte=southwest_lat, longitude__lte=northeast_lng, latitude__lte=northeast_lat)
+        return ParkingData.objects.filter(longitude__gte=southwest_lng,
+                latitude__gte=southwest_lat, longitude__lte=northeast_lng,
+                latitude__lte=northeast_lat)
 
 
 class StaticView(generics.ListAPIView):
@@ -84,7 +88,7 @@ class CountryView(generics.ListAPIView):
     """
     Get all the parkingplaces from a specified country
     """
-    serializer_class = ParkingDataSerializer
+    serializer_class = ParkingStaticDataSerializer
 
     def get_queryset(self):
         country_code = self.kwargs['country_code']
@@ -95,33 +99,43 @@ class RegionView(generics.ListAPIView):
     """
     Get all the parkingplaces from a specified region
     """
-    serializer_class = ParkingDataSerializer
+    serializer_class = ParkingStaticDataSerializer
 
     def get_queryset(self):
-        regionName = self.kwargs['regionName']
-        return ParkingData.objects.filter(region=regionName)
+        region_Name = self.kwargs['region_name']
+        return ParkingData.objects.filter(region=region_Name)
 
 
 class ProvinceView(generics.ListAPIView):
     """
     Get all the parkingplaces from a specified province
     """
-    serializer_class = ParkingDataSerializer
+    serializer_class = ParkingStaticDataSerializer
 
     def get_queryset(self):
-        provinceName = self.kwargs['provinceName']
-        return ParkingData.objects.filter(province=provinceName)
+        province_Name = self.kwargs['province_name']
+        return ParkingData.objects.filter(province=province_Name)
 
 
 class CityView(generics.ListAPIView):
     """
     Get all the parkingplaces from a specified city
     """
-    serializer_class = ParkingDataSerializer
+    serializer_class = ParkingStaticDataSerializer
 
     def get_queryset(self):
-        cityName = self.kwargs['cityName']
-        return ParkingData.objects.filter(city=cityName)
+        city_Name = self.kwargs['city_name']
+        return ParkingData.objects.filter(city=city_Name)
+
+
+class NoneView(generics.ListAPIView):
+    """
+    Get all the parkingplaces without location
+    """
+    serializer_class = ParkingStaticDataSerializer
+
+    def get_queryset(self):
+        return ParkingData.objects.filter(region__isnull=True)
 
 
 class OffstreetView(generics.ListAPIView):
@@ -148,45 +162,20 @@ def getMultipleStaticUrl(request, from_id, to_id):
         static_jsons.append(r)
     return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
-def is_not_none(value, key, is_array=False):
-    """Checks whether a value is contained in the object, and that it is not None."""
-    return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
-
 def generic_summary_view(field_name, area_name, lower_field_name):
     parkings = ParkingData.objects.filter(**{field_name: area_name})
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
-        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0})
-        numberFields = 0
-        # Checks geolocation fields
-        if parking.longitude is not None and parking.latitude is not None:
-            numberFields += 1
-
-        # Dive in static data
-        if parking.staticData is not None:
-            staticData = json.loads(parking.staticData)
-            if staticData is not None:
-                for field in ("specifications", "tariffs", "contactPersons", "openingHours"):
-                    if is_not_none(staticData, field, True):
-                        numberFields += 1
-                if is_not_none(staticData, "specification", True):
-                    specs = staticData["specifications"]
-                    for field in ("capacity", "minimumHeightInMeters", "disabledAccess"):
-                        if is_not_none(specs, field):
-                            numberFields += 1
-        mark = "bad"
-        if numberFields > 6:
-            mark = "good"
-        elif numberFields > 3:
-            mark = "average"
-        areas[lower_field][mark] += 1
+        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0, "onstreet": 0})
+        areas[lower_field][parking.mark] += 1
 
     dump = json.dumps({
         "name": area_name,
         "children": [{
             "name": area,
-            "children":[
+            "children": [
+                {"name": "onstreet", "value": areas[area]["onstreet"]},
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}

@@ -26,6 +26,7 @@ class ParkingData(models.Model):
         max_length=255, blank=True, null=True, unique=False)
     city = models.CharField(max_length=255, blank=True,
                             null=True, unique=False)
+    mark = models.CharField(max_length=255, blank=True, null=True, unique=False)
 
     def __str__(self):
         """Return a human readable representation of the model instance."""

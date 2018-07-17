@@ -1,3 +1,12 @@
+"""
+Tries to find the location of facilities, based on the information available
+in the index file and in the static data. It reads the cache directory and
+output the updated data in the same directory, overwriting it.
+
+Example:
+    python find_location.py locations/
+"""
+
 import json
 from sys import argv
 from os import listdir
@@ -7,6 +16,7 @@ from time import time, sleep
 from shapely.geometry import shape
 
 def get_value(object, keys):
+    """Obtains a value down a hierarchy of objects, and return None on error."""
     try:
         for key in keys:
             object = object[key]
@@ -15,6 +25,9 @@ def get_value(object, keys):
         return None
 
 def get_address_fields(facility):
+    """Obtains the address of a facility from its geolocation, using the
+    nominatim API (nominatim.openstreetmap.org).
+    """
     country_code = None
     city = None
     province = None
@@ -55,6 +68,10 @@ def get_address_fields(facility):
 get_address_fields.last_request = None
 
 def coord_to_coord(object):
+    """Cleans coordinate fields of an object. Sometimes it is a list with the
+    coordinates as first element, sometimes the coordinates do not have decimal
+    point in the right position. This fixes these problems.
+    """
     if isinstance(object, list):
         object = object[0]
     if object is not None and (abs(object["latitude"]) > 90 or abs(object["longitude"]) > 180):
@@ -70,6 +87,7 @@ def coord_to_coord(object):
     return object
 
 def shape_to_coord(object):
+    """Returns the centroid of a geometric shape, using shapely library."""
     try:
         geodata = shape(object).centroid
         if geodata.is_empty:
@@ -80,6 +98,9 @@ def shape_to_coord(object):
         return None
 
 def address_to_coord(address):
+    """Return the geolocation of an address, using the nominatim API
+    (nominatim.openstreetmap.org).
+    """
     # Use nominatim to translate from address to geolocation
     # Make sure not to make more than one request per second or so
     if address_to_coord.last_request is None:
@@ -115,6 +136,8 @@ address_to_coord.last_request = None
 
 directory = argv[1]
 
+# The list of fields in which we could find the position, along with the function
+# to use to convert them to proper geocoordinates.
 fields_to_try = [
     (["locationForDisplay"], coord_to_coord),
     (["accessPoints", 0, "accessPointLocation"], coord_to_coord),
@@ -133,12 +156,14 @@ for filename in file_list:
         print(e)
         print(filename)
 
+    # If the geolocation is not already given
     if "geoLocation" not in facility:
         static_data = facility["staticData"]
         if static_data is None:
             continue
 
         facility["geoLocation"] = None
+        # Try each field, and if it exists convert it to coordinates and break
         for field, convert_function in fields_to_try:
             value = get_value(static_data, field)
             if value is not None:
@@ -148,6 +173,7 @@ for filename in file_list:
         with open(filename, "w") as file:
             json.dump(facility, file, indent=2)
 
+    # Add the address fields ("city", "province", ...) to the facility data
     if "city" not in facility and facility["geoLocation"] is not None:
         facility.update(get_address_fields(facility))
         with open(filename, "w") as file:
