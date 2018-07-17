@@ -153,10 +153,14 @@ class Dashboard extends Component {
     return (v!== "[]" )
   }
 
-  onZoomChange(name){
+  onZoomChange(name, forceLevel){
     let levelIndex = ++(this.level)
+    if(forceLevel)
+      this.level = 3
+
+    let summaryStr = this.level === 3 ? "" : "summary/"
     let sub = levels[levelIndex] + "/" + name
-    let url = "http://localhost:8000/parkingdata/summary/" + sub
+    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
     let thiss = this
     fetch(url) 
     .then(response => response.json())
@@ -308,8 +312,10 @@ class Dashboard extends Component {
           this.setState({treemapData: json})
     }
 
-    onZoomChange2(name){
-        this.onZoomChange(name)
+    onZoomChange2(name, jumpToLevel = false){
+
+        this.onZoomChange(name, jumpToLevel)
+    
     }
 
   render() {
@@ -320,7 +326,7 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
-        <Treemap level={this.state.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)}/>
+        <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)}/>
     
       
     );

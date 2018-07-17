@@ -1,7 +1,9 @@
 import React, { Component } from 'react'; 
 import * as d3 from "d3";
 import './Treemap.css'
-
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import { Table } from 'reactstrap';
 var colorDict = {
     "good": "goodBG",
     "average": "avgBG",
@@ -85,6 +87,7 @@ class Treemap extends Component {
     super(props);
     this.state = {typeView: "" };
     //this.root = d3.hierarchy(data);
+    this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
   }
 
   componentDidMount(){
@@ -101,6 +104,8 @@ class Treemap extends Component {
         return
 
  
+        d3.select('svg').selectAll("*").remove()
+        d3.select('svg').append('g')
     let svgGroup = d3.select('svg g')
     svgGroup.selectAll("*").remove();
     let thiss = this
@@ -198,10 +203,17 @@ getColorByName(name){
 
 listenForZooms(name){
 
-    if(this.props.onZoomChange){
-        this.props.onZoomChange(name)
+    if(this.props.onZoomChange ){
+        if(this.props.level !== 3)
+            this.props.onZoomChange(name)
+        else
+            this.props.onZoomChange(name, 3)
     
     }
+}
+
+drawMapView(data){
+        this.generateTable(data)
 }
 
 
@@ -215,17 +227,158 @@ listenForZooms(name){
         
     }*/
 
-    if(this.props.data){
-        this.drawMap(d3.hierarchy(this.props.data))
+    if(this.props.data /*&& this.props.level && this.props.level !== 3*/){
+
+
+        if(!this.props.level || this.props.level !== 3 )
+            this.drawMap(d3.hierarchy(this.props.data))
+        else if (this.props.level && this.props.level === 3) {
+            alert("Ici")
+            this.drawMapView(this.props.data)
+        }
+  
     }
 
 
     return (
+       <div>
+           <Table className="heatMap" width={0}/>
       <svg className="TreemapData" >
-           <g></g>
+        
       </svg> 
+      </div>
     );
   } 
+
+
+  generateTable(data) {
+
+    
+    var table = d3.select('.heatMap')
+    var thead = table.append('thead') // create the header
+    var tbody = table.append('tbody');
+   
+    var thead = table.append('thead') // create the header
+    var tbody = table.append('tbody');
+   
+
+    let columns = ["name"].concat(this.requiredAttr)
+
+    thead.append('tr')
+      .selectAll('th')
+      .data(columns).enter()
+      .append('th')
+      .text(function (column) { return column; });
+
+      this.setAllParkings(tbody, columns, data)
+  }
+
+    /**
+     * TO DO: Catch wrong response / time out
+     */
+    async setAllParkings(tbody, column, data){
+
+       
+        let allP = []
+  
+        for(let i = 1; i < data.length; i++){
+          let resultJson = data[i]
+            
+          this.generateRow(tbody, column, resultJson )
+          
+      allP.push(resultJson)
+  
+      }
+     
+      }
+
+      
+  async  generateRow(tbody, columns, node){
+
+    let tr = tbody.append('tr')
+
+
+    for (let j = 0; j < columns.length; j++) {
+      let classN = ""
+
+      if(columns[j] === "name"){
+        classN += " heatCellName"//normal cell
+
+        tr.append('td')
+        .attr("class", classN)
+        .text(node[columns[j]])
+      }
+      else if(columns[j] === "longitude"){
+        classN += " heatCell"//colored heatcell
+        classN += ((node["longitude"])? " validCell" : " invalidCell") // is this field in the json?
+
+        tr.append('td')
+        .attr("class", classN)
+        .text(node[columns[j]])
+      }
+      else {
+        let resultJson = null
+        classN += " heatCell"//colored heatcell
+        // get json 
+        await fetch(node["staticDataUrl"])
+          .then(response => response.json())
+          .then(json => {
+          console.log(json);
+          resultJson = json
+
+          let v = this.getValueJsonResult(columns[j], resultJson)
+          console.log("V==" + v)
+
+          if(v && this.notEmptyArray(v)){
+            classN += " validCell"  // is this field in the json?
+          }
+          else{
+           classN += " invalidCell"  // is this field in the json?
+          }
+
+          tr.append('td')
+          .attr("class", classN)
+          .text(v)
+      });
+
+
+
+       
+      }
+    } // close for
+  }
+
+  getValueJsonResult(key, node){
+
+    //capacity is a special one
+  
+
+
+      if(key === "capacity" && node["parkingFacilityInformation"] && node["parkingFacilityInformation"]["specifications"] && node["parkingFacilityInformation"]["specifications"].length > 0){
+          let nodeCapacity = node["parkingFacilityInformation"]["specifications"][0]
+
+          if(!nodeCapacity )
+            return null
+
+          if (nodeCapacity["capacity"]) {
+            return nodeCapacity["capacity"]
+
+          }
+          return null // No capacity found
+      
+        }
+      else {
+
+        try{
+          
+            return (JSON.stringify(node["parkingFacilityInformation"][key]))
+        }
+        catch(e){
+          console.log(e)
+          return null // not found
+        }
+      }
+    }
 }
 
 export default Treemap;
