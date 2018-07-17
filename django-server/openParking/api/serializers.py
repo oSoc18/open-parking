@@ -10,4 +10,4 @@ class ParkingDataSerializer(serializers.ModelSerializer):
         model = ParkingData
         fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
                   'limitedAccess', 'latitude', 'longitude', 'facilityType',
-                  'country_code', 'region', 'city', 'province')
+                  'country_code', 'region', 'city', 'province', 'mark')
