@@ -10,75 +10,6 @@ var colorDict = {
     "bad": "badBG"
 }
 
-var zwnl =  {
-    name: "Zuidwest-Nederland",    
-    children: [
-        { name: "Zuid-Holland",  
-        children: 
-        [
-            { name: "good", value: 8},
-            { name: "average", value: 15},
-            { name: "bad", value: 222}
-        ]
-    },
-        { name: "Zeeland",   children: 
-        [
-            { name: "good", value: 54},
-            { name: "average", value: 1},
-            { name: "bad", value: 333}
-        ] }  
-    ]
-    }
-    
-var zuidHolland = {
-    name: "Zuid-Holland",
-    children: [
-        {name: "Aardam",
-        children: [
-            {name: "good", value: 44 },
-            {name: "average", value: 44 },
-            {name: "bad", value: 546 } 
-        ]},
-        {name: "Bloklan",
-        children: [
-            {name: "good", value: 252 },
-            {name: "average", value: 55 },
-            {name: "bad", value: 15 } 
-        ]}
-
-    ]
-}
-var data = 	{
-    name: "Nederland",	
-    children: [
-        { name: "Noordwest-Nederland",  
-        children: 
-        [
-            { name: "good", value: 11},
-            { name: "average", value: 88},
-            { name: "bad", value: 445}
-        ]
-    },
-        { name: "Zuidwest-Nederland",   children: 
-        [
-            { name: "good", value: 11},
-            { name: "average", value: 88},
-            { name: "bad", value: 111}
-        ] } ,
-        { name: "Zuid-Nederland",   children: 
-        [
-            { name: "good", value: 111},
-            { name: "average", value: 88},
-            { name: "bad", value: 445}
-        ] },
-        { name: "Noord-Nederland",   children: 
-        [
-            { name: "good", value: 311},
-            { name: "average", value: 88},
-            { name: "bad", value: 123}
-        ] }
-    ]
-}
 
 
 class Treemap extends Component {
@@ -129,9 +60,8 @@ class Treemap extends Component {
    .enter()
    .append('g')
    .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
-   .on('click', d => thiss.listenForZooms( d.data.name))
-   // onhover --> border thick
-   
+   .on('click', d => thiss.listenForZooms( d.data.name, d.parent))
+   //.on('mouseOn', d => thiss.setHover(d.data.name, d.parent))
 
    let dict = {}
    //children
@@ -142,8 +72,7 @@ class Treemap extends Component {
     return d.x1 - d.x0; })
   .attr('height', function(d) { return d.y1 - d.y0; })
   .attr('class', d => thiss.getColorByName(d.data.name))
-  
-  //.on('click', d => thiss.listenForZooms(d.data.name, this))
+  .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
 
   nodes
   .append('text')
@@ -210,8 +139,11 @@ getColorByName(name){
     return colorDict[name]
 }  
 
-listenForZooms(name){
+listenForZooms(name, parent = null){
 
+    if(["bad", "average", "good"].indexOf(name) > -1){
+        name = parent.data.name
+    }
     if(this.props.onZoomChange ){
         if(this.props.level !== 3)
             this.props.onZoomChange(name)
