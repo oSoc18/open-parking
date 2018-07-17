@@ -174,7 +174,6 @@ def generic_summary_view(field_name, area_name, lower_field_name):
         "children": [{
             "name": area,
             "children": [
-                {"name": "onstreet", "value": areas[area]["onstreet"]},
                 {"name": "good", "value": areas[area]["good"]},
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
