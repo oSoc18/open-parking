@@ -1,9 +1,20 @@
+"""
+Create a JSON file suitable to be loaded into the Django SQL database, from
+data in the cache folder. Some of the fields are calculated here, such as the
+facility type or the region name.
+
+Example:
+    python create_fixture.py locations/ ../django-server/openParking/api/fixtures/fixture.json
+
+"""
+
 import json
 from sys import argv
 from os import listdir
 from os.path import isfile, join
 
 def get_facility_type(facility):
+    """Returns True if the facility has a geometry area, False otherwise."""
     if facility["staticData"] is not None \
             and "specifications" in facility["staticData"] \
             and len(facility["staticData"]["specifications"]) > 0 \
@@ -16,21 +27,19 @@ def get_facility_type(facility):
 
 
 def get_region_name(facility):
+    """Return the region name of a facility, based on its province."""
     if "province" in facility and facility["province"] is not None:
-        if facility["province"] in ("Noord-Holland", "Utrecht", "Flavoland"):
-            return "Noordwest-Nederland"
-        elif facility["province"] in ("Zuid-Holland", "Zeeland"):
-            return "Zuidwest-Nederland"
-        elif facility["province"] in ("Noord-Brabant", "Limburg"):
-            return "Zuid-Nederland"
-        elif facility["province"] in ("Gelderland", "Overijsel"):
-            return "Oost-Nederland"
-        elif facility["province"] in ("Groningen", "Friesland"):
-            return "Noord-Nederland"
-        else:
-            return None
-    else:
-        return None
+        provinces = {
+            ("Noord-Holland", "Utrecht", "Flavoland"): "Noordwest-Nederland",
+            ("Zuid-Holland", "Zeeland"): "Zuidwest-Nederland",
+            ("Noord-Brabant", "Limburg"): "Zuid-Nederland",
+            ("Gelderland", "Overijsel"): "Oost-Nederland",
+            ("Groningen", "Friesland"): "Noord-Nederland"
+        }
+        for province_list, region in provinces.items():
+            if facility["province"] in province_list:
+                return region
+    return None
 
 
 input_directory = argv[1]
