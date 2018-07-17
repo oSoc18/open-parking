@@ -17,7 +17,7 @@ class SideBar extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             checked: [],
             expanded: [],
@@ -29,20 +29,20 @@ class SideBar extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-    
+
         this.setState({
-          [name]: value
+            [name]: value
         });
         alert(name)
 
-        if(this.props.onChangeOptions)
+        if (this.props.onChangeOptions)
             this.props.onChangeOptions(this.state[name])
-      }
+    }
 
     renderedSideBar() {
 
     }
-    
+
     render() {
         return (
             // side bar
@@ -55,28 +55,28 @@ class SideBar extends Component {
                 <h4 className="title">Visible facilities</h4>
 
                 <div>
-                    <input type="checkbox" id="parkAndRide" name="parkAndRide"
+                    <input class="styled-checkbox" type="checkbox" id="parkAndRide" name="parkAndRide"
                         value="parkAndRide" onChange={this.handleVisibleFacilities} />
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="residentsOnly" name="residentsOnly"
+                    <input class="styled-checkbox" type="checkbox" id="residentsOnly" name="residentsOnly"
                         value="residentsOnly" onChange={this.handleVisibleFacilities} />
                     <label for="residentsOnly">Residents only</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="garage" name="garage"
-                        value="garage" onChange={this.handleVisibleFacilities}/>
+                    <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
+                        value="garage" onChange={this.handleVisibleFacilities} />
                     <label for="garage">Garage</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="company" name="company"
-                        value="company" onChange={this.handleVisibleFacilities}/>
+                    <input class="styled-checkbox" type="checkbox" id="company" name="company"
+                        value="company" onChange={this.handleVisibleFacilities} />
                     <label for="company">Company</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="otherPlaces" name="otherPlaces"
-                        value="otherPlaces" onChange={this.handleVisibleFacilities}/>
+                    <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
+                        value="otherPlaces" onChange={this.handleVisibleFacilities} />
                     <label for="otherPlaces">Other places</label>
                 </div>
 
