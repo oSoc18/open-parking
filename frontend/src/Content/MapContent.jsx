@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 
 import './MapContent.css'
+
 class MapContent extends Component {
 
     renderMap() {
@@ -26,6 +27,15 @@ class MapContent extends Component {
             }
             return this;
         };
+        let offstreetIcon = L.icon({
+            iconUrl: require('./markers/parking-blue.png'),
+            iconSize: [46, 46],
+            iconAnchor: [23, 46],
+            popupAnchor: [0, -46]
+        });
+
+
+        let main = this;
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
@@ -77,21 +87,30 @@ class MapContent extends Component {
             mark.bindPopup();
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b>";
-                if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
-                    $.getJSON(facility.dynamicDataUrl, function (data) {
-                        console.log(data);
-                        if(data.parkingFacilityDynamicInformation !== undefined) {
-                            popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+                mark.getPopup().setContent(popup);
+                if(facility.facilityType === "offstreet") {
+                    if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
+                        $.getJSON(facility.dynamicDataUrl, function (data) {
+                            if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
+                                correct++;
+                                popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+                            }
+                        });
+                    }
 
-                        }
+                    $.getJSON(facility.staticDataUrl, function (data) {
+                        popup += "<br>Location: " + facility.latitude + " " + facility.longitude + "<br>Tariffs: " + "<br>Opening Hours: " + "<br>Contact Person: " + data.contactPersons + "<br>Constraints: " + facility.parkingRestrictions;
+                        mark.getPopup().setContent(popup);
                     });
+                }else {
+                    popup+="<br>This is an onstreet parking spot";
                 }
-
-                $.getJSON(facility.staticDataUrl, function (data) {
-                    popup += "<br>Location: " + facility.latitude + " " + facility.longitude + "<br>Tariffs: " + "<br>Opening Hours: " + "<br>Contact Person: " + data.contactPersons + "<br>Constraints: " + facility.parkingRestrictions;
-                    mark.getPopup().setContent(popup);
-                });
             });
+            if(facility.facilityType === "offstreet"){
+
+            }else{
+                mark.setIcon(offstreetIcon);
+            }
             markers.push(mark);
         });
 
@@ -148,6 +167,7 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
+                <img src="./markers/parking-blue.png" alt=""/>
 
                 <div id="layers">
                     <div>
