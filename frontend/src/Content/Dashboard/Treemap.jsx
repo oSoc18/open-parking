@@ -197,6 +197,13 @@ textSize(text) {
 }
 
 
+notEmptyArray(v){
+  
+
+    return (v!== "[]" )
+  }
+
+
 getColorByName(name){
     return colorDict[name]
 }  
@@ -233,7 +240,7 @@ drawMapView(data){
         if(!this.props.level || this.props.level !== 3 )
             this.drawMap(d3.hierarchy(this.props.data))
         else if (this.props.level && this.props.level === 3) {
-            alert("Ici")
+         
             this.drawMapView(this.props.data)
         }
   
@@ -284,7 +291,19 @@ drawMapView(data){
         for(let i = 1; i < data.length; i++){
           let resultJson = data[i]
             
-          this.generateRow(tbody, column, resultJson )
+          await fetch("http://localhost:8000/parkingdata/request/staticurl/"+ data[i]["uuid"])
+          .then(response => response.json())
+          .then(json => {
+          console.log(json);
+          resultJson = json
+          resultJson["name"] = data[i]["name"]
+
+          //generate row
+          this.generateRow(tbody, column, resultJson, data[i]["longitude"] )
+
+        //  let v = this.getValueJsonResult(columns[j], resultJson)
+      });
+         
           
       allP.push(resultJson)
   
@@ -292,8 +311,55 @@ drawMapView(data){
      
       }
 
+      generateRow(tbody, columns, data, longitude){
+        let tr = tbody.append('tr')
+        let v = ""
+
+        for (let j = 0; j < columns.length; j++) {
+            let classN = ""
+            if(columns[j] === "name"){
+                classN += " heatCellName"//normal cell
+
+            tr.append('td')
+                .attr("class", classN)
+                .text(data[columns[j]])
+            }
+            else if (columns[j] === "longitude"){
+        
+                    classN += " heatCell"//colored heatcell
+                    classN += ((longitude !== null)? " validCell" : " invalidCell") // is this field in the json?
+                    tr.append('td')
+                    .attr("class", classN)
+                    
+                    .text("" + longitude)
+            }
+            else {
+                console.log(JSON.stringify(data))
+                classN += " heatCell "
+                v = this.getValueJsonResult(columns[j], data)
+             
+        
+                if(v && this.notEmptyArray(v)){
+                  classN += " validCell"  // is this field in the json?
+                }
+                else{
+                 classN += " invalidCell"  // is this field in the json?
+                }
+                tr.append('td')
+                .attr("class", classN)
+                .text(v)
+        
+        
+        
+               
+        }
       
-  async  generateRow(tbody, columns, node){
+      }
+
+      }
+
+      
+    /*generateRow(tbody, columns, node){
 
     let tr = tbody.append('tr')
 
@@ -317,36 +383,22 @@ drawMapView(data){
         .text(node[columns[j]])
       }
       else {
-        let resultJson = null
-        classN += " heatCell"//colored heatcell
-        // get json 
-        await fetch(node["staticDataUrl"])
-          .then(response => response.json())
-          .then(json => {
-          console.log(json);
-          resultJson = json
+        let v = this.getValueJsonResult(columns[j], resultJson)
+     
 
-          let v = this.getValueJsonResult(columns[j], resultJson)
-          console.log("V==" + v)
-
-          if(v && this.notEmptyArray(v)){
-            classN += " validCell"  // is this field in the json?
-          }
-          else{
-           classN += " invalidCell"  // is this field in the json?
-          }
-
-          tr.append('td')
-          .attr("class", classN)
-          .text(v)
-      });
+        if(v && this.notEmptyArray(v)){
+          classN += " validCell"  // is this field in the json?
+        }
+        else{
+         classN += " invalidCell"  // is this field in the json?
+        }
 
 
 
        
       }
     } // close for
-  }
+  }*/
 
   getValueJsonResult(key, node){
 

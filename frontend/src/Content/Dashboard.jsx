@@ -119,14 +119,14 @@ class Dashboard extends Component {
         let resultJson = null
         classN += " heatCell"//colored heatcell
         // get json 
-        await fetch(node["staticDataUrl"])
+        await fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/"+ node["uuid"])
           .then(response => response.json())
           .then(json => {
           console.log(json);
           resultJson = json
 
           let v = this.getValueJsonResult(columns[j], resultJson)
-          console.log("V==" + v)
+     
 
           if(v && this.notEmptyArray(v)){
             classN += " validCell"  // is this field in the json?
@@ -230,7 +230,7 @@ class Dashboard extends Component {
     }
 
   generateTable() {
-
+    return
     var table = d3.select('.heatMap')
     var thead = table.append('thead') // create the header
     var tbody = table.append('tbody');
