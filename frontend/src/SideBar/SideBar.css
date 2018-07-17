@@ -1,19 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+
 * {
-    font-family: "Trebuchet MS", Helvetica, sans-serif
+    font-family: 'Montserrat', Helvetica, sans-serif
 }
 
 .sideBar{
 
     width: 250px;
-    background-color: #5683cd; 
+    background-color: #ffffff; 
     height: 100vh;
     float: left;
 } 
 
 .sideBar h1 {
-    color: white;
-    font-size: 2.5em;
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    margin-top: 20px;
+    color: #4f4f4f;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: 'Montserrat', Helvetica, sans-serif;
     text-transform: uppercase;
  
 }
