@@ -24,10 +24,10 @@ class SideBar extends Component {
         this.setState({
           [name]: value
         });
-        alert(name)
+
 
         if(this.props.onChangeOptions)
-            this.props.onChangeOptions(this.state[name])
+            this.props.onChangeOptions(name)
       }
 
     renderedSideBar() {
