@@ -3,6 +3,7 @@ from sys import argv
 from os import listdir
 from os.path import isfile, join
 
+
 def get_facility_type(facility):
     if facility["staticData"] is not None \
             and "specifications" in facility["staticData"] \
@@ -25,7 +26,7 @@ def get_region_name(facility):
             return "Zuid-Nederland"
         elif facility["province"] in ("Gelderland", "Overijsel"):
             return "Oost-Nederland"
-        elif facility["province"] in ("Groningen", "Friesland"):
+        elif facility["province"] in ("Groningen", "Friesland", "Drenthe"):
             return "Noord-Nederland"
         else:
             return None
@@ -64,6 +65,7 @@ for filename in file_list:
             "country_code": facility["country_code"] if "country_code" in facility else None
         }
     })
+    print(pk)
     pk += 1
 
 print("Write data to {}...".format(output_filename))

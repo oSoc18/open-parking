@@ -2,7 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
     CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
-        generic_summary_view, getStaticUrl, getMultipleStaticUrl
+    generic_summary_view, getStaticUrl, getMultipleStaticUrl, NoneView
 from rest_framework.decorators import api_view
 
 
@@ -31,13 +31,17 @@ urlpatterns = {
 
     # URLS for clickthrough thing
     url(r'^parkingdata/country/(?P<country_code>.+)/$',
-        CountryView.as_view(), name="countryParkings"),
+        CountryView.as_view(), name="country_parkings"),
     url(r'^parkingdata/region/(?P<region_Name>.+)/$',
-        RegionView.as_view(), name="region_Parkings"),
+        RegionView.as_view(), name="region_parkings"),
     url(r'^parkingdata/province/(?P<province_Name>.+)/$',
-        ProvinceView.as_view(), name="Province_Parkings"),
+        ProvinceView.as_view(), name="province_parkings"),
     url(r'^parkingdata/city/(?P<city_Name>.+)/$',
-        CityView.as_view(), name="city_Parkings"),
+        CityView.as_view(), name="city_parkings"),
+
+    # Gives all parkings without locations
+    url(r'^parkingdata/region/none/$',
+        NoneView.as_view(), name="none_location"),
 
     url(r'^parkingdata/offstreet/all/$',
         OffstreetView.as_view(), name="offstreet_Parkings"),
