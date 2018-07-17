@@ -12,7 +12,9 @@ class MapContent extends Component {
             center: [52.1326, 5.2913],
             zoom: 8
         });
-        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ').addTo(map);
+        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        }).addTo(map);
         return map;
 
     }
@@ -85,9 +87,11 @@ class MapContent extends Component {
             let correct = 0;
             let mark = L.marker([facility.latitude, facility.longitude]);
             mark.bindPopup();
+
             mark.on("popupopen", function () {
-                let popup = "<b>" + facility.name + "</b>";
+                let popup = "<b>" + facility.name + "</b><br>Loading data...";
                 mark.getPopup().setContent(popup);
+                popup = "<b>" + facility.name + "</b>";
                 if (facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON(facility.dynamicDataUrl, function (data) {
@@ -99,15 +103,27 @@ class MapContent extends Component {
                     }
 
                     $.getJSON(facility.staticDataUrl, function (data) {
-                        popup += "<br>Location: " + facility.latitude + " " + facility.longitude + "<br>Tariffs: " + "<br>Opening Hours: " + "<br>Contact Person: " + data.contactPersons + "<br>Constraints: " + facility.parkingRestrictions;
+                        popup += "<br>Location: " + (facility.latitude !== undefined ? facility.latitude : "<span class='text-danger'>No latitude</span>") + " " + (facility.longitude !== undefined ? facility.longitude : "<span class='text-danger'>No longitude</span>") +
+                            "<br>Tariffs: " + (data.tariffs !== undefined ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.openingTimes !== undefined ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.contactPersons !== undefined ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingRestrictions !== undefined ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
                         mark.getPopup().setContent(popup);
                     });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
+                    mark.getPopup().setContent(popup);
+
                 }
             });
-            if (facility.facilityType === "offstreet") {
+            if (facility.mark !== "onstreet") {
+                if (facility.mark === "bad") {
 
+                } else if (facility.mark === "average") {
+
+                } else {
+
+                }
             } else {
                 mark.setIcon(offstreetIcon);
             }
