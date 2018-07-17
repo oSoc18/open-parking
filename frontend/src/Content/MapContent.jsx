@@ -44,31 +44,53 @@ class MapContent extends Component {
                 }
             }
         }
-
-        let test = [];
-        markersToAdd.forEach(function (eacj) {
-           test.push(eacj.facilityType);
-        });
-        console.log(test);
-
-
+        markersToAdd.clean(undefined);
+        if(!$("#dynamic").prop("checked")){
+            for(let i=0; i<markersToAdd.length; i++){
+                if(markersToAdd[i].dynamicDataUrl === null){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if(!$("#private").prop("checked")){
+            for(let i=0; i<markersToAdd.length; i++){
+                if(markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if(!$("#public").prop("checked")){
+            for(let i=0; i<markersToAdd.length; i++){
+                if(markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
 
         let markers = [];
         markersToAdd.forEach(function (facility) {
+            let correct = 0;
             let mark = L.marker([facility.latitude, facility.longitude]);
-            mark.bindPopup("<b>" + facility.name + "</b><br>" + facility.id + " " + facility.latitude + " " + facility.longitude);
+            mark.bindPopup();
             mark.on("popupopen", function () {
-                $.get(facility.staticDataUrl, function (data) {
-                    console.log(data);
-                });
-                if (facility.dynamicDataUrl !== null) {
-                    $.get(facility.dynamicDataUrl, function (data) {
+                let popup = "<b>" + facility.name + "</b>";
+                if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
+                    $.getJSON(facility.dynamicDataUrl, function (data) {
                         console.log(data);
-                        //TODO: Get dynamic data
-                        //mark.getPopup().setContent("<b>"+facility.name+"</b><br/>vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + " " + data.parkingFacilityDynamicInformation.facilityActualStatus.capacity);
-                        console.log(data);
+                        if(data.parkingFacilityDynamicInformation !== undefined) {
+                            popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+
+                        }
                     });
                 }
+
+                $.getJSON(facility.staticDataUrl, function (data) {
+                    popup += "<br>Location: " + facility.latitude + " " + facility.longitude + "<br>Tariffs: " + "<br>Opening Hours: " + "<br>Contact Person: " + data.contactPersons + "<br>Constraints: " + facility.parkingRestrictions;
+                    mark.getPopup().setContent(popup);
+                });
             });
             markers.push(mark);
         });
@@ -87,12 +109,11 @@ class MapContent extends Component {
         });
         map.addLayer(cluster);
 
-        $("#onstreet").prop("checked", true);
-        $("#offstreet").prop("checked", true);
+        $("#layers div input").prop("checked", true);
+
 
 
         $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + map.getBounds().toBBoxString() + "/?format=json", function (json) {
-            console.log(json.length);
             facilities = json;
             main.filterMarkers(facilities, cluster);
 
@@ -108,10 +129,7 @@ class MapContent extends Component {
             });
         });
 
-        $("#onstreet").on("click", function () {
-            main.filterMarkers(facilities, cluster);
-        });
-        $("#offstreet").on("click", function () {
+        $("#layers div input").on("click", function () {
             main.filterMarkers(facilities, cluster);
         });
 
@@ -127,8 +145,6 @@ class MapContent extends Component {
                       integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
                       crossorigin=""/>
                 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
-                <link rel="stylesheet"
-                      href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css"/>
 
 
                 <div id="mapid"></div>
@@ -141,6 +157,18 @@ class MapContent extends Component {
                     <div>
                         <input type="checkbox" id="offstreet" name="filter" value="offstreet"/>
                         <label htmlFor="offstreet">Off-street</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="dynamic" name="filter" value="dynamic"/>
+                        <label htmlFor="offstreet">Show parkings with no dynamic data</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="private" name="filter" value="private"/>
+                        <label htmlFor="offstreet">private</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="public" name="filter" value="public"/>
+                        <label htmlFor="offstreet">public</label>
                     </div>
                 </div>
             </div>
