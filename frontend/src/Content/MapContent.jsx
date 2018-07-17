@@ -12,7 +12,9 @@ class MapContent extends Component {
             center: [52.1326, 5.2913],
             zoom: 8
         });
-        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ').addTo(map);
+        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ',{
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        }).addTo(map);
         return map;
 
     }
@@ -85,6 +87,7 @@ class MapContent extends Component {
             let correct = 0;
             let mark = L.marker([facility.latitude, facility.longitude]);
             mark.bindPopup();
+
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b>";
                 mark.getPopup().setContent(popup);
@@ -99,11 +102,17 @@ class MapContent extends Component {
                     }
 
                     $.getJSON(facility.staticDataUrl, function (data) {
-                        popup += "<br>Location: " + facility.latitude + " " + facility.longitude + "<br>Tariffs: " + "<br>Opening Hours: " + "<br>Contact Person: " + data.contactPersons + "<br>Constraints: " + facility.parkingRestrictions;
+                        popup += "<br>Location: " + (facility.latitude!==undefined?facility.latitude: <span class="bad">"No latitude"</span>) + " " + (facility.longitude!==undefined?facility.longitude:"No longitude") +
+                            "<br>Tariffs: " + (data.tariffs!==undefined? "Available":data.tariffs +"No Tariffs available") +
+                            "<br>Opening Hours: " + (data.openingTimes!==undefined? "Available":data.openingTimes + "No opening hours available") +
+                            "<br>Contact Person: " + (data.contactPersons!==undefined? "Available":data.contactPersons +"No contact persons available") +
+                            "<br>Constraints: " + (data.parkingRestrictions!==undefined?  "Available":data.parkingRestrictions +"No parking restrictions available");
                         mark.getPopup().setContent(popup);
                     });
                 }else {
                     popup+="<br>This is an onstreet parking spot";
+                    mark.getPopup().setContent(popup);
+
                 }
             });
             if(facility.facilityType === "offstreet"){
