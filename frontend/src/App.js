@@ -14,6 +14,11 @@ class App extends Component {
     this.state = { mainContent: "map"}
   }
 
+  onOptionsChanged(values){
+    alert(values)
+
+  }
+
 
   render() {
     return (
@@ -22,7 +27,7 @@ class App extends Component {
 
 
 <div>
-        <SideBar  /> 
+        <SideBar onChangeOptions={this.onOptionsChanged.bind(this)} /> 
         <MainContent tab={this.state.mainContent} /> 
         </div>
       </div>
