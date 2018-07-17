@@ -10,6 +10,7 @@ var colorDict = {
     "bad": "badBG"
 }
 
+const QUALITYDATA = ["bad", "average", "good"]
 
 
 class Treemap extends Component {
@@ -59,9 +60,11 @@ class Treemap extends Component {
    .data(this.root.descendants())
    .enter()
    .append('g')
-   .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
+   .attr('transform', function(d) {  return 'translate(' + [ d.x0 , d.y0 ] + ')'})
    .on('click', d => thiss.listenForZooms( d.data.name, d.parent))
+
    //.on('mouseOn', d => thiss.setHover(d.data.name, d.parent))
+   //.onmouseout, deletehover   
 
    let dict = {}
    //children
@@ -70,9 +73,12 @@ class Treemap extends Component {
   .attr('width', function(d) { 
     dict[d.data.name] = d.x1 - d.x0  
     return d.x1 - d.x0; })
-  .attr('height', function(d) { return d.y1 - d.y0; })
+  .attr('height', function(d) {  return d.y1 - d.y0 ; })
   .attr('class', d => thiss.getColorByName(d.data.name))
-  .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
+  .attr('id', d => d.data.name)
+  .on("mouseover", d => {console.log(d);thiss.handleMouseOverNode(null, d.data.name, d.parent)})
+  .on("mouseout", d => thiss.handleMouseOutNode(null, d.data.name, d.parent))
+ // .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
 
   nodes
   .append('text')
@@ -106,6 +112,38 @@ while (textLength > (width - 2 * padding) && text.length > 0) {
     textLength = self.node().getComputedTextLength();*/
 }
   
+handleMouseOverNode (obj, name, parent) {
+
+    let rect = d3.select("#"+ name)
+
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+        // handle parent
+        rect = d3.select("#"+ parent.data.name)
+    }
+   
+    
+    rect.attr("stroke", "green")
+        .attr("stroke-width", 5)
+        .attr("font-weight", "bold")
+
+
+}
+
+handleMouseOutNode(obj, name, parent) {
+
+    let rect = d3.select("#"+ name)
+
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+        // handle parent
+        rect = d3.select("#"+ parent.data.name)
+    }
+   
+    
+    rect.attr("stroke-width", 0)
+
+
+}
+   
 
 wrap(width, padding) {
     var self = d3.select(this),
@@ -117,6 +155,8 @@ wrap(width, padding) {
         textLength = self.node().getComputedTextLength();
     }
 } 
+
+
 
 textSize(text) {
     if (!d3) return;
@@ -226,7 +266,7 @@ drawMapView(data){
           await fetch("http://localhost:8000/parkingdata/request/staticurl/"+ data[i]["uuid"])
           .then(response => response.json())
           .then(json => {
-          console.log(json);
+  
           resultJson = json
           resultJson["name"] = data[i]["name"]
 
@@ -266,7 +306,6 @@ drawMapView(data){
                     .text("" + longitude)
             }
             else {
-                console.log(JSON.stringify(data))
                 classN += " heatCell "
                 v = this.getValueJsonResult(columns[j], data)
              
@@ -280,10 +319,7 @@ drawMapView(data){
                 tr.append('td')
                 .attr("class", classN)
                 .text(v)
-        
-        
-        
-               
+
         }
       
       }
