@@ -32,11 +32,11 @@ urlpatterns = {
     # URLS for clickthrough thing
     url(r'^parkingdata/country/(?P<country_code>.+)/$',
         CountryView.as_view(), name="country_parkings"),
-    url(r'^parkingdata/region/(?P<region_Name>.+)/$',
+    url(r'^parkingdata/region/(?P<region_name>.+)/$',
         RegionView.as_view(), name="region_parkings"),
-    url(r'^parkingdata/province/(?P<province_Name>.+)/$',
+    url(r'^parkingdata/province/(?P<province_name>.+)/$',
         ProvinceView.as_view(), name="province_parkings"),
-    url(r'^parkingdata/city/(?P<city_Name>.+)/$',
+    url(r'^parkingdata/city/(?P<city_name>.+)/$',
         CityView.as_view(), name="city_parkings"),
 
     # Gives all parkings without locations
