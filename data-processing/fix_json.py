@@ -1,3 +1,7 @@
+"""
+Corrects errors in the index file, such as missing quotes or duplicate keys.
+"""
+
 from sys import argv
 import json
 
@@ -32,7 +36,7 @@ for i, line in enumerate(lines):
 
 
 def dict_check_duplicates(ordered_pairs):
-    """Print out duplicate keys."""
+    """Prints out duplicate keys and returns a dict with the first of the duplicates."""
     # Search for duplicate keys
     duplicates = {key:[] for key, value in ordered_pairs}
     for key, value in ordered_pairs:
