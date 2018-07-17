@@ -89,8 +89,9 @@ class MapContent extends Component {
             mark.bindPopup();
 
             mark.on("popupopen", function () {
-                let popup = "<b>" + facility.name + "</b>";
+                let popup = "<b>" + facility.name + "</b><br>Loading data...";
                 mark.getPopup().setContent(popup);
+                popup = "<b>" + facility.name + "</b>";
                 if(facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON(facility.dynamicDataUrl, function (data) {
@@ -102,11 +103,11 @@ class MapContent extends Component {
                     }
 
                     $.getJSON(facility.staticDataUrl, function (data) {
-                        popup += "<br>Location: " + (facility.latitude!==undefined?facility.latitude: <span class="bad">"No latitude"</span>) + " " + (facility.longitude!==undefined?facility.longitude:"No longitude") +
-                            "<br>Tariffs: " + (data.tariffs!==undefined? "Available":data.tariffs +"No Tariffs available") +
-                            "<br>Opening Hours: " + (data.openingTimes!==undefined? "Available":data.openingTimes + "No opening hours available") +
-                            "<br>Contact Person: " + (data.contactPersons!==undefined? "Available":data.contactPersons +"No contact persons available") +
-                            "<br>Constraints: " + (data.parkingRestrictions!==undefined?  "Available":data.parkingRestrictions +"No parking restrictions available");
+                        popup += "<br>Location: " + (facility.latitude!==undefined?facility.latitude: "<span class='text-danger'>No latitude</span>") + " " + (facility.longitude!==undefined?facility.longitude:"<span class='text-danger'>No longitude</span>") +
+                            "<br>Tariffs: " + (data.tariffs!==undefined? "Available":"<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.openingTimes!==undefined? "Available":"<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.contactPersons!==undefined? "Available":"<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingRestrictions!==undefined?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
                         mark.getPopup().setContent(popup);
                     });
                 }else {
@@ -115,8 +116,14 @@ class MapContent extends Component {
 
                 }
             });
-            if(facility.facilityType === "offstreet"){
+            if(facility.mark !== "onstreet"){
+                if(facility.mark === "bad"){
 
+                }else if(facility.mark === "average"){
+
+                }else{
+
+                }
             }else{
                 mark.setIcon(offstreetIcon);
             }
