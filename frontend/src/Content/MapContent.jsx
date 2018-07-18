@@ -7,6 +7,9 @@ import './MapContent.css'
 
 class MapContent extends Component {
 
+    constructor(props){
+        super(props)
+    }
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
@@ -29,19 +32,26 @@ class MapContent extends Component {
             }
             return this;
         };
-        let offstreetIcon = L.icon({
-            iconUrl: require('./images/parking-blue.png'),
-            iconSize: [46, 46],
-            iconAnchor: [23, 46],
-            popupAnchor: [0, -46]
+
+        let ParkingIcon = L.Icon.extend({
+            options: {
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+            }
         });
 
+        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-green.png')});
+        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-orange.png')});
+        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-red.png')});
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png')});
 
         let main = this;
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
         if (!$("#onstreet").prop("checked")) {
+
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].facilityType === "onstreet") {
                     delete markersToAdd[i];
@@ -90,11 +100,12 @@ class MapContent extends Component {
 
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
+                console.log(facility.uuid);
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
-                        $.getJSON(facility.dynamicDataUrl, function (data) {
+                        $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
                                 popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
@@ -102,12 +113,14 @@ class MapContent extends Component {
                         });
                     }
 
-                    $.getJSON(facility.staticDataUrl, function (data) {
-                        popup += "<br>Location: " + (facility.latitude !== undefined ? facility.latitude : "<span class='text-danger'>No latitude</span>") + " " + (facility.longitude !== undefined ? facility.longitude : "<span class='text-danger'>No longitude</span>") +
-                            "<br>Tariffs: " + (data.tariffs !== undefined ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.openingTimes !== undefined ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.contactPersons !== undefined ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingRestrictions !== undefined ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/"+facility.uuid+"/", function (data) {
+                        popup +="<br>Limited API access: " + facility.limitedAccess +
+                            "<br>Location: " + facility.latitude + " " + facility.longitude +
+                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+
                         mark.getPopup().setContent(popup);
                     });
                 } else {
@@ -116,16 +129,17 @@ class MapContent extends Component {
 
                 }
             });
-            if (facility.mark !== "onstreet") {
-                if (facility.mark === "bad") {
-
-                } else if (facility.mark === "average") {
-
-                } else {
-
+            if(facility.mark !== "onstreet"){
+                if(facility.mark === "bad"){
+                    mark.setIcon(badIcon);
+                }else if(facility.mark === "average"){
+                    mark.setIcon(averageIcon);
+                }else{
+                    mark.setIcon(goodIcon);
                 }
-            } else {
-                mark.setIcon(offstreetIcon);
+            }else{
+                mark.setIcon(offStreetIcon);
+
             }
             markers.push(mark);
         });
@@ -140,7 +154,7 @@ class MapContent extends Component {
         let main = this;
         let facilities = [];
         let cluster = L.markerClusterGroup({
-            disableClusteringAtZoom: 17
+            disableClusteringAtZoom: 13
         });
         map.addLayer(cluster);
 
@@ -173,6 +187,11 @@ class MapContent extends Component {
 
     render() {
 
+            this.vis = this.props.filters.visFacilities // get visible facilities
+            
+            //this.updateOnOff
+            
+    
         return (
 
             <div id="mapParent">
