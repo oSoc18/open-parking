@@ -23,7 +23,7 @@ class MapContent extends Component {
         return map;
     }
 
-    filterMarkers(facilities, cluster) {
+    filterMarkers(facilities, cluster, showHeatmap) {
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -198,18 +198,24 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        let heatPoints = { good: [], average: [], bad: [] };
-        for (let i = 0; i < facilities.length; i++) {
-            if (facilities[i].mark in heatPoints) {
-                heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
-            }
-        }
-        for (let mark in heatPoints) {
-            main.heatmaps[mark].setLatLngs(heatPoints[mark]);
-            main.heatmaps[mark].redraw();
-        }
+        this.updateHeatmapPoints(facilities, showHeatmap);
+
     }
 
+    updateHeatmapPoints(facilities, showHeatmap) {
+        if (showHeatmap) {
+            let heatPoints = { good: [], average: [], bad: [] };
+            for (let i = 0; i < facilities.length; i++) {
+                if (facilities[i].mark in heatPoints) {
+                    heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
+                }
+            }
+            for (let mark in heatPoints) {
+                this.heatmaps[mark].setLatLngs(heatPoints[mark]);
+                this.heatmaps[mark].redraw();
+            }
+        }
+    }
 
     componentDidMount() {
 
@@ -245,6 +251,21 @@ class MapContent extends Component {
         $("#layers div input").on("click", function () {
             main.filterMarkers(facilities, cluster);
         });
+
+        let heatmapSwitch = $("#heatmap-switch input");
+        heatmapSwitch.on("click", function () {
+            let showHeatmap = heatmapSwitch.prop("checked");
+            for (let mark in main.heatmaps) {
+                // Remove heatmap by default, and add it if the switch is checked
+                main.map.removeLayer(main.heatmaps[mark]);
+                if (showHeatmap) {
+                    main.map.addLayer(main.heatmaps[mark]);
+                }
+            }
+
+            main.updateHeatmapPoints(facilities, showHeatmap);
+        });
+
 
         // Create three heatmap layers, they will be populated in filterMarkers
         // There is one layer per marker color, there is no way to do it with
@@ -325,7 +346,7 @@ class MapContent extends Component {
                     </div>
                 </div>
 
-                <div className="switch-field">
+                <div className="switch-field" id="heatmap-switch">
                     <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
                         <label class="switch"><input type="checkbox" />
