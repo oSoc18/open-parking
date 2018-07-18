@@ -23,7 +23,7 @@ class MapContent extends Component {
         return map;
     }
 
-    filterMarkers(facilities, cluster, showHeatmap) {
+    filterMarkers(facilities, cluster) {
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -45,10 +45,10 @@ class MapContent extends Component {
             }
         });
 
-        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
-        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
-        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-red.png') });
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png') });
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-good.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
 
         let main = this;
 
@@ -198,12 +198,11 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        this.updateHeatmapPoints(facilities, showHeatmap);
-
+        this.updateHeatmapPoints(facilities);
     }
 
-    updateHeatmapPoints(facilities, showHeatmap) {
-        if (showHeatmap) {
+    updateHeatmapPoints(facilities) {
+        if ($("#heatmap-switch input").prop("checked")) {
             let heatPoints = { good: [], average: [], bad: [] };
             for (let i = 0; i < facilities.length; i++) {
                 if (facilities[i].mark in heatPoints) {
@@ -263,7 +262,7 @@ class MapContent extends Component {
                 }
             }
 
-            main.updateHeatmapPoints(facilities, showHeatmap);
+            main.updateHeatmapPoints(facilities);
         });
 
 
