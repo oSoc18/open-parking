@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import './Treemap.css'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import { Table } from 'reactstrap';
+import { Table, Button } from 'reactstrap';
 var colorDict = {
     "good": "goodBG",
     "average": "avgBG",
@@ -120,8 +120,6 @@ while (textLength > (width - 2 * padding) && text.length > 0) {
   
 handleMouseOverNode (obj, name, parent) {
 
-    if(name == null)
-         name = "Unknown"
     let rect = d3.select("#"+ name)
 
     if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
@@ -138,9 +136,7 @@ handleMouseOverNode (obj, name, parent) {
 }
 
 handleMouseOutNode(obj, name, parent) {
-
-    if(name == null)
-        name = "Unknown"
+ 
     let rect = d3.select("#"+ name.replace(/ /g,"_"))
 
     if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
@@ -223,8 +219,6 @@ generateBreadCrums(data, level){
     console.log(this.props.data)
     if(this.props.data /*&& this.props.level && this.props.level !== 3*/){
 
-        if(this.props.data.name = null)
-            this.props.data.name = "Unknown"
 
         if(!this.props.level || this.props.level !== 3 ){
             breadCrums = this.generateBreadCrums(this.props.data, this.props.level)
@@ -247,7 +241,7 @@ generateBreadCrums(data, level){
 
     return (
        <div>
-           <h1>{breadCrums}</h1>
+           <h1>{breadCrums}</h1> <Button outline color="primary">Zoom out</Button>{' '}
            <Table className="heatMap" width={0}/>
       <svg className="TreemapData"  >
         
