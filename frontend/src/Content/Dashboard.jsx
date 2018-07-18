@@ -77,12 +77,17 @@ class Dashboard extends Component {
 
    
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
-    this.state = ({level: 0, treemapData: null})  // default = land
+    this.state = ({level: 0, treemapData: null, stackedTree: []})  // default = land
   }
 
   componentDidMount() {
     //this.generateTable()
     this.setNodesTreemap()
+  }
+
+  getPrev(){
+    //lower level
+
   }
 
   changeLevel(up){
@@ -159,7 +164,6 @@ class Dashboard extends Component {
 
     if(forceLevel){
       this.level = 3
-      alert(name)
     }
 
     let summaryStr = this.level === 3 ? "" : "summary/"
@@ -320,7 +324,8 @@ class Dashboard extends Component {
         }
   
       
-          this.setState({treemapData: json})
+         let tempHistory = this.state.stackedTree.push(json)
+          this.setState({treemapData: json, stackedTree: tempHistory})
     }
           
     }
@@ -339,10 +344,24 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
-        <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)}/>
+        <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)}/>
     
       
     );
+  }
+
+  onDezoom(val = 1){
+    this.level = this.level - val
+    let prev = null
+
+    if(this.state.stackedTree.length > 0){
+      let temp = this.state.stackedTree
+        prev = temp.pop()
+        this.setState({
+            treemapData: prev,
+            stackedTree: temp
+        })
+    }
   }
 }
 

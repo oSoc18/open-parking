@@ -179,6 +179,7 @@ listenForZooms(name, parent = null){
     }
     if(this.props.onZoomChange ){
         this.stackedTree.push({"data": this.props.data, "name": this.props.data.name })
+        console.log(this.stackedTree)
         if(this.props.level !== 3){
            
             this.props.onZoomChange(name)
@@ -200,24 +201,29 @@ generateBreadCrums(data, level){
 
 goPrev(){
 
-    let prevData = null
+    /*let prevData = null
     let prevName = ""
+
+    d3.select(".heatMap").selectAll("*").remove()
     if(this.stackedTree.length < 1)
         return //this shouldn't happen
 
-    if(this.stackedTree.length > 1){
+    if(this.stackedTree.length > 0){
         let temp = this.stackedTree.pop()
         prevData = temp.data
         prevName = temp.name
+        console.log(this.stackedTree)
     }
-    else { // we cant pop
-        let temp = this.stackedTree[0]
-        prevData = temp.data
-        prevName = temp.name
+    else{
+        alert("nothing in tree")
     }
-    this.drawMap(d3.hierarchy(prevData))
-    //load data + title
-    //drawmap
+
+    this.drawMap(d3.hierarchy(prevData))*/
+  
+    if(this.props.onDezoom){
+        this.props.onDezoom()
+    }
+
 }
 
   render() {
@@ -243,7 +249,7 @@ goPrev(){
             breadCrums = this.props.data.name
         }
 
-        if(breadCrums !== "Loading data..." && this.props.level > 0){
+        if(breadCrums !== "Loading data..."  && this.stackedTree.length > 0){
             buttonZoomOut = (<Button outline color="primary" style={{"float": "right"}} onClick={this.goPrev}>Zoom out</Button>)
         }
         
