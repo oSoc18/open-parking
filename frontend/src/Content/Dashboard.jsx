@@ -155,17 +155,22 @@ class Dashboard extends Component {
 
   onZoomChange(name, forceLevel){
     let levelIndex = ++(this.level)
-    if(forceLevel)
+
+
+    if(forceLevel){
       this.level = 3
+      alert(name)
+    }
 
     let summaryStr = this.level === 3 ? "" : "summary/"
+    let city = this.level === 3 ?  name : null
     let sub = levels[levelIndex] + "/" + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
     let thiss = this
     fetch(url) 
     .then(response => response.json())
     .then(json => {
-      thiss.setTreeMap(json)
+      thiss.setTreeMap(json, city)
   }    )
   }
 
@@ -307,9 +312,15 @@ class Dashboard extends Component {
 
     }
 
-    setTreeMap(json){
-      if(this.state.treemapData !== json)
+    setTreeMap(json, cityname = null){
+      if(this.state.treemapData !== json){ //only update if it's not the same
+
+        if(cityname !== null){
+          json["name"] = cityname
+        }
           this.setState({treemapData: json})
+    }
+          
     }
 
     onZoomChange2(name, jumpToLevel = false){
