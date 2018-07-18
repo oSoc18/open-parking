@@ -235,7 +235,10 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
-                <div className="switch_field">
+                <div className="legend-field">
+
+                </div>
+                <div className="switch-field">
                     <label className="heat-label">Heatview</label>
                     <div class="container" className="switch-total">
                         <label class="switch"><input type="checkbox" />
