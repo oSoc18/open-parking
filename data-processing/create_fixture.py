@@ -72,6 +72,14 @@ def get_mark(facilityType, longitude, latitude, staticData):
         else:
             return "bad"
 
+def get_usage(staticData):
+    if staticData is not None and is_not_none(staticData, "specifications", True):
+        specs = staticData["specifications"][0]
+        if is_not_none(specs, "usage"):
+            return specs["usage"]
+    return None
+
+
 input_directory = argv[1]
 output_filename = argv[2]
 
@@ -103,6 +111,7 @@ for filename in file_list:
     # Add the mark field, based on some other fields
     fields["mark"] = get_mark(fields["facilityType"], fields["longitude"],
             fields["latitude"], facility["staticData"])
+    fields["usage"] = get_usage(fields["staticData"])
 
     output_json.append({"model": "api.parkingdata", "pk": pk, "fields": fields})
     pk += 1
