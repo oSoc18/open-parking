@@ -1,7 +1,7 @@
 .MainContent {
     float: left;
     height: 100%;
-    
+
     /*padding: 20px;
     */position: absolute;
     left: 250px;
@@ -10,7 +10,7 @@
     left: 250px;
     max-width: 100%;
     min-width: 1111px;
-   
+
 
 }
 
@@ -19,4 +19,11 @@
     max-height: 600px;
 }
 
+.active {
+    background-color: #fff;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.2);
+}
 
+.nav-link, .nav-link:hover, .nav-link:focus {
+    color: #000;
+}
