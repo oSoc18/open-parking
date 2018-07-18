@@ -23,7 +23,7 @@ class MapContent extends Component {
         return map;
     }
 
-    filterMarkers(facilities, cluster, showHeatmap) {
+    filterMarkers(facilities, cluster) {
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -210,13 +210,12 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        this.updateHeatmapPoints(facilities, showHeatmap);
-
+        this.updateHeatmapPoints(facilities);
     }
 
-    updateHeatmapPoints(facilities, showHeatmap) {
-        if (showHeatmap) {
-            let heatPoints = {good: [], average: [], bad: []};
+    updateHeatmapPoints(facilities) {
+        if ($("#heatmap-switch input").prop("checked")) {
+            let heatPoints = { good: [], average: [], bad: [] };
             for (let i = 0; i < facilities.length; i++) {
                 if (facilities[i].mark in heatPoints) {
                     heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
@@ -274,7 +273,7 @@ class MapContent extends Component {
                 }
             }
 
-            main.updateHeatmapPoints(facilities, showHeatmap);
+            main.updateHeatmapPoints(facilities);
         });
 
 
@@ -316,6 +315,7 @@ class MapContent extends Component {
                     crossorigin="" />
                 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
 
+                <div id="search-container"></div>
 
                 <div id="mapid"></div>
 
@@ -323,6 +323,10 @@ class MapContent extends Component {
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
+                        <div id="color-and-text">
+                            <div class="small-box blue"></div>
+                            <span>Excellent</span>
+                        </div>
                         <div id="color-and-text">
                             <div class="small-box blue"></div>
                             <span>Excellent</span>
