@@ -33,6 +33,9 @@ class MapContent extends Component {
             return this;
         };
 
+        let vis = this.props.filters.visFacilities
+        console.log(vis);
+
         let ParkingIcon = L.Icon.extend({
             options: {
                 iconSize: [36, 36],
@@ -86,6 +89,14 @@ class MapContent extends Component {
         if (!$("#public").prop("checked")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false) {
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("garage")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
                     delete markersToAdd[i];
                 }
             }
@@ -150,27 +161,27 @@ class MapContent extends Component {
 
     componentDidMount() {
 
-        let map = this.renderMap();
+        this.map = this.renderMap();
         let main = this;
         let facilities = [];
         let cluster = L.markerClusterGroup({
             disableClusteringAtZoom: 13
         });
-        map.addLayer(cluster);
+        this.map.addLayer(cluster);
 
         $("#layers div input").prop("checked", true);
 
 
 
-        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + map.getBounds().toBBoxString() + "/?format=json", function (json) {
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
             facilities = json;
             main.filterMarkers(facilities, cluster);
 
         });
 
 
-        map.on("moveend", function () {
-            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + map.getBounds().toBBoxString() + "/?format=json", function (json) {
+        this.map.on("moveend", function () {
+            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
 
                 facilities = json;
                 main.filterMarkers(facilities, cluster);
@@ -187,11 +198,10 @@ class MapContent extends Component {
 
     render() {
 
-            this.vis = this.props.filters.visFacilities // get visible facilities
-            
+             // get visible facilities
             //this.updateOnOff
-            
-    
+
+
         return (
 
             <div id="mapParent">
