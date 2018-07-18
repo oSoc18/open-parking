@@ -29,13 +29,19 @@ class MapContent extends Component {
             }
             return this;
         };
-        let offstreetIcon = L.icon({
-            iconUrl: require('./markers/parking-blue.png'),
-            iconSize: [46, 46],
-            iconAnchor: [23, 46],
-            popupAnchor: [0, -46]
+
+        let ParkingIcon = L.Icon.extend({
+            options: {
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+            }
         });
 
+        let goodIcon = new ParkingIcon({iconUrl: require('./markers/parking-green.png')});
+        let averageIcon = new ParkingIcon({iconUrl: require('./markers/parking-orange.png')});
+        let badIcon = new ParkingIcon({iconUrl: require('./markers/parking-red.png')});
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./markers/parking-blue.png')});
 
         let main = this;
 
@@ -103,11 +109,12 @@ class MapContent extends Component {
                     }
 
                     $.getJSON(facility.staticDataUrl, function (data) {
-                        popup += "<br>Location: " + (facility.latitude!==undefined?facility.latitude: "<span class='text-danger'>No latitude</span>") + " " + (facility.longitude!==undefined?facility.longitude:"<span class='text-danger'>No longitude</span>") +
-                            "<br>Tariffs: " + (data.tariffs!==undefined? "Available":"<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.openingTimes!==undefined? "Available":"<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.contactPersons!==undefined? "Available":"<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingRestrictions!==undefined?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+                        popup +="<br>Limited API access: " + facility.limitedAccess +
+                            "<br>Location: " + facility.latitude + " " + facility.longitude +
+                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
                         mark.getPopup().setContent(popup);
                     });
                 }else {
@@ -118,14 +125,14 @@ class MapContent extends Component {
             });
             if(facility.mark !== "onstreet"){
                 if(facility.mark === "bad"){
-
+                    mark.setIcon(badIcon);
                 }else if(facility.mark === "average"){
-
+                    mark.setIcon(averageIcon);
                 }else{
-
+                    mark.setIcon(goodIcon);
                 }
             }else{
-                mark.setIcon(offstreetIcon);
+                mark.setIcon(offStreetIcon);
             }
             markers.push(mark);
         });
@@ -140,7 +147,7 @@ class MapContent extends Component {
         let main = this;
         let facilities = [];
         let cluster = L.markerClusterGroup({
-            disableClusteringAtZoom: 17
+            disableClusteringAtZoom: 13
         });
         map.addLayer(cluster);
 
