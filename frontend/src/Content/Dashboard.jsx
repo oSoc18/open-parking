@@ -361,16 +361,13 @@ class Dashboard extends Component {
     this.level = this.level - val
     let prev = null
 
-    alert("Hier")
     if(this.state.stackedTree.length > 0){
       let temp = this.state.stackedTree
         prev = temp.pop()
-        
         this.setState({
             treemapData: prev,
             stackedTree: temp
         })
-        console.log(this.state.stackedTree)
     }
   }
 }
