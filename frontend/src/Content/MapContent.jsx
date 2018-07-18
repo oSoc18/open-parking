@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
+import 'leaflet.heat';
 import './MapContent.css';
 
 
@@ -10,6 +11,7 @@ class MapContent extends Component {
     constructor(props) {
         super(props)
     }
+
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
@@ -19,10 +21,9 @@ class MapContent extends Component {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(map);
         return map;
-
     }
 
-    filterMarkers(facilities, cluster) {
+    filterMarkers(facilities, cluster, showHeatmap) {
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -49,10 +50,11 @@ class MapContent extends Component {
         console.log(inf);
         console.log(extra);
 
-        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
-        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
-        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-red.png') });
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png') });
+        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
+        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
+        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-bad.png')});
+        let onStreetIcon = new ParkingIcon({iconUrl: require('./images/parking-onstreet.png')});
+
 
         let main = this;
 
@@ -107,7 +109,8 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("parkAndRide")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+
+                if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                     delete markersToAdd[i];
                 }
             }
@@ -124,7 +127,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("carpool")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")) {
                     delete markersToAdd[i];
 
                 }
@@ -133,7 +136,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("permit")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")) {
                     delete markersToAdd[i];
                 }
             }
@@ -141,12 +144,12 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("otherPlaces")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) &&
+                if (markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) &&
                     !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
                     !markersToAdd[i].usage.toLowerCase().includes("garage") &&
                     !(markersToAdd[i].usage.toLowerCase().includes("ride")) &&
                     !(markersToAdd[i].usage.toLowerCase().includes("p en r")) &&
-                    !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    !(markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                     delete markersToAdd[i];
                 }
             }
@@ -199,15 +202,32 @@ class MapContent extends Component {
                     mark.setIcon(goodIcon);
                 }
             } else {
-                mark.setIcon(offStreetIcon);
+                mark.setIcon(onStreetIcon);
 
             }
             markers.push(mark);
         });
 
         cluster.addLayers(markers);
+
+        this.updateHeatmapPoints(facilities, showHeatmap);
+
     }
 
+    updateHeatmapPoints(facilities, showHeatmap) {
+        if (showHeatmap) {
+            let heatPoints = {good: [], average: [], bad: []};
+            for (let i = 0; i < facilities.length; i++) {
+                if (facilities[i].mark in heatPoints) {
+                    heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
+                }
+            }
+            for (let mark in heatPoints) {
+                this.heatmaps[mark].setLatLngs(heatPoints[mark]);
+                this.heatmaps[mark].redraw();
+            }
+        }
+    }
 
     componentDidMount() {
 
@@ -221,7 +241,6 @@ class MapContent extends Component {
         this.map.addLayer(cluster);
 
         $("#layers div input").prop("checked", true);
-
 
 
         $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
@@ -244,8 +263,42 @@ class MapContent extends Component {
             main.filterMarkers(facilities, cluster);
         });
 
-    }
+        let heatmapSwitch = $("#heatmap-switch input");
+        heatmapSwitch.on("click", function () {
+            let showHeatmap = heatmapSwitch.prop("checked");
+            for (let mark in main.heatmaps) {
+                // Remove heatmap by default, and add it if the switch is checked
+                main.map.removeLayer(main.heatmaps[mark]);
+                if (showHeatmap) {
+                    main.map.addLayer(main.heatmaps[mark]);
+                }
+            }
 
+            main.updateHeatmapPoints(facilities, showHeatmap);
+        });
+
+
+        // Create three heatmap layers, they will be populated in filterMarkers
+        // There is one layer per marker color, there is no way to do it with
+        // only one heatmap
+        let heatmapColors = [
+            ["bad", "#d55e00"], // Vermillion
+            ["average", "#e69f00"], // Orange
+            ["good", "#56b4e9"],  // Sky blue
+        ];
+        this.heatmaps = {};
+        for (let i = 0; i < heatmapColors.length; i++) {
+            this.heatmaps[heatmapColors[i][0]] = L.heatLayer([], {
+                radius: 35,
+                blur: 15,
+                minOpacity: 0.6,
+                max: 1,
+                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
+            });
+            this.heatmaps[heatmapColors[i][0]].addTo(this.map);
+        }
+
+    }
 
 
 
@@ -265,8 +318,28 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
-                <div className="switch_field">
-                    <label className="heat-label">Heatview</label>
+
+                <div className="legend-field">
+                    <span className="legend-label">Data availability of facilities</span>
+                    <br></br>
+                    <div className="legend-field-text">
+                        <div id="color-and-text">
+                            <div class="small-box blue"></div>
+                            <span>Excellent</span>
+                        </div>
+                        <div id="color-and-text">
+                            <div class="small-box orange"></div>
+                            <span>Mediocre</span>
+                        </div>
+                        <div id="color-and-text">
+                            <div class="small-box red"></div>
+                            <span>Poor</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="switch-field" id="heatmap-switch">
+                    <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
                         <label class="switch"><input type="checkbox" />
                             <div></div>
