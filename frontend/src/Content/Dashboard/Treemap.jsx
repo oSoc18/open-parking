@@ -216,8 +216,11 @@ generateBreadCrums(data, level){
 
 
     let breadCrums = "Loading data..."
+    console.log(this.props.data)
     if(this.props.data /*&& this.props.level && this.props.level !== 3*/){
 
+        if(this.props.data.name = null)
+            this.props.data.name = "Unknown"
 
         if(!this.props.level || this.props.level !== 3 ){
             breadCrums = this.generateBreadCrums(this.props.data, this.props.level)
@@ -225,7 +228,7 @@ generateBreadCrums(data, level){
         }
         else if (this.props.level && this.props.level === 3) {
          
-            console.log(this.props.data)
+            
             this.drawMapView(this.props.data) //heatmap
         }
 
@@ -278,22 +281,25 @@ generateBreadCrums(data, level){
   
         for(let i = 1; i < data.length; i++){
 
-        if(data[i.mark === "onstreet"])
+        if(data[i].mark === "onstreet")
             continue
 
           let resultJson = data[i]["staticData"]
+    
+         /* alert(resultJson["mark"])*/
+          
   
 
           //resultJson["name"] = data[i]["name"]
 
           //generate row
-          this.generateRow(tbody, column, resultJson, data[i]["longitude"] )
+          this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark )
 
       }
      
       }
 
-      generateRow(tbody, columns, data, longitude){
+      generateRow(tbody, columns, data, longitude, mark = ""){
           data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
@@ -302,10 +308,11 @@ generateBreadCrums(data, level){
             let classN = ""
             if(columns[j] === "name"){
                 classN += " heatCellName"//normal cell
-
+                classN += " nameBorder" + mark
             tr.append('td')
                 .attr("class", classN)
                 .text(data[columns[j]])
+
             }
             else if (columns[j] === "longitude"){
         
