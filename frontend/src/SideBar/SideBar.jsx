@@ -14,12 +14,15 @@ class SideBar extends Component {
             expanded: [],
         };
         this.handleVisibleFacilities = this.handleVisibleFacilities.bind(this);
+        this.handleInformation = this.handleInformation.bind(this);
+        this.handleExtras = this.handleExtras.bind(this);
     }
 
     initFilters() {
         let jsn = {};
-        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"]
-
+        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
+        this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.extras = ["onStreet", "offSteet", "noDynamic", "private", "public"];
 
     }
 
@@ -63,6 +66,56 @@ class SideBar extends Component {
 
         if (this.props.onChangeVisFacilities)
             this.props.onChangeVisFacilities(temp)
+    }
+    handleExtras(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        let temp = this.extras;
+
+
+
+
+        var index = temp.indexOf(name);    // <-- Not supported in <IE9
+        if (index !== -1) {
+            temp.splice(index, 1);
+        }
+
+        else {
+            temp.push(name)
+        }
+        this.extras = temp;
+
+
+
+        if (this.props.onChangeExtras)
+            this.props.onChangeVisFacilities(temp)
+    }
+
+
+    handleInformation(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        let temp = this.information;
+
+
+
+
+        var index = temp.indexOf(name);    // <-- Not supported in <IE9
+        if (index !== -1) {
+            temp.splice(index, 1);
+        }
+
+        else {
+            temp.push(name)
+        }
+        this.information = temp;
+
+
+
+        if (this.props.onChangeInformation)
+            this.props.onChangeInformation(temp)
 
 
     }
@@ -116,27 +169,27 @@ class SideBar extends Component {
 
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                            value="capacity" />
+                            value="capacity" onChange={this.handleInformation} />
                         <label for="capacity">Capacity</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" />
+                            value="tariffs" onChange={this.handleInformation}/>
                         <label for="tariffs">Tariffs</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" />
+                            value="restrictions" onChange={this.handleInformation}/>
                         <label for="restrictions">Restrictions</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" />
+                            value="openingHours" onChange={this.handleInformation}/>
                         <label for="openingHours">Opening hours</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" />
+                            value="contactData" onChange={this.handleInformation}/>
                         <label for="contactData">Contact data</label>
                     </div>
 
@@ -146,27 +199,27 @@ class SideBar extends Component {
 
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="onStreet" name="onStreet"
-                        value="onStreet" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                        value="onStreet" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="onStreet">On-street</label>
                 </div>
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="offStreet" name="offStreet"
-                        value="offStreet" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                        value="offStreet" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="offStreet">Off-street</label>
                 </div>
                 <div data-tooltip="Get all parkings without dynamic data." data-tooltip-position="right" >
                     <input class="styled-checkbox-extra" type="checkbox" id="noDynamic" name="noDynamic"
-                        value="noDynamic" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                        value="noDynamic" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="noDynamic">No dynamic data</label>
                 </div>
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="private" name="private"
-                        value="private" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                        value="private" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="private">Private</label>
                 </div>
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="public" name="public"
-                        value="public" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                        value="public" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="public">Public</label>
                 </div>
             </div>

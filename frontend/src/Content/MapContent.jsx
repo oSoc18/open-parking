@@ -9,7 +9,6 @@ class MapContent extends Component {
 
     constructor(props) {
         super(props)
-        this.loaded = false
     }
     renderMap() {
         let map = L.map('mapid', {
@@ -34,9 +33,6 @@ class MapContent extends Component {
             return this;
         };
 
-        let vis = this.props.filters.visFacilities
-        console.log(vis);
-
         let ParkingIcon = L.Icon.extend({
             options: {
                 iconSize: [36, 36],
@@ -44,6 +40,14 @@ class MapContent extends Component {
                 popupAnchor: [0, -36]
             }
         });
+
+        let vis = this.props.filters.visFacilities;
+        let inf = this.props.filters.information;
+        let extra = this.props.filters.extras;
+
+        console.log(vis);
+        console.log(inf);
+        console.log(extra);
 
         let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
         let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
@@ -54,52 +58,57 @@ class MapContent extends Component {
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
-        if (!$("#onstreet").prop("checked")) {
-
+        if (!extra.includes("onStreet")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].facilityType === "onstreet") {
                     delete markersToAdd[i];
+                    console.log("onsteet");
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if (!$("#offstreet").prop("checked")) {
+        if (!extra.includes("offStreet")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].facilityType === "offstreet") {
                     delete markersToAdd[i];
+                    console.log("offstreet");
+
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if (!$("#dynamic").prop("checked")) {
+        if (!extra.includes("noDynamic")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].dynamicDataUrl === null) {
                     delete markersToAdd[i];
+                    console.log("no dynamic");
+
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if (!$("#private").prop("checked")) {
+        if (!extra.includes("private")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true) {
                     delete markersToAdd[i];
+                    console.log("private");
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if (!$("#public").prop("checked")) {
+        if (!extra.includes("public")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false) {
                     delete markersToAdd[i];
+                    console.log("public");
                 }
             }
         }
         markersToAdd.clean(undefined);
         if (!vis.includes("parkAndRide")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))){
                     delete markersToAdd[i];
-                    console.log("park")
                 }
             }
         }
@@ -109,7 +118,6 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
                     delete markersToAdd[i];
-                    console.log("farage")
                 }
             }
         }
@@ -118,7 +126,6 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
                     delete markersToAdd[i];
-                    console.log("carpool")
 
                 }
             }
@@ -128,17 +135,19 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
                     delete markersToAdd[i];
-                    console.log("permit")
-
                 }
             }
         }
         markersToAdd.clean(undefined);
         if (!vis.includes("otherPlaces")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) &&
+                    !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
+                    !markersToAdd[i].usage.toLowerCase().includes("garage") &&
+                    !(markersToAdd[i].usage.toLowerCase().includes("ride")) &&
+                    !(markersToAdd[i].usage.toLowerCase().includes("p en r")) &&
+                    !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
                     delete markersToAdd[i];
-                    console.log("other")
                 }
             }
         }
@@ -237,31 +246,13 @@ class MapContent extends Component {
 
     }
 
-    componentDidUpdate(prevprops) {
 
-        if(prevprops.filters === this.props.filters)
-            return;
-
-        let main = this;
-        this.map.invalidateSize();
-
-        let facilities = [];
-        let cluster = L.markerClusterGroup({
-            disableClusteringAtZoom: 13
-        });
-
-        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
-            facilities = json;
-            main.filterMarkers(facilities, cluster);
-            main.map.invalidateSize()
-
-        });
-    }
 
 
     render() {
         // get visible facilities
         //this.updateOnOff
+
 
 
         return (
@@ -282,34 +273,7 @@ class MapContent extends Component {
                         </label>
                     </div>
                 </div>
-
-                <div id="layers">
-
-
-                    <div>
-                        <input type="checkbox" id="onstreet" name="filter" value="onstreet" />
-                        <label htmlFor="onstreet">On-street</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="offstreet" name="filter" value="offstreet" />
-                        <label htmlFor="offstreet">Off-street</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="dynamic" name="filter" value="dynamic" />
-                        <label htmlFor="offstreet">Show parkings with no dynamic data</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="private" name="filter" value="private" />
-                        <label htmlFor="offstreet">private</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="public" name="filter" value="public" />
-                        <label htmlFor="offstreet">public</label>
-                    </div>
-                </div>
             </div>
-
-
         )
 
 
