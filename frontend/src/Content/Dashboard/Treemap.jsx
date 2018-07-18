@@ -120,6 +120,8 @@ while (textLength > (width - 2 * padding) && text.length > 0) {
   
 handleMouseOverNode (obj, name, parent) {
 
+    if(name == null)
+         name = "Unknown"
     let rect = d3.select("#"+ name)
 
     if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
@@ -137,6 +139,8 @@ handleMouseOverNode (obj, name, parent) {
 
 handleMouseOutNode(obj, name, parent) {
 
+    if(name == null)
+        name = "Unknown"
     let rect = d3.select("#"+ name.replace(/ /g,"_"))
 
     if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
