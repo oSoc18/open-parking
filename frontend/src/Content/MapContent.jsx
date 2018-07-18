@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
+import './MapContent.css';
 
-import './MapContent.css'
 
 class MapContent extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
     }
     renderMap() {
@@ -41,10 +41,10 @@ class MapContent extends Component {
             }
         });
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-green.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-orange.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-red.png')});
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png')});
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-red.png') });
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png') });
 
         let main = this;
 
@@ -113,12 +113,12 @@ class MapContent extends Component {
                     }
 
                     $.getJSON(facility.staticDataUrl, function (data) {
-                        popup +="<br>Limited API access: " + facility.limitedAccess +
+                        popup += "<br>Limited API access: " + facility.limitedAccess +
                             "<br>Location: " + facility.latitude + " " + facility.longitude +
-                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length > 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
 
                         mark.getPopup().setContent(popup);
                     });
@@ -128,15 +128,15 @@ class MapContent extends Component {
 
                 }
             });
-            if(facility.mark !== "onstreet"){
-                if(facility.mark === "bad"){
+            if (facility.mark !== "onstreet") {
+                if (facility.mark === "bad") {
                     mark.setIcon(badIcon);
-                }else if(facility.mark === "average"){
+                } else if (facility.mark === "average") {
                     mark.setIcon(averageIcon);
-                }else{
+                } else {
                     mark.setIcon(goodIcon);
                 }
-            }else{
+            } else {
                 mark.setIcon(offStreetIcon);
 
             }
@@ -186,11 +186,11 @@ class MapContent extends Component {
 
     render() {
 
-            this.vis = this.props.filters.visFacilities // get visible facilities
-            
-            //this.updateOnOff
-            
-    
+        this.vis = this.props.filters.visFacilities // get visible facilities
+
+        //this.updateOnOff
+
+
         return (
 
             <div id="mapParent">
@@ -201,9 +201,18 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
-                <img src="./images/parking-blue.png" alt="" />
+                <div className="switch_field">
+                    <label className="heat-label">Heatview</label>
+                    <div class="container" className="switch-total">
+                        <label class="switch"><input type="checkbox" />
+                            <div></div>
+                        </label>
+                    </div>
+                </div>
 
                 <div id="layers">
+
+
                     <div>
                         <input type="checkbox" id="onstreet" name="filter" value="onstreet" />
                         <label htmlFor="onstreet">On-street</label>
