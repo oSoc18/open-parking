@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
+import 'leaflet.heat';
+import './MapContent.css';
 
-import './MapContent.css'
 
 class MapContent extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.loaded = false
     }
@@ -20,7 +21,6 @@ class MapContent extends Component {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(map);
         return map;
-
     }
 
     filterMarkers(facilities, cluster) {
@@ -45,10 +45,10 @@ class MapContent extends Component {
             }
         });
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-green.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-orange.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-red.png')});
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png')});
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-red.png') });
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png') });
 
         let main = this;
 
@@ -95,11 +95,50 @@ class MapContent extends Component {
             }
         }
         markersToAdd.clean(undefined);
+        if (!vis.includes("parkAndRide")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    delete markersToAdd[i];
+                    console.log("park")
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+
         if (!vis.includes("garage")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
                     delete markersToAdd[i];
-                    this.map.invalidateSize()
+                    console.log("farage")
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("carpool")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
+                    delete markersToAdd[i];
+                    console.log("carpool")
+
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("permit")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                    delete markersToAdd[i];
+                    console.log("permit")
+
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("otherPlaces")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    delete markersToAdd[i];
+                    console.log("other")
                 }
             }
         }
@@ -126,13 +165,13 @@ class MapContent extends Component {
                         });
                     }
 
-                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/"+facility.uuid+"/", function (data) {
-                        popup +="<br>Limited API access: " + facility.limitedAccess +
+                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
+                        popup += "<br>Limited API access: " + facility.limitedAccess +
                             "<br>Location: " + facility.latitude + " " + facility.longitude +
-                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length > 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
 
                         mark.getPopup().setContent(popup);
                     });
@@ -142,15 +181,15 @@ class MapContent extends Component {
 
                 }
             });
-            if(facility.mark !== "onstreet"){
-                if(facility.mark === "bad"){
+            if (facility.mark !== "onstreet") {
+                if (facility.mark === "bad") {
                     mark.setIcon(badIcon);
-                }else if(facility.mark === "average"){
+                } else if (facility.mark === "average") {
                     mark.setIcon(averageIcon);
-                }else{
+                } else {
                     mark.setIcon(goodIcon);
                 }
-            }else{
+            } else {
                 mark.setIcon(offStreetIcon);
 
             }
@@ -158,12 +197,23 @@ class MapContent extends Component {
         });
 
         cluster.addLayers(markers);
+
+        let heatPoints = {good: [], average: [], bad: []};
+        for (let i = 0; i < facilities.length; i++) {
+            if (facilities[i].mark in heatPoints) {
+                heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
+            }
+        }
+        for(let mark in heatPoints) {
+            main.heatmaps[mark].setLatLngs(heatPoints[mark]);
+            main.heatmaps[mark].redraw();
+        }
     }
 
 
     componentDidMount() {
 
-        this.loaded = true
+        this.loaded = true;
         this.map = this.renderMap();
         let main = this;
         let facilities = [];
@@ -196,15 +246,35 @@ class MapContent extends Component {
             main.filterMarkers(facilities, cluster);
         });
 
+        // Create three heatmap layers, they will be populated in filterMarkers
+        // There is one layer per marker color, there is no way to do it with
+        // only one heatmap
+        let heatmapColors = [
+            ["bad", "#d55e00"], // Vermillion
+            ["average", "#e69f00"], // Orange
+            ["good", "#56b4e9"],  // Sky blue
+        ];
+        this.heatmaps = {};
+        for (let i = 0; i < heatmapColors.length; i++) {
+            this.heatmaps[heatmapColors[i][0]] = L.heatLayer([], {
+                radius: 35,
+                blur: 15,
+                minOpacity: 0.6,
+                max: 1,
+                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
+            });
+            this.heatmaps[heatmapColors[i][0]].addTo(this.map);
+        }
+
     }
 
-    componentDidUpdate(prevprops){
+    componentDidUpdate(prevprops) {
 
         if(prevprops.filters === this.props.filters)
-            return
+            return;
 
-        let main = this
-        this.map.invalidateSize()
+        let main = this;
+        this.map.invalidateSize();
 
         let facilities = [];
         let cluster = L.markerClusterGroup({
@@ -221,8 +291,8 @@ class MapContent extends Component {
 
 
     render() {
-             // get visible facilities
-            //this.updateOnOff
+        // get visible facilities
+        //this.updateOnOff
 
 
         return (
@@ -235,9 +305,22 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
-                <img src="./images/parking-blue.png" alt="" />
+
+                <div className="legend-field">
+                </div>
+
+                <div className="switch_field">
+                    <label className="heat-label">Heat view</label>
+                    <div class="container" className="switch-total">
+                        <label class="switch"><input type="checkbox" />
+                            <div></div>
+                        </label>
+                    </div>
+                </div>
 
                 <div id="layers">
+
+
                     <div>
                         <input type="checkbox" id="onstreet" name="filter" value="onstreet" />
                         <label htmlFor="onstreet">On-street</label>

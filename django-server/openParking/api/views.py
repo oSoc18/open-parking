@@ -139,6 +139,7 @@ def generic_summary_view(field_name, area_name, lower_field_name):
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
             ]
-        } for area in areas]
+        # We do not want to return None locations to the summary frontend
+        } for area in areas if area is not None]
     })
     return HttpResponse(dump, content_type='application/json')
