@@ -324,6 +324,7 @@ class MapContent extends Component {
                     crossorigin="" />
                 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
 
+                <div id="search-container"></div>
 
                 <div id="mapid"></div>
 
@@ -331,6 +332,10 @@ class MapContent extends Component {
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
+                        <div id="color-and-text">
+                            <div class="small-box blue"></div>
+                            <span>Excellent</span>
+                        </div>
                         <div id="color-and-text">
                             <div class="small-box blue"></div>
                             <span>Excellent</span>
