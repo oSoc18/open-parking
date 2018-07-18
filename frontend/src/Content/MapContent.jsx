@@ -23,7 +23,7 @@ class MapContent extends Component {
         return map;
     }
 
-    filterMarkers(facilities, cluster) {
+    filterMarkers(facilities, cluster, showHeatmap) {
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -97,7 +97,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("parkAndRide")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                     delete markersToAdd[i];
                     console.log("park")
                 }
@@ -116,7 +116,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("carpool")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")) {
                     delete markersToAdd[i];
                     console.log("carpool")
 
@@ -126,7 +126,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("permit")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")) {
                     delete markersToAdd[i];
                     console.log("permit")
 
@@ -136,7 +136,7 @@ class MapContent extends Component {
         markersToAdd.clean(undefined);
         if (!vis.includes("otherPlaces")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                if (markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                     delete markersToAdd[i];
                     console.log("other")
                 }
@@ -198,18 +198,24 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        let heatPoints = {good: [], average: [], bad: []};
-        for (let i = 0; i < facilities.length; i++) {
-            if (facilities[i].mark in heatPoints) {
-                heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
-            }
-        }
-        for(let mark in heatPoints) {
-            main.heatmaps[mark].setLatLngs(heatPoints[mark]);
-            main.heatmaps[mark].redraw();
-        }
+        this.updateHeatmapPoints(facilities, showHeatmap);
+
     }
 
+    updateHeatmapPoints(facilities, showHeatmap) {
+        if (showHeatmap) {
+            let heatPoints = { good: [], average: [], bad: [] };
+            for (let i = 0; i < facilities.length; i++) {
+                if (facilities[i].mark in heatPoints) {
+                    heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
+                }
+            }
+            for (let mark in heatPoints) {
+                this.heatmaps[mark].setLatLngs(heatPoints[mark]);
+                this.heatmaps[mark].redraw();
+            }
+        }
+    }
 
     componentDidMount() {
 
@@ -246,6 +252,21 @@ class MapContent extends Component {
             main.filterMarkers(facilities, cluster);
         });
 
+        let heatmapSwitch = $("#heatmap-switch input");
+        heatmapSwitch.on("click", function () {
+            let showHeatmap = heatmapSwitch.prop("checked");
+            for (let mark in main.heatmaps) {
+                // Remove heatmap by default, and add it if the switch is checked
+                main.map.removeLayer(main.heatmaps[mark]);
+                if (showHeatmap) {
+                    main.map.addLayer(main.heatmaps[mark]);
+                }
+            }
+
+            main.updateHeatmapPoints(facilities, showHeatmap);
+        });
+
+
         // Create three heatmap layers, they will be populated in filterMarkers
         // There is one layer per marker color, there is no way to do it with
         // only one heatmap
@@ -261,7 +282,7 @@ class MapContent extends Component {
                 blur: 15,
                 minOpacity: 0.6,
                 max: 1,
-                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
+                gradient: { 0: heatmapColors[i][1], 1: heatmapColors[i][1] }
             });
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
@@ -270,7 +291,7 @@ class MapContent extends Component {
 
     componentDidUpdate(prevprops) {
 
-        if(prevprops.filters === this.props.filters)
+        if (prevprops.filters === this.props.filters)
             return;
 
         let main = this;
@@ -307,9 +328,25 @@ class MapContent extends Component {
                 <div id="mapid"></div>
 
                 <div className="legend-field">
+                    <span className="legend-label">Data availability of facilities</span>
+                    <br></br>
+                    <div className="legend-field-text">
+                        <div id="color-and-text">
+                            <div class="small-box blue"></div>
+                            <span>Excellent</span>
+                        </div>
+                        <div id="color-and-text">
+                            <div class="small-box orange"></div>
+                            <span>Mediocre</span>
+                        </div>
+                        <div id="color-and-text">
+                            <div class="small-box red"></div>
+                            <span>Poor</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="switch_field">
+                <div className="switch-field" id="heatmap-switch">
                     <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
                         <label class="switch"><input type="checkbox" />

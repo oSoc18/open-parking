@@ -57,11 +57,11 @@ def get_mark(facilityType, longitude, latitude, staticData):
 
         # Dive in static data
         if staticData is not None:
-            for field in ("tariffs", "contactPersons", "openingHours"):
+            for field in ("tariffs", "contactPersons", "openingTimes"):
                 if is_not_none(staticData, field, True):
                     numberFields += 1
-            if is_not_none(staticData, "specification", True):
-                specs = staticData["specifications"]
+            if is_not_none(staticData, "specifications", True):
+                specs = staticData["specifications"][0]
                 for field in ("capacity", "minimumHeightInMeters"):
                     if is_not_none(specs, field):
                         numberFields += 1
