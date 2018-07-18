@@ -69,6 +69,7 @@ svg.TreemapData {
     font-size: 12px;
 }
 
+
 .table th {
     font-size: 12px;
 }
@@ -138,4 +139,9 @@ h1 {
 .nameBordergood{
 
     border-bottom: 3px solid rgba(86, 180, 223) !important
+}
+
+
+.heatMap{
+    margin: 3 rem !important;
 }
