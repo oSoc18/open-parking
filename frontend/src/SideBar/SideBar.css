@@ -6,21 +6,122 @@
 }
 
 .sideBar{
-
+    padding-left: 20px;
     width: 250px;
     background-color: #ffffff; 
     height: 100vh;
     float: left;
+    text-align: left;
 } 
 
 .sideBar h1 {
-    margin-top: 20px;
-    color: #4f4f4f;
+    margin-top: 26px;
+    margin-right: 30px;
+    margin-left: 5px;
+    margin-bottom: 0px;
+    color: #363636;
+    font-size: 1.15em;
+    font-weight: bold;
+    font-family: 'Montserrat', Helvetica, sans-serif;
+    text-transform: uppercase;
+    float: right;
+}
+
+#logo {
+    margin-top: 14px;
+    margin-right: 0px;
+    margin-bottom: px;
+    margin-left: 4px;
+}
+
+.sideBar label{
+    color: #686868;
+}
+
+.sideBar h4 {
+    margin: 20px;
+    color: #363636;
     font-size: 1em;
     font-weight: bold;
     font-family: 'Montserrat', Helvetica, sans-serif;
     text-transform: uppercase;
  
+}
+
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    margin-right: 20px;
+    padding: 0;
+}
+
+.styled-checkbox {
+    position: absolute;
+    opacity: 0;
+}
+
+.styled-checkbox + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    
+}
+
+.styled-checkbox + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #7d7d7d;
+    border-radius: 20%;
+}
+
+.styled-checkbox:hover + label:before {
+    background: #ffffff;
+}
+
+.styled-checkbox:focus + label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.styled-checkbox:checked + label:before {
+    background: #ffffff;
+}
+
+.styled-checkbox:disabled + label {
+    color: #ffffff;
+    cursor: auto;
+}
+
+.styled-checkbox:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+}
+
+.styled-checkbox:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    background: ite;
+    width: 2px;
+    height: 2px;
+    box-shadow: 2px 0 0  #4571ec, 4px 0 0  #4571ec, 4px -2px 0  #4571ec, 4px -4px 0  #4571ec, 4px -6px 0  #4571ec, 4px -8px 0  #4571ec;
+    transform: rotate(45deg);
+}
+ 
+.unstyled {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
 }
 
 

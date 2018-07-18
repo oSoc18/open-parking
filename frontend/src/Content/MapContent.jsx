@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -7,20 +7,23 @@ import './MapContent.css'
 
 class MapContent extends Component {
 
+    constructor(props){
+        super(props)
+    }
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
             zoom: 8
         });
-        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ',{
+        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaXNsYWQiLCJhIjoiY2pqbzZiczU0MTV5aTNxcnM5bWY1Nnp4YSJ9.C9UeB-y3MTGiU8Lv7_m5dQ', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(map);
         return map;
 
     }
 
-    filterMarkers(facilities, cluster){
-        Array.prototype.clean = function(deleteValue) {
+    filterMarkers(facilities, cluster) {
+        Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
                     this.splice(i, 1);
@@ -38,50 +41,51 @@ class MapContent extends Component {
             }
         });
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./markers/parking-green.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./markers/parking-orange.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./markers/parking-red.png')});
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./markers/parking-blue.png')});
+        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-green.png')});
+        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-orange.png')});
+        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-red.png')});
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png')});
 
         let main = this;
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
-        if(!$("#onstreet").prop("checked")){
-            for(let i=0; i<markersToAdd.length; i++){
-                if(markersToAdd[i].facilityType === "onstreet"){
+        if (!$("#onstreet").prop("checked")) {
+
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].facilityType === "onstreet") {
                     delete markersToAdd[i];
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if(!$("#offstreet").prop("checked")){
-            for(let i=0; i<markersToAdd.length; i++){
-                if(markersToAdd[i].facilityType === "offstreet"){
+        if (!$("#offstreet").prop("checked")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].facilityType === "offstreet") {
                     delete markersToAdd[i];
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if(!$("#dynamic").prop("checked")){
-            for(let i=0; i<markersToAdd.length; i++){
-                if(markersToAdd[i].dynamicDataUrl === null){
+        if (!$("#dynamic").prop("checked")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].dynamicDataUrl === null) {
                     delete markersToAdd[i];
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if(!$("#private").prop("checked")){
-            for(let i=0; i<markersToAdd.length; i++){
-                if(markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true){
+        if (!$("#private").prop("checked")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true) {
                     delete markersToAdd[i];
                 }
             }
         }
         markersToAdd.clean(undefined);
-        if(!$("#public").prop("checked")){
-            for(let i=0; i<markersToAdd.length; i++){
-                if(markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false){
+        if (!$("#public").prop("checked")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false) {
                     delete markersToAdd[i];
                 }
             }
@@ -98,7 +102,7 @@ class MapContent extends Component {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
-                if(facility.facilityType === "offstreet") {
+                if (facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON(facility.dynamicDataUrl, function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
@@ -115,10 +119,11 @@ class MapContent extends Component {
                             "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
                             "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
                             "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+
                         mark.getPopup().setContent(popup);
                     });
-                }else {
-                    popup+="<br>This is an onstreet parking spot";
+                } else {
+                    popup += "<br>This is an onstreet parking spot";
                     mark.getPopup().setContent(popup);
 
                 }
@@ -133,6 +138,7 @@ class MapContent extends Component {
                 }
             }else{
                 mark.setIcon(offStreetIcon);
+
             }
             markers.push(mark);
         });
@@ -180,37 +186,42 @@ class MapContent extends Component {
 
     render() {
 
+            this.vis = this.props.filters.visFacilities // get visible facilities
+            
+            //this.updateOnOff
+            
+    
         return (
 
             <div id="mapParent">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
-                      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-                      crossorigin=""/>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
+                    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+                    crossorigin="" />
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
 
 
                 <div id="mapid"></div>
-                <img src="./markers/parking-blue.png" alt=""/>
+                <img src="./images/parking-blue.png" alt="" />
 
                 <div id="layers">
                     <div>
-                        <input type="checkbox" id="onstreet" name="filter" value="onstreet"/>
+                        <input type="checkbox" id="onstreet" name="filter" value="onstreet" />
                         <label htmlFor="onstreet">On-street</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="offstreet" name="filter" value="offstreet"/>
+                        <input type="checkbox" id="offstreet" name="filter" value="offstreet" />
                         <label htmlFor="offstreet">Off-street</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="dynamic" name="filter" value="dynamic"/>
+                        <input type="checkbox" id="dynamic" name="filter" value="dynamic" />
                         <label htmlFor="offstreet">Show parkings with no dynamic data</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="private" name="filter" value="private"/>
+                        <input type="checkbox" id="private" name="filter" value="private" />
                         <label htmlFor="offstreet">private</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="public" name="filter" value="public"/>
+                        <input type="checkbox" id="public" name="filter" value="public" />
                         <label htmlFor="offstreet">public</label>
                     </div>
                 </div>

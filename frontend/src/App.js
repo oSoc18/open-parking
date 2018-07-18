@@ -11,24 +11,30 @@ class App extends Component {
   constructor(props){
     super(props)
     //this.handleNavigation = this.handleNavigation.bind(this)
-    this.state = { mainContent: "map"}
+    this.state = { mainContent: "map",
+                    visFacilities: ["parkAndRide", "residentsOnly", "garage", "company", "otherPlaces"] 
+  }
   }
 
-  handleNavigation(value){
-    this.setState({mainContent: value})
+  onChangeVisFacilities(values){
 
+    this.setState({
+      visFacilities: values
+    })
 
   }
+
 
   render() {
     return (
       <div className="App">
-        <MainNav onChangeContent={this.handleNavigation.bind(this)} />
+     
 
 
 <div>
-        <SideBar  /> 
-        <MainContent tab={this.state.mainContent} /> 
+        <SideBar onChangeVisFacilities={this.onChangeVisFacilities.bind(this)} /> 
+        <MainContent tab={this.state.mainContent} filters={{"visFacilities": this.state.visFacilities
+                                                              }} /> 
         </div>
       </div>
     );

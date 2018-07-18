@@ -1,0 +1,118 @@
+rect {
+    fill: rgb(177, 180, 180);
+    opacity: 0.55;
+    padding: 8px;
+  }
+
+svg.TreemapData {
+    height: 100vh;
+    width: 100vw;
+}
+
+
+.badBG {
+
+    fill: #d7181d;
+    opacity: 1.0;
+    stroke: white;
+}
+
+.avgBG{
+    fill: #fbc89b;
+    opacity: 1.0;
+    stroke: white;
+}
+
+.goodBG{
+    fill: #92bfdc;
+    opacity: 1.0;
+    stroke: white;
+}
+
+.labelbody {
+    margin: 2px;
+}
+.foreignObject {
+    font: 9px sans-serif;
+    text-overflow: ellipsis;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.heatCell{
+    white-space: nowrap; text-overflow:ellipsis; overflow: hidden; 
+    /*max-width:1px;*/
+    height: 26px;
+}
+
+.table th{
+    padding: 3px !important;
+    width: 100px;
+}
+
+.nameCell th {
+    width: 120px; 
+    
+}
+
+.heatMap .table {
+   width: 0;
+   max-width: 100%;
+}
+
+.table td {
+    border: 1px solid #eceeef;
+    font-size: 12px;
+}
+
+.table th {
+    font-size: 12px;
+}
+.table .invalidCell {
+    background-color: rgb(213,94,100);
+    padding: 3px !important;
+    width: 100px;
+}
+
+.table .validCell{
+    background-color: rgb(86, 180, 233);
+    padding: 3px !important;
+    width: 100px;
+}
+
+.table .heatCellName {
+    padding: 3px !important;
+    width: 100px;
+    white-space: nowrap; text-overflow:ellipsis; overflow: hidden;
+
+}
+
+thead, tbody, tr, td, th { display: block; }
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+thead th {
+    height: 30px;
+
+    /*text-align: left;*/
+}
+
+tbody {
+  height: 500px;
+    overflow-y: auto;
+}
+
+thead {
+    /* fallback */
+}
+
+
+tbody td, thead th {
+ 
+    float: left;
+}

@@ -6,6 +6,7 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import { Table } from 'reactstrap';
 import './Dashboard.css'
+import Treemap from './Dashboard/Treemap';
 
 require('whatwg-fetch') //browser only!
 
@@ -65,18 +66,31 @@ const realJson = [
 
 ]
 
+const levels = [ "country", "region", "province", "city", "facility"];
+
 
 class Dashboard extends Component {
 
   constructor(props) {
     super(props);
+    this.level = 0
 
+   
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
+    this.state = ({level: 0, treemapData: null})  // default = land
   }
 
   componentDidMount() {
-    this.generateTable()
+    //this.generateTable()
+    this.setNodesTreemap()
   }
+
+  changeLevel(up){
+    let highCoef = up ? 1 : -1
+    let current = this.state.level 
+    this.setState({level: current + highCoef })
+  }
+
 
   async  generateRow(tbody, columns, node){
 
@@ -105,14 +119,14 @@ class Dashboard extends Component {
         let resultJson = null
         classN += " heatCell"//colored heatcell
         // get json 
-        await fetch(node["staticDataUrl"])
+        await fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/"+ node["uuid"])
           .then(response => response.json())
           .then(json => {
           console.log(json);
           resultJson = json
 
           let v = this.getValueJsonResult(columns[j], resultJson)
-          console.log("V==" + v)
+     
 
           if(v && this.notEmptyArray(v)){
             classN += " validCell"  // is this field in the json?
@@ -139,9 +153,26 @@ class Dashboard extends Component {
     return (v!== "[]" )
   }
 
+  onZoomChange(name, forceLevel){
+    let levelIndex = ++(this.level)
+    if(forceLevel)
+      this.level = 3
+
+    let summaryStr = this.level === 3 ? "" : "summary/"
+    let sub = levels[levelIndex] + "/" + name
+    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
+    let thiss = this
+    fetch(url) 
+    .then(response => response.json())
+    .then(json => {
+      thiss.setTreeMap(json)
+  }    )
+  }
+
   getValueJsonResult(key, node){
 
     //capacity is a special one
+  
 
 
       if(key === "capacity" && node["parkingFacilityInformation"] && node["parkingFacilityInformation"]["specifications"] && node["parkingFacilityInformation"]["specifications"].length > 0){
@@ -181,7 +212,7 @@ class Dashboard extends Component {
        
       let allP = []
 
-      for(let i = 1; i < 200; i++){
+      for(let i = 1; i < 0; i++){
         let url = "http://localhost:8000/parkingdata"
         let resultJson = null
         url += "/id/" + i + "?format=json"
@@ -199,7 +230,7 @@ class Dashboard extends Component {
     }
 
   generateTable() {
-
+    return
     var table = d3.select('.heatMap')
     var thead = table.append('thead') // create the header
     var tbody = table.append('tbody');
@@ -244,17 +275,60 @@ class Dashboard extends Component {
     }
 
 
-  
+    getTable(){
+      
+      let debug = false
+      if(debug){
+        return <Table className="heatMap" width={0}>
+        </Table>
+      }
+      else{
+        return <div/>
+      }
+    }
+
+    getTreemapNode(){}
+
+     /**
+     * TO DO: Catch wrong response / time out
+     */
+     setNodesTreemap(){
+
+       
+      let allP = []
+      let thiss = this
+      let url = "http://localhost:8000/parkingdata/summary/country/nl/"
+      let resultJson = null
+       fetch(url) 
+        .then(response => response.json())
+        .then(json => {
+          thiss.setTreeMap(json)
+      }    )
+
+    }
+
+    setTreeMap(json){
+      if(this.state.treemapData !== json)
+          this.setState({treemapData: json})
+    }
+
+    onZoomChange2(name, jumpToLevel = false){
+
+        this.onZoomChange(name, jumpToLevel)
+    
+    }
 
   render() {
     //set headers
     // for each selected facility
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
+    let getTable = this.getTable()
     return (
-      <Table className="heatMap" width={0}>
-
-      </Table>
+      
+        <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)}/>
+    
+      
     );
   }
 }
