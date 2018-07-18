@@ -17,13 +17,8 @@ class Treemap extends Component {
 
   constructor(props){
     super(props);
-    this.state = {typeView: "" };
-    this.prev = {
-        "country": "The Netherlands",
-        "region": null,
-        "province": null,
-        "city": null
-    }
+    this.stackedTree = []
+    this.goPrev = this.goPrev.bind(this)
     //this.root = d3.hierarchy(data);
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
   }
@@ -106,16 +101,7 @@ class Treemap extends Component {
       }
        else 
             return ""
-  })/*.each(function(d){
-      let width = dict[d]  
-      let padding = 0
-    var self = d3.select(this),
-    textLength = self.node().getComputedTextLength(),
-    text = self.text();
-while (textLength > (width - 2 * padding) && text.length > 0) {
-    text = text.slice(0, -1);
-    self.text(text + '...');
-    textLength = self.node().getComputedTextLength();*/
+  })
 }
   
 handleMouseOverNode (obj, name, parent) {
@@ -192,11 +178,14 @@ listenForZooms(name, parent = null){
         name = parent.data.name
     }
     if(this.props.onZoomChange ){
+        this.stackedTree.push({"data": this.props.data, "name": this.props.data.name })
         if(this.props.level !== 3){
+           
             this.props.onZoomChange(name)
         }
-        else
+        else{
             this.props.onZoomChange(name, 3)
+        }
     
     }
 }
@@ -206,10 +195,29 @@ drawMapView(data){
 }
 
 generateBreadCrums(data, level){
+    
+}
 
-    
-    this.prev[LEVELS[level]] = data.name
-    
+goPrev(){
+
+    let prevData = null
+    let prevName = ""
+    if(this.stackedTree.length < 1)
+        return //this shouldn't happen
+
+    if(this.stackedTree.length > 1){
+        let temp = this.stackedTree.pop()
+        prevData = temp.data
+        prevName = temp.name
+    }
+    else { // we cant pop
+        let temp = this.stackedTree[0]
+        prevData = temp.data
+        prevName = temp.name
+    }
+    this.drawMap(d3.hierarchy(prevData))
+    //load data + title
+    //drawmap
 }
 
   render() {
@@ -217,7 +225,7 @@ generateBreadCrums(data, level){
 
     let breadCrums = "Loading data..."
     let buttonZoomOut = null
-    console.log(this.props.data)
+
     if(this.props.data /*&& this.props.level && this.props.level !== 3*/){
 
 
@@ -236,7 +244,7 @@ generateBreadCrums(data, level){
         }
 
         if(breadCrums !== "Loading data..." && this.props.level > 0){
-            buttonZoomOut = (<Button outline color="primary" style={{"float": "right"}}>Zoom out</Button>)
+            buttonZoomOut = (<Button outline color="primary" style={{"float": "right"}} onClick={this.goPrev}>Zoom out</Button>)
         }
         
   
@@ -291,18 +299,12 @@ generateBreadCrums(data, level){
 
           let resultJson = data[i]["staticData"]
     
-         /* alert(resultJson["mark"])*/
-          
-  
-
-          //resultJson["name"] = data[i]["name"]
-
           //generate row
           this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark )
 
       }
      
-      }
+    }
 
       generateRow(tbody, columns, data, longitude, mark = ""){
           data = JSON.parse(data)
