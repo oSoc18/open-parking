@@ -11,13 +11,19 @@ var colorDict = {
 }
 
 const QUALITYDATA = ["bad", "average", "good"]
-
+const LEVELS = ["country", "region", "province", "city"]
 
 class Treemap extends Component {
 
   constructor(props){
     super(props);
     this.state = {typeView: "" };
+    this.prev = {
+        "country": "The Netherlands",
+        "region": null,
+        "province": null,
+        "city": null
+    }
     //this.root = d3.hierarchy(data);
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
   }
@@ -76,7 +82,7 @@ class Treemap extends Component {
   .attr('height', function(d) {  return d.y1 - d.y0 ; })
   .attr('class', d => thiss.getColorByName(d.data.name))
   .attr('id', d => d.data.name)
-  .on("mouseover", d => {console.log(d);thiss.handleMouseOverNode(null, d.data.name, d.parent)})
+  .on("mouseover", d => {thiss.handleMouseOverNode(null, d.data.name, d.parent)})
   .on("mouseout", d => thiss.handleMouseOutNode(null, d.data.name, d.parent))
  // .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
 
@@ -116,7 +122,7 @@ handleMouseOverNode (obj, name, parent) {
 
     let rect = d3.select("#"+ name)
 
-    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
         // handle parent
         rect = d3.select("#"+ parent.data.name)
     }
@@ -131,9 +137,9 @@ handleMouseOverNode (obj, name, parent) {
 
 handleMouseOutNode(obj, name, parent) {
 
-    let rect = d3.select("#"+ name)
+    let rect = d3.select("#"+ name.replace(/ /g,"_"))
 
-    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null){
         // handle parent
         rect = d3.select("#"+ parent.data.name)
     }
@@ -186,8 +192,9 @@ listenForZooms(name, parent = null){
         name = parent.data.name
     }
     if(this.props.onZoomChange ){
-        if(this.props.level !== 3)
+        if(this.props.level !== 3){
             this.props.onZoomChange(name)
+        }
         else
             this.props.onZoomChange(name, 3)
     
@@ -198,32 +205,42 @@ drawMapView(data){
         this.generateTable(data)
 }
 
+generateBreadCrums(data, level){
+
+    
+    this.prev[LEVELS[level]] = data.name
+    
+}
 
   render() {
 
 
-   /* if(this.props.data && !(this.root) ){
-        this.root = d3.hierarchy(this.props.data);
-       // this.setState({force: "State"})
-       console.log("TEST")
-        
-    }*/
-
+    let breadCrums = "Loading data..."
     if(this.props.data /*&& this.props.level && this.props.level !== 3*/){
 
 
-        if(!this.props.level || this.props.level !== 3 )
+        if(!this.props.level || this.props.level !== 3 ){
+            breadCrums = this.generateBreadCrums(this.props.data, this.props.level)
             this.drawMap(d3.hierarchy(this.props.data))
+        }
         else if (this.props.level && this.props.level === 3) {
          
-            this.drawMapView(this.props.data)
+            console.log(this.props.data)
+            this.drawMapView(this.props.data) //heatmap
         }
+
+        if(this.props.data.name){
+            breadCrums = this.props.data.name
+        }
+        
   
     }
 
 
+
     return (
        <div>
+           <h1>{breadCrums}</h1>
            <Table className="heatMap" width={0}/>
       <svg className="TreemapData"  >
         
@@ -258,33 +275,26 @@ drawMapView(data){
      */
     async setAllParkings(tbody, column, data){
 
-       
-        let allP = []
   
         for(let i = 1; i < data.length; i++){
-          let resultJson = data[i]
-            
-          await fetch("http://localhost:8000/parkingdata/request/staticurl/"+ data[i]["uuid"])
-          .then(response => response.json())
-          .then(json => {
+
+        if(data[i.mark === "onstreet"])
+            continue
+
+          let resultJson = data[i]["staticData"]
   
-          resultJson = json
-          resultJson["name"] = data[i]["name"]
+
+          //resultJson["name"] = data[i]["name"]
 
           //generate row
           this.generateRow(tbody, column, resultJson, data[i]["longitude"] )
 
-        //  let v = this.getValueJsonResult(columns[j], resultJson)
-      });
-         
-          
-      allP.push(resultJson)
-  
       }
      
       }
 
       generateRow(tbody, columns, data, longitude){
+          data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
 
@@ -327,56 +337,11 @@ drawMapView(data){
 
       }
 
-      
-    /*generateRow(tbody, columns, node){
-
-    let tr = tbody.append('tr')
-
-
-    for (let j = 0; j < columns.length; j++) {
-      let classN = ""
-
-      if(columns[j] === "name"){
-        classN += " heatCellName"//normal cell
-
-        tr.append('td')
-        .attr("class", classN)
-        .text(node[columns[j]])
-      }
-      else if(columns[j] === "longitude"){
-        classN += " heatCell"//colored heatcell
-        classN += ((node["longitude"])? " validCell" : " invalidCell") // is this field in the json?
-
-        tr.append('td')
-        .attr("class", classN)
-        .text(node[columns[j]])
-      }
-      else {
-        let v = this.getValueJsonResult(columns[j], resultJson)
-     
-
-        if(v && this.notEmptyArray(v)){
-          classN += " validCell"  // is this field in the json?
-        }
-        else{
-         classN += " invalidCell"  // is this field in the json?
-        }
-
-
-
-       
-      }
-    } // close for
-  }*/
 
   getValueJsonResult(key, node){
 
-    //capacity is a special one
-  
-
-
-      if(key === "capacity" && node["parkingFacilityInformation"] && node["parkingFacilityInformation"]["specifications"] && node["parkingFacilityInformation"]["specifications"].length > 0){
-          let nodeCapacity = node["parkingFacilityInformation"]["specifications"][0]
+      if(key === "capacity" && node && node["specifications"] && node["specifications"].length > 0){
+          let nodeCapacity = node["specifications"][0]
 
           if(!nodeCapacity )
             return null
@@ -392,7 +357,7 @@ drawMapView(data){
 
         try{
           
-            return (JSON.stringify(node["parkingFacilityInformation"][key]))
+            return (JSON.stringify(node[key]))
         }
         catch(e){
           console.log(e)
