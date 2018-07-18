@@ -306,7 +306,7 @@ class MapContent extends Component {
 
                 <div id="mapid"></div>
                 <div className="switch_field">
-                    <label className="heat-label">Heatview</label>
+                    <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
                         <label class="switch"><input type="checkbox" />
                             <div></div>
