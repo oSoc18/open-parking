@@ -99,18 +99,17 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
                     delete markersToAdd[i];
+                    console.log("park")
                 }
             }
         }
         markersToAdd.clean(undefined);
 
-
-
         if (!vis.includes("garage")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
                     delete markersToAdd[i];
-                    this.map.invalidateSize()
+                    console.log("farage")
                 }
             }
         }
@@ -119,6 +118,8 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
                     delete markersToAdd[i];
+                    console.log("carpool")
+
                 }
             }
         }
@@ -127,14 +128,17 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
                     delete markersToAdd[i];
+                    console.log("permit")
+
                 }
             }
         }
         markersToAdd.clean(undefined);
         if (!vis.includes("otherPlaces")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
                     delete markersToAdd[i];
+                    console.log("other")
                 }
             }
         }
@@ -163,7 +167,7 @@ class MapContent extends Component {
 
                     $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/"+facility.uuid+"/", function (data) {
                         popup +="<br>Limited API access: " + facility.limitedAccess +
-                            "<br>Location: " + facility.latitude + " " + facility.longitude +
+                            "<br>Location: " + facility.latitude + " " + facility.usage +
                             "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
                             "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
                             "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
@@ -198,7 +202,7 @@ class MapContent extends Component {
 
     componentDidMount() {
 
-        this.loaded = true
+        this.loaded = true;
         this.map = this.renderMap();
         let main = this;
         let facilities = [];
@@ -236,10 +240,10 @@ class MapContent extends Component {
     componentDidUpdate(prevprops){
 
         if(prevprops.filters === this.props.filters)
-            return
+            return;
 
-        let main = this
-        this.map.invalidateSize()
+        let main = this;
+        this.map.invalidateSize();
 
         let facilities = [];
         let cluster = L.markerClusterGroup({
@@ -249,7 +253,7 @@ class MapContent extends Component {
         $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
             facilities = json;
             main.filterMarkers(facilities, cluster);
-            this.map.invalidateSize()
+            main.map.invalidateSize()
 
         });
     }

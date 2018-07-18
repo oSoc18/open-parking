@@ -18,7 +18,7 @@ class SideBar extends Component {
 
     initFilters(){
         let jsn = {}
-        this.visibleFacilities =  ["parkAndRide", "residentsOnly", "garage", "company", "otherPlaces"]
+        this.visibleFacilities =  ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"]
     
         
 
@@ -72,7 +72,7 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="permit" name="residentsOnly"
+                    <input class="styled-checkbox" type="checkbox" id="permit" name="permit"
                         value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
                     <label for="permit">Permit</label>
                 </div>
