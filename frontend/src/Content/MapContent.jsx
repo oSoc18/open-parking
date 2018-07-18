@@ -9,6 +9,7 @@ class MapContent extends Component {
 
     constructor(props){
         super(props)
+        this.loaded = false
     }
     renderMap() {
         let map = L.map('mapid', {
@@ -109,6 +110,7 @@ class MapContent extends Component {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
                     delete markersToAdd[i];
+                    this.map.invalidateSize()
                 }
             }
         }
@@ -196,6 +198,7 @@ class MapContent extends Component {
 
     componentDidMount() {
 
+        this.loaded = true
         this.map = this.renderMap();
         let main = this;
         let facilities = [];
@@ -230,9 +233,29 @@ class MapContent extends Component {
 
     }
 
+    componentDidUpdate(prevprops){
+
+        if(prevprops.filters === this.props.filters)
+            return
+
+        let main = this
+        this.map.invalidateSize()
+
+        let facilities = [];
+        let cluster = L.markerClusterGroup({
+            disableClusteringAtZoom: 13
+        });
+
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+            facilities = json;
+            main.filterMarkers(facilities, cluster);
+            this.map.invalidateSize()
+
+        });
+    }
+
 
     render() {
-
              // get visible facilities
             //this.updateOnOff
 
