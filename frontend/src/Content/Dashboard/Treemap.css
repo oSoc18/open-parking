@@ -131,11 +131,11 @@ h1 {
 }
 
 .nameBorderaverage{
-    border-bottom: 3px solid #fbc89b
+    border-bottom: 3px solid rgba(230, 159, 0 ) !important
 
 }
 
 .nameBordergood{
 
-
+    border-bottom: 3px solid rgba(86, 180, 223) !important
 }

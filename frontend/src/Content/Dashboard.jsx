@@ -315,9 +315,11 @@ class Dashboard extends Component {
     setTreeMap(json, cityname = null){
       if(this.state.treemapData !== json){ //only update if it's not the same
 
-        if(cityname !== null){
+        if(cityname !== null){ // give parent a name
           json["name"] = cityname
         }
+  
+      
           this.setState({treemapData: json})
     }
           

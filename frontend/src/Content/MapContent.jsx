@@ -214,7 +214,7 @@ class MapContent extends Component {
         $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
             facilities = json;
             main.filterMarkers(facilities, cluster);
-            this.map.invalidateSize()
+            main.map.invalidateSize()
 
         });
     }
