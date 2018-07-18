@@ -94,9 +94,44 @@ class MapContent extends Component {
             }
         }
         markersToAdd.clean(undefined);
+        if (!vis.includes("parkAndRide")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+
+
+
         if (!vis.includes("garage")) {
             for (let i = 0; i < markersToAdd.length; i++) {
                 if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("carpool")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("permit")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                    delete markersToAdd[i];
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("otherPlaces")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
                     delete markersToAdd[i];
                 }
             }
