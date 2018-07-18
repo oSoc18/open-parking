@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 
 import pprint
 
+
 class DetailsView(generics.RetrieveAPIView):
     """
     Get a detailed view of a parking by its ID
@@ -43,6 +44,21 @@ def get_static_url(request, uuid):
     return HttpResponse(dump, content_type='application/json')
 
 
+@api_view(['GET'])
+def get_dynamic_url(request, uuid):
+    """
+    Get the info of the static URL of a parking with a specified UUID
+    """
+    url = ParkingData.objects.get(
+        uuid=uuid).dynamicDataUrl
+    if url is None:
+        return HttpResponse("Sorry, we could not find a dynamic URL.")
+    else:
+        r = requests.get(url)
+        dump = json.dumps(r.json())
+        return HttpResponse(dump, content_type='application/json')
+
+
 class RectangleView(generics.ListAPIView):
     """
     Get all instances located in a rectangle defined by two points.
@@ -56,8 +72,8 @@ class RectangleView(generics.ListAPIView):
         northeast_lat = float(self.kwargs['northeast_lat'])
 
         return ParkingData.objects.filter(longitude__gte=southwest_lng,
-                latitude__gte=southwest_lat, longitude__lte=northeast_lng,
-                latitude__lte=northeast_lat)
+                                          latitude__gte=southwest_lat, longitude__lte=northeast_lng,
+                                          latitude__lte=northeast_lat)
 
 
 class StaticView(generics.ListAPIView):
@@ -161,12 +177,14 @@ def get_multiple_static_url(request, from_id, to_id):
         static_jsons.append(r)
     return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
+
 def generic_summary_view(field_name, area_name, lower_field_name):
     parkings = ParkingData.objects.filter(**{field_name: area_name})
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
-        areas.setdefault(lower_field, {"good": 0, "average": 0, "bad": 0, "onstreet": 0})
+        areas.setdefault(
+            lower_field, {"good": 0, "average": 0, "bad": 0, "onstreet": 0})
         areas[lower_field][parking.mark] += 1
 
     dump = json.dumps({
