@@ -1,8 +1,7 @@
 rect {
     fill: rgb(177, 180, 180);
     opacity: 0.55;
-    stroke: white;
-    padding: 4px;
+    padding: 8px;
   }
 
 svg.TreemapData {
@@ -10,20 +9,24 @@ svg.TreemapData {
     width: 100vw;
 }
 
+
 .badBG {
 
     fill: #d7181d;
     opacity: 1.0;
+    stroke: white;
 }
 
 .avgBG{
     fill: #fbc89b;
     opacity: 1.0;
+    stroke: white;
 }
 
 .goodBG{
     fill: #92bfdc;
     opacity: 1.0;
+    stroke: white;
 }
 
 .labelbody {

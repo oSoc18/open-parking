@@ -10,75 +10,7 @@ var colorDict = {
     "bad": "badBG"
 }
 
-var zwnl =  {
-    name: "Zuidwest-Nederland",    
-    children: [
-        { name: "Zuid-Holland",  
-        children: 
-        [
-            { name: "good", value: 8},
-            { name: "average", value: 15},
-            { name: "bad", value: 222}
-        ]
-    },
-        { name: "Zeeland",   children: 
-        [
-            { name: "good", value: 54},
-            { name: "average", value: 1},
-            { name: "bad", value: 333}
-        ] }  
-    ]
-    }
-    
-var zuidHolland = {
-    name: "Zuid-Holland",
-    children: [
-        {name: "Aardam",
-        children: [
-            {name: "good", value: 44 },
-            {name: "average", value: 44 },
-            {name: "bad", value: 546 } 
-        ]},
-        {name: "Bloklan",
-        children: [
-            {name: "good", value: 252 },
-            {name: "average", value: 55 },
-            {name: "bad", value: 15 } 
-        ]}
-
-    ]
-}
-var data = 	{
-    name: "Nederland",	
-    children: [
-        { name: "Noordwest-Nederland",  
-        children: 
-        [
-            { name: "good", value: 11},
-            { name: "average", value: 88},
-            { name: "bad", value: 445}
-        ]
-    },
-        { name: "Zuidwest-Nederland",   children: 
-        [
-            { name: "good", value: 11},
-            { name: "average", value: 88},
-            { name: "bad", value: 111}
-        ] } ,
-        { name: "Zuid-Nederland",   children: 
-        [
-            { name: "good", value: 111},
-            { name: "average", value: 88},
-            { name: "bad", value: 445}
-        ] },
-        { name: "Noord-Nederland",   children: 
-        [
-            { name: "good", value: 311},
-            { name: "average", value: 88},
-            { name: "bad", value: 123}
-        ] }
-    ]
-}
+const QUALITYDATA = ["bad", "average", "good"]
 
 
 class Treemap extends Component {
@@ -128,8 +60,11 @@ class Treemap extends Component {
    .data(this.root.descendants())
    .enter()
    .append('g')
-   .attr('transform', function(d) {return 'translate(' + [d.x0, d.y0] + ')'})
-   .on('click', d => thiss.listenForZooms( d.data.name))
+   .attr('transform', function(d) {  return 'translate(' + [ d.x0 , d.y0 ] + ')'})
+   .on('click', d => thiss.listenForZooms( d.data.name, d.parent))
+
+   //.on('mouseOn', d => thiss.setHover(d.data.name, d.parent))
+   //.onmouseout, deletehover   
 
    let dict = {}
    //children
@@ -138,10 +73,12 @@ class Treemap extends Component {
   .attr('width', function(d) { 
     dict[d.data.name] = d.x1 - d.x0  
     return d.x1 - d.x0; })
-  .attr('height', function(d) { return d.y1 - d.y0; })
+  .attr('height', function(d) {  return d.y1 - d.y0 ; })
   .attr('class', d => thiss.getColorByName(d.data.name))
-  
-  //.on('click', d => thiss.listenForZooms(d.data.name))
+  .attr('id', d => d.data.name)
+  .on("mouseover", d => {console.log(d);thiss.handleMouseOverNode(null, d.data.name, d.parent)})
+  .on("mouseout", d => thiss.handleMouseOutNode(null, d.data.name, d.parent))
+ // .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
 
   nodes
   .append('text')
@@ -175,6 +112,38 @@ while (textLength > (width - 2 * padding) && text.length > 0) {
     textLength = self.node().getComputedTextLength();*/
 }
   
+handleMouseOverNode (obj, name, parent) {
+
+    let rect = d3.select("#"+ name)
+
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+        // handle parent
+        rect = d3.select("#"+ parent.data.name)
+    }
+   
+    
+    rect.attr("stroke", "green")
+        .attr("stroke-width", 5)
+        .attr("font-weight", "bold")
+
+
+}
+
+handleMouseOutNode(obj, name, parent) {
+
+    let rect = d3.select("#"+ name)
+
+    if(QUALITYDATA.indexOf(name) > -1 && parent !== null){
+        // handle parent
+        rect = d3.select("#"+ parent.data.name)
+    }
+   
+    
+    rect.attr("stroke-width", 0)
+
+
+}
+   
 
 wrap(width, padding) {
     var self = d3.select(this),
@@ -187,12 +156,15 @@ wrap(width, padding) {
     }
 } 
 
+
+
 textSize(text) {
     if (!d3) return;
-    var container = d3.select('body').append('div').append('svg');
+    var container0 = d3.select('body').append('div')
+    var container = container0.append('svg');
     container.append('text').attr( "x", -0).attr( "y", -0 ).text(text);
     var size = container.node().getBBox();
-    container.remove();
+    container0.remove();
     return { width: size.width, height: size.height };
 }
 
@@ -208,8 +180,11 @@ getColorByName(name){
     return colorDict[name]
 }  
 
-listenForZooms(name){
+listenForZooms(name, parent = null){
 
+    if(["bad", "average", "good"].indexOf(name) > -1){
+        name = parent.data.name
+    }
     if(this.props.onZoomChange ){
         if(this.props.level !== 3)
             this.props.onZoomChange(name)
@@ -292,7 +267,7 @@ drawMapView(data){
           await fetch("http://localhost:8000/parkingdata/request/staticurl/"+ data[i]["uuid"])
           .then(response => response.json())
           .then(json => {
-          console.log(json);
+  
           resultJson = json
           resultJson["name"] = data[i]["name"]
 
@@ -332,7 +307,6 @@ drawMapView(data){
                     .text("" + longitude)
             }
             else {
-                console.log(JSON.stringify(data))
                 classN += " heatCell "
                 v = this.getValueJsonResult(columns[j], data)
              
@@ -346,10 +320,7 @@ drawMapView(data){
                 tr.append('td')
                 .attr("class", classN)
                 .text(v)
-        
-        
-        
-               
+
         }
       
       }

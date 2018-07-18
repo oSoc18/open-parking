@@ -100,48 +100,15 @@ class DynamicView(generics.ListAPIView):
         return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
 
 
-class CountryView(generics.ListAPIView):
-    """
-    Get all the parkingplaces from a specified country
-    """
+class AreaView(generics.ListAPIView):
+    """Gets all the parkingplaces from a specified area."""
+
     serializer_class = ParkingStaticDataSerializer
+    area_level = None
 
     def get_queryset(self):
-        country_code = self.kwargs['country_code']
-        return ParkingData.objects.filter(country_code=country_code)
-
-
-class RegionView(generics.ListAPIView):
-    """
-    Get all the parkingplaces from a specified region
-    """
-    serializer_class = ParkingStaticDataSerializer
-
-    def get_queryset(self):
-        region_Name = self.kwargs['region_name']
-        return ParkingData.objects.filter(region=region_Name)
-
-
-class ProvinceView(generics.ListAPIView):
-    """
-    Get all the parkingplaces from a specified province
-    """
-    serializer_class = ParkingStaticDataSerializer
-
-    def get_queryset(self):
-        province_Name = self.kwargs['province_name']
-        return ParkingData.objects.filter(province=province_Name)
-
-
-class CityView(generics.ListAPIView):
-    """
-    Get all the parkingplaces from a specified city
-    """
-    serializer_class = ParkingStaticDataSerializer
-
-    def get_queryset(self):
-        city_Name = self.kwargs['city_name']
-        return ParkingData.objects.filter(city=city_Name)
+        area_name = self.kwargs['area_name']
+        return ParkingData.objects.filter(**{self.area_level: area_name})
 
 
 class NoneView(generics.ListAPIView):
@@ -152,30 +119,6 @@ class NoneView(generics.ListAPIView):
 
     def get_queryset(self):
         return ParkingData.objects.filter(region__isnull=True)
-
-
-class OffstreetView(generics.ListAPIView):
-    """
-    Get all the offstreet parkings
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        return ParkingData.objects.filter(facilityType="offstreet")
-
-
-@api_view(['GET'])
-def get_multiple_static_url(request, from_id, to_id):
-    """
-    Get the json of all parkingplaces (from_id to to_id)
-    """
-    static_jsons = []
-    for id in range(int(from_id), int(to_id)):
-        url = ParkingData.objects.get(
-            id=id).staticDataUrl
-        r = requests.get(url).json()
-        static_jsons.append(r)
-    return HttpResponse(json.dumps(static_jsons), content_type='application/json')
 
 
 def generic_summary_view(field_name, area_name, lower_field_name):

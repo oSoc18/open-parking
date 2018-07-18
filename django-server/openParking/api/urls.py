@@ -1,8 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import DetailsView, UuidView, RectangleView, StaticView, DynamicView, \
-    CountryView, RegionView, ProvinceView, CityView, OffstreetView, \
-    generic_summary_view, get_static_url, get_multiple_static_url, NoneView, get_dynamic_url
+from .views import DetailsView, UuidView, RectangleView, StaticView, \
+    DynamicView, AreaView, generic_summary_view, get_static_url, NoneView, get_dynamic_url
 from rest_framework.decorators import api_view
 
 
@@ -33,25 +32,18 @@ urlpatterns = {
         DynamicView.as_view(), name="dynamic_Parkings"),
 
     # URLS for clickthrough thing
-    url(r'^parkingdata/country/(?P<country_code>.+)/$',
-        CountryView.as_view(), name="country_parkings"),
-    url(r'^parkingdata/region/(?P<region_name>.+)/$',
-        RegionView.as_view(), name="region_parkings"),
-    url(r'^parkingdata/province/(?P<province_name>.+)/$',
-        ProvinceView.as_view(), name="province_parkings"),
-    url(r'^parkingdata/city/(?P<city_name>.+)/$',
-        CityView.as_view(), name="city_parkings"),
+    url(r'^parkingdata/country/(?P<area_name>.+)/$',
+        AreaView.as_view(area_level="country_code"), name="country_parkings"),
+    url(r'^parkingdata/region/(?P<area_name>.+)/$',
+        AreaView.as_view(area_level="region"), name="region_parkings"),
+    url(r'^parkingdata/province/(?P<area_name>.+)/$',
+        AreaView.as_view(area_level="province"), name="province_parkings"),
+    url(r'^parkingdata/city/(?P<area_name>.+)/$',
+        AreaView.as_view(area_level="city"), name="city_parkings"),
 
     # Gives all parkings without locations
     url(r'^parkingdata/region/none/$',
         NoneView.as_view(), name="none_location"),
-
-    url(r'^parkingdata/offstreet/all/$',
-        OffstreetView.as_view(), name="offstreet_Parkings"),
-
-    # testing purposes
-    url(r'^parkingdata/requests/(?P<from_id>[0-9]+),(?P<to_id>[0-9]+)/$',
-        get_multiple_static_url, name="multiple_StaticUrl"),
 
     # In the following
     # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/country/nl/
