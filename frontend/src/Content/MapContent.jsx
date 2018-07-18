@@ -100,11 +100,12 @@ class MapContent extends Component {
 
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
+                console.log(facility.uuid);
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
-                        $.getJSON(facility.dynamicDataUrl, function (data) {
+                        $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
                                 popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
@@ -112,7 +113,7 @@ class MapContent extends Component {
                         });
                     }
 
-                    $.getJSON(facility.staticDataUrl, function (data) {
+                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/"+facility.uuid+"/", function (data) {
                         popup +="<br>Limited API access: " + facility.limitedAccess +
                             "<br>Location: " + facility.latitude + " " + facility.longitude +
                             "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
