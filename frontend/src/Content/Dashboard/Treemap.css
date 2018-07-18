@@ -4,6 +4,10 @@ rect {
     padding: 8px;
   }
 
+  rect:hover{
+    cursor: pointer;
+  }
+
 svg.TreemapData {
     height: 100vh;
     width: 100vw;
@@ -115,4 +119,23 @@ thead {
 tbody td, thead th {
  
     float: left;
+}
+
+h1 {
+    float: left;
+}
+
+.nameBorderbad{
+    border-bottom: 3px solid rgb(213,94,100) !important
+
+}
+
+.nameBorderaverage{
+    border-bottom: 3px solid #fbc89b
+
+}
+
+.nameBordergood{
+
+
 }

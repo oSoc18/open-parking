@@ -9,6 +9,7 @@ class MapContent extends Component {
 
     constructor(props) {
         super(props)
+        this.loaded = false
     }
     renderMap() {
         let map = L.map('mapid', {
@@ -32,6 +33,9 @@ class MapContent extends Component {
             }
             return this;
         };
+
+        let vis = this.props.filters.visFacilities
+        console.log(vis);
 
         let ParkingIcon = L.Icon.extend({
             options: {
@@ -91,6 +95,15 @@ class MapContent extends Component {
             }
         }
         markersToAdd.clean(undefined);
+        if (!vis.includes("garage")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
+                    delete markersToAdd[i];
+                    this.map.invalidateSize()
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
 
         let markers = [];
         markersToAdd.forEach(function (facility) {
@@ -100,11 +113,12 @@ class MapContent extends Component {
 
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
+                console.log(facility.uuid);
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.facilityType === "offstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
-                        $.getJSON(facility.dynamicDataUrl, function (data) {
+                        $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
                                 popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
@@ -112,7 +126,7 @@ class MapContent extends Component {
                         });
                     }
 
-                    $.getJSON(facility.staticDataUrl, function (data) {
+                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
                         popup += "<br>Limited API access: " + facility.limitedAccess +
                             "<br>Location: " + facility.latitude + " " + facility.longitude +
                             "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
@@ -149,27 +163,28 @@ class MapContent extends Component {
 
     componentDidMount() {
 
-        let map = this.renderMap();
+        this.loaded = true
+        this.map = this.renderMap();
         let main = this;
         let facilities = [];
         let cluster = L.markerClusterGroup({
             disableClusteringAtZoom: 13
         });
-        map.addLayer(cluster);
+        this.map.addLayer(cluster);
 
         $("#layers div input").prop("checked", true);
 
 
 
-        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + map.getBounds().toBBoxString() + "/?format=json", function (json) {
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
             facilities = json;
             main.filterMarkers(facilities, cluster);
 
         });
 
 
-        map.on("moveend", function () {
-            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + map.getBounds().toBBoxString() + "/?format=json", function (json) {
+        this.map.on("moveend", function () {
+            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
 
                 facilities = json;
                 main.filterMarkers(facilities, cluster);
@@ -183,11 +198,30 @@ class MapContent extends Component {
 
     }
 
+    componentDidUpdate(prevprops) {
+
+        if (prevprops.filters === this.props.filters)
+            return
+
+        let main = this
+        this.map.invalidateSize()
+
+        let facilities = [];
+        let cluster = L.markerClusterGroup({
+            disableClusteringAtZoom: 13
+        });
+
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+            facilities = json;
+            main.filterMarkers(facilities, cluster);
+            this.map.invalidateSize()
+
+        });
+    }
+
 
     render() {
-
-        this.vis = this.props.filters.visFacilities // get visible facilities
-
+        // get visible facilities
         //this.updateOnOff
 
 

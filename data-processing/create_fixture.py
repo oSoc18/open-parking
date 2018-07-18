@@ -44,7 +44,7 @@ def get_region_name(facility):
 
 def is_not_none(value, key, is_array=False):
     """Checks whether a value is contained in the object, and that it is not None."""
-    return key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
+    return value is not None and key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
 
 def get_mark(facilityType, longitude, latitude, staticData):
     if facilityType == "onstreet":
@@ -72,6 +72,14 @@ def get_mark(facilityType, longitude, latitude, staticData):
         else:
             return "bad"
 
+def get_usage(staticData):
+    if staticData is not None and is_not_none(staticData, "specifications", True):
+        specs = staticData["specifications"][0]
+        if is_not_none(specs, "usage"):
+            return specs["usage"]
+    return None
+
+
 input_directory = argv[1]
 output_filename = argv[2]
 
@@ -98,7 +106,8 @@ for filename in file_list:
         "city": facility["city"] if "city" in facility else None,
         "province": facility["province"] if "province" in facility else None,
         "region": get_region_name(facility),
-        "country_code": facility["country_code"] if "country_code" in facility else None
+        "country_code": facility["country_code"] if "country_code" in facility else None,
+        "usage": get_usage(facility["staticData"])
     }
     # Add the mark field, based on some other fields
     fields["mark"] = get_mark(fields["facilityType"], fields["longitude"],

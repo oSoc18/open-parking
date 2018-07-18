@@ -87,9 +87,9 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="residentsOnly" name="residentsOnly"
-                        value="residentsOnly" onChange={this.handleVisibleFacilities} defaultChecked={true} />
-                    <label for="residentsOnly">Residents only</label>
+                    <input class="styled-checkbox" type="checkbox" id="permit" name="residentsOnly"
+                        value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                    <label for="permit">Permit</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
@@ -97,9 +97,9 @@ class SideBar extends Component {
                     <label for="garage">Garage</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="company" name="company"
-                        value="company" onChange={this.handleVisibleFacilities} defaultChecked={true} />
-                    <label for="company">Company</label>
+                    <input class="styled-checkbox" type="checkbox" id="carpool" name="carpool"
+                        value="carpool" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                    <label for="carpool">Carpool</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
