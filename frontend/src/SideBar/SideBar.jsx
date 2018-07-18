@@ -17,15 +17,11 @@ class SideBar extends Component {
     }
 
     initFilters() {
-        let jsn = {}
-<<<<<<< HEAD
-        this.visibleFacilities =  ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"]
-    
-        
-=======
-        this.visibleFacilities = ["parkAndRide", "residentsOnly", "garage", "company", "otherPlaces"]
+        let jsn = {};
+        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"]
+
+
     }
->>>>>>> d9299051b1d79cb901c770eaaa5ba577e6d6e7bb
 
     componentDidMount() {
         var coll = document.getElementsByClassName("collapsible");
@@ -48,7 +44,7 @@ class SideBar extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        let temp = this.visibleFacilities
+        let temp = this.visibleFacilities;
 
 
 
@@ -61,7 +57,7 @@ class SideBar extends Component {
         else {
             temp.push(name)
         }
-        this.visibleFacilities = temp
+        this.visibleFacilities = temp;
 
 
 
@@ -93,13 +89,8 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-<<<<<<< HEAD
                     <input class="styled-checkbox" type="checkbox" id="permit" name="permit"
                         value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
-=======
-                    <input class="styled-checkbox" type="checkbox" id="permit" name="residentsOnly"
-                        value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true} />
->>>>>>> d9299051b1d79cb901c770eaaa5ba577e6d6e7bb
                     <label for="permit">Permit</label>
                 </div>
                 <div>
