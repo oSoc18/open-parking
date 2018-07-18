@@ -27,6 +27,10 @@
     float: right;
 }
 
+label{
+    margin-bottom: 0px !important;
+}
+
 #logo {
     margin-top: 14px;
     margin-right: 0px;
@@ -34,14 +38,18 @@
     margin-left: 4px;
 }
 
+#expand_tag{
+    float: right;
+}
+
 .sideBar label{
     color: #686868;
 }
 
 .sideBar h4 {
-    margin: 20px;
+    margin: 15px;
     color: #363636;
-    font-size: 1em;
+    font-size: .9em;
     font-weight: bold;
     font-family: 'Montserrat', Helvetica, sans-serif;
     text-transform: uppercase;
@@ -59,6 +67,8 @@ hr {
     padding: 0;
 }
 
+
+/*FIRST CHECKBOX DESIGN*/
 .styled-checkbox {
     position: absolute;
     opacity: 0;
@@ -75,11 +85,10 @@ hr {
     content: '';
     margin-right: 10px;
     display: inline-block;
-    vertical-align: text-top;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     background: #ffffff;
-    border: 2px solid #7d7d7d;
+    border: 1.5px solid #7d7d7d;
     border-radius: 20%;
 }
 
@@ -108,8 +117,8 @@ hr {
 .styled-checkbox:checked + label:after {
     content: '';
     position: absolute;
-    left: 5px;
-    top: 9px;
+    left: 2px;
+    top: 10px;
     background: ite;
     width: 2px;
     height: 2px;
@@ -124,4 +133,194 @@ hr {
 
 }
 
+/*SECOND CHECKBOX DESIGN*/
+.styled-checkbox-extra {
+    position: absolute;
+    opacity: 0;
+}
 
+.styled-checkbox-extra + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    
+}
+
+.styled-checkbox-extra + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: #ffffff;
+    border: 1.5px solid #4571ec;
+    border-radius: 20%;
+}
+
+.styled-checkbox-extra:hover + label:before {
+    background: #ffffff;
+}
+
+.styled-checkbox-extra:focus + label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.styled-checkbox-extra:checked + label:before {
+    background: #ffffff;
+}
+
+.styled-checkbox-extra:disabled + label {
+    color: #ffffff;
+    cursor: auto;
+}
+
+.styled-checkbox-extra:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+}
+
+.styled-checkbox-extra:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    background: ite;
+    width: 2px;
+    height: 2px;
+    box-shadow: 2px 0 0  #4571ec, 4px 0 0  #4571ec, 4px -2px 0  #4571ec, 4px -4px 0  #4571ec, 4px -6px 0  #4571ec, 4px -8px 0  #4571ec;
+    transform: rotate(45deg);
+}
+ 
+.unstyled {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    padding: 15px;
+    width: 210px;
+    color: #363636;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: .9em;
+    font-weight: bold;
+    font-family: 'Montserrat', Helvetica, sans-serif;
+    text-transform: uppercase;
+ 
+  }
+  
+  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+  .active, .collapsible:hover {
+    background-color: #ccc;
+  }
+  
+  /* Style the collapsible content. Note: hidden by default */
+  .content {
+    padding: 20px 20px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    width: 210px;
+  }
+
+  [data-tooltip] {
+    display: inline-block;
+    position: relative;
+    cursor: help;
+}
+
+
+/* Tooltip styling */
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    display: none;
+    position: absolute;
+    background: #000;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    min-width: 100px;
+    text-align: center;
+    border-radius: 4px;
+}
+/* Dynamic horizontal centering */
+[data-tooltip-position="top"]:before,
+[data-tooltip-position="bottom"]:before {
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+/* Dynamic vertical centering */
+[data-tooltip-position="right"]:before,
+[data-tooltip-position="left"]:before {
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+[data-tooltip-position="top"]:before {
+    bottom: 100%;
+    margin-bottom: 6px;
+}
+[data-tooltip-position="right"]:before {
+    left: 100%;
+    margin-left: 6px;
+}
+[data-tooltip-position="bottom"]:before {
+    top: 100%;
+    margin-top: 6px;
+}
+[data-tooltip-position="left"]:before {
+    right: 100%;
+    margin-right: 6px;
+}
+
+/* Tooltip arrow styling/placement */
+[data-tooltip]:after {
+    content: '';
+    display: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+/* Dynamic horizontal centering for the tooltip */
+[data-tooltip-position="top"]:after,
+[data-tooltip-position="bottom"]:after {
+    left: 50%;
+    margin-left: -6px;
+}
+/* Dynamic vertical centering for the tooltip */
+[data-tooltip-position="right"]:after,
+[data-tooltip-position="left"]:after {
+    top: 50%;
+    margin-top: -6px;
+}
+[data-tooltip-position="top"]:after {
+    bottom: 100%;
+    border-width: 6px 6px 0;
+    border-top-color: #000;
+}
+[data-tooltip-position="right"]:after {
+    left: 100%;
+    border-width: 6px 6px 6px 0;
+    border-right-color: #000;
+}
+
+/* Show the tooltip when hovering */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+    display: block;
+    z-index: 50;
+}

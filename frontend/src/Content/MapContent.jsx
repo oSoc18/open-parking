@@ -3,13 +3,14 @@ import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
+import './MapContent.css';
 
-import './MapContent.css'
 
 class MapContent extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
+        this.loaded = false
     }
     renderMap() {
         let map = L.map('mapid', {
@@ -44,10 +45,10 @@ class MapContent extends Component {
             }
         });
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-green.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-orange.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-red.png')});
-        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png')});
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-green.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-orange.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-red.png') });
+        let offStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-blue.png') });
 
         let main = this;
 
@@ -94,10 +95,50 @@ class MapContent extends Component {
             }
         }
         markersToAdd.clean(undefined);
+        if (!vis.includes("parkAndRide")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    delete markersToAdd[i];
+                    console.log("park")
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+
         if (!vis.includes("garage")) {
             for (let i = 0; i < markersToAdd.length; i++) {
-                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")){
+                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
                     delete markersToAdd[i];
+                    console.log("farage")
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("carpool")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")){
+                    delete markersToAdd[i];
+                    console.log("carpool")
+
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("permit")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")){
+                    delete markersToAdd[i];
+                    console.log("permit")
+
+                }
+            }
+        }
+        markersToAdd.clean(undefined);
+        if (!vis.includes("otherPlaces")) {
+            for (let i = 0; i < markersToAdd.length; i++) {
+                if(markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) && !markersToAdd[i].usage.toLowerCase().includes("carpool") && !markersToAdd[i].usage.toLowerCase().includes("garage") && !(markersToAdd[i].usage.toLowerCase().includes("ride")) && !(markersToAdd[i].usage.toLowerCase().includes("p en r")) && !(markersToAdd[i].usage.toLowerCase().includes("p+r"))){
+                    delete markersToAdd[i];
+                    console.log("other")
                 }
             }
         }
@@ -124,13 +165,13 @@ class MapContent extends Component {
                         });
                     }
 
-                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/"+facility.uuid+"/", function (data) {
-                        popup +="<br>Limited API access: " + facility.limitedAccess +
+                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
+                        popup += "<br>Limited API access: " + facility.limitedAccess +
                             "<br>Location: " + facility.latitude + " " + facility.longitude +
-                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length>0? "Available":"<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length>0? "Available":"<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length>0? "Available":"<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length>0?  "Available":"<span class='text-danger'>No parking restrictions available</span>");
+                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length > 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
 
                         mark.getPopup().setContent(popup);
                     });
@@ -140,15 +181,15 @@ class MapContent extends Component {
 
                 }
             });
-            if(facility.mark !== "onstreet"){
-                if(facility.mark === "bad"){
+            if (facility.mark !== "onstreet") {
+                if (facility.mark === "bad") {
                     mark.setIcon(badIcon);
-                }else if(facility.mark === "average"){
+                } else if (facility.mark === "average") {
                     mark.setIcon(averageIcon);
-                }else{
+                } else {
                     mark.setIcon(goodIcon);
                 }
-            }else{
+            } else {
                 mark.setIcon(offStreetIcon);
 
             }
@@ -172,6 +213,7 @@ class MapContent extends Component {
 
     componentDidMount() {
 
+        this.loaded = true;
         this.map = this.renderMap();
         let main = this;
         let facilities = [];
@@ -226,11 +268,31 @@ class MapContent extends Component {
 
     }
 
+    componentDidUpdate(prevprops) {
+
+        if(prevprops.filters === this.props.filters)
+            return;
+
+        let main = this;
+        this.map.invalidateSize();
+
+        let facilities = [];
+        let cluster = L.markerClusterGroup({
+            disableClusteringAtZoom: 13
+        });
+
+        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+            facilities = json;
+            main.filterMarkers(facilities, cluster);
+            main.map.invalidateSize()
+
+        });
+    }
+
 
     render() {
-
-             // get visible facilities
-            //this.updateOnOff
+        // get visible facilities
+        //this.updateOnOff
 
 
         return (
@@ -243,9 +305,18 @@ class MapContent extends Component {
 
 
                 <div id="mapid"></div>
-                <img src="./images/parking-blue.png" alt="" />
+                <div className="switch_field">
+                    <label className="heat-label">Heatview</label>
+                    <div class="container" className="switch-total">
+                        <label class="switch"><input type="checkbox" />
+                            <div></div>
+                        </label>
+                    </div>
+                </div>
 
                 <div id="layers">
+
+
                     <div>
                         <input type="checkbox" id="onstreet" name="filter" value="onstreet" />
                         <label htmlFor="onstreet">On-street</label>
