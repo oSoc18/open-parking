@@ -339,7 +339,7 @@ class MapContent extends Component {
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
 
-        this.facilities = facilities
+        this.facilities = facilities;
         this.cluster = cluster
 
     }

@@ -8,7 +8,7 @@ class SideBar extends Component {
 
     constructor(props) {
         super(props);
-        this.initFilters()
+        this.initFilters();
         this.state = {
             checked: [],
             expanded: [],
@@ -22,7 +22,7 @@ class SideBar extends Component {
         let jsn = {};
         this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
         this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
-        this.extras = ["onStreet", "offSteet", "noDynamic", "private", "public"];
+        this.extras = ["onStreet", "offStreet", "noDynamic", "private", "public"];
 
     }
 
@@ -89,7 +89,7 @@ class SideBar extends Component {
 
 
         if (this.props.onChangeExtras)
-            this.props.onChangeVisFacilities(temp)
+            this.props.onChangeExtras(temp)
     }
 
 
