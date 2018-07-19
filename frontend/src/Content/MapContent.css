@@ -52,6 +52,10 @@
     margin: 5px;
   }
   
+#onstreetIcon{
+    float: left;
+    margin: 5px;
+}
   
   .blue {
     background: #91bfdb;
