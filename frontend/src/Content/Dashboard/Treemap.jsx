@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import './Treemap.css'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
+import Legend from './Legend'
 import { Table, Button, Container, Row } from 'reactstrap';
 var colorDict = {
     "good": "goodBG",
@@ -259,6 +260,7 @@ class Treemap extends Component {
         }
         return (
             <div>
+                <Legend />
                            <div>
                         <h1 style={{"float": "left"}}>{breadCrums}</h1>
                         <div>{buttonZoomOut}</div>
