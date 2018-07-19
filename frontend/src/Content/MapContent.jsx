@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import './MapContent.css';
+import onstreetIcon from './images/onstreet-legend.png';
 
 
 class MapContent extends Component {
@@ -11,6 +12,19 @@ class MapContent extends Component {
     constructor(props) {
         super(props)
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.filters !== this.props.filters) {
+             this.filterMarkers(this.facilities, this.cluster)
+        }
+     } 
+  
+  
+    componentDidUpdate(prevProps,prevState) {
+        if (prevProps.filters !== this.props.filters) {
+           // this.filterMarkers(this.facilities, this.cluster)
+         }
+     }
 
     renderMap() {
         let map = L.map('mapid', {
@@ -215,7 +229,7 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        this.updateHeatmapPoints(facilities);
+        this.updateHeatmapPoints(markersToAdd);
     }
 
     updateHeatmapPoints(facilities) {
@@ -298,6 +312,9 @@ class MapContent extends Component {
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
 
+        this.facilities = facilities
+        this.cluster = cluster
+
     }
 
 
@@ -325,8 +342,8 @@ class MapContent extends Component {
                     <br></br>
                     <div className="legend-field-text">
                         <div id="color-and-text">
-                            <div class="small-box blue"></div>
-                            <span>Excellent</span>
+                            <img id="onstreetIcon" src={onstreetIcon} alt="icon" width="15px" height="15px"></img>
+                            <span>On-street</span>
                         </div>
                         <div id="color-and-text">
                             <div class="small-box blue"></div>
