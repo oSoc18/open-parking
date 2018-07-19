@@ -4,7 +4,7 @@ data in the cache folder. Some of the fields are calculated here, such as the
 facility type or the region name.
 
 Example:
-    python create_fixture.py locations/ ../django-server/openParking/api/fixtures/fixture.json
+    python create_fixture.py cache-dir/ ../django-server/openParking/api/fixtures/fixture.json
 
 """
 

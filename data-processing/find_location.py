@@ -4,7 +4,7 @@ in the index file and in the static data. It reads the cache directory and
 output the updated data in the same directory, overwriting it.
 
 Example:
-    python find_location.py locations/
+    python find_location.py cache-dir/
 """
 
 import json
