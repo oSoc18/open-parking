@@ -35,7 +35,7 @@ def get_region_name(facility):
             ("Zuid-Holland", "Zeeland"): "Zuidwest-Nederland",
             ("Noord-Brabant", "Limburg"): "Zuid-Nederland",
             ("Gelderland", "Overijsel"): "Oost-Nederland",
-            ("Groningen", "Friesland", "Drenthe"): "Noord-Nederland"
+            ("Groningen", "Friesland", "Drenthe", "Fryslân"): "Noord-Nederland"
         }
         for province_list, region in provinces.items():
             if facility["province"] in province_list:
@@ -119,6 +119,7 @@ for filename in file_list:
     output_json.append({"model": "api.parkingdata",
                         "pk": pk, "fields": fields})
     pk += 1
+    print(pk)
 
 print("Write data to {}...".format(output_filename))
 with open(output_filename, "w") as file:
