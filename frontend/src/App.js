@@ -31,7 +31,7 @@ class App extends Component {
   }
   onChangeExtras(values){
       this.setState({
-          extend: values
+          extras: values
       })
   }
 
