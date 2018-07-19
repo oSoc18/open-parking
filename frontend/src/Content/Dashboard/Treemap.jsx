@@ -267,7 +267,7 @@ class Treemap extends Component {
             }
 
             if (breadCrums !== "Loading data..." && this.props.level > 0) {
-                buttonZoomOut = (<Button id="zoom-out-button" outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
+                buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
 
@@ -276,8 +276,16 @@ class Treemap extends Component {
             <div>
 
                 <div className="dashboard-head">
+
                     <h1>{breadCrums}</h1>
-                    <div>{buttonZoomOut}</div>
+                    <div className="two-buttons">
+                        <div id="single-button">
+                            <Button outline color="primary" onClick={this.goPrev}>none</Button>
+                        </div>
+                        <div id="single-button">
+                            {buttonZoomOut}
+                        </div>
+                    </div>
                     <Legend />
                 </div>
 

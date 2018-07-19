@@ -6,6 +6,7 @@ import requests
 import json
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
+from django.db.models import Q
 
 import pprint
 
@@ -118,8 +119,7 @@ class NoneView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        print("yeeeeeee boyyy")
-        return ParkingData.objects.filter(region__isnull=True)
+        return ParkingData.objects.filter(Q(region__isnull=True) | Q(region__exact=''))
 
 
 def generic_summary_view(field_name, area_name, lower_field_name):
