@@ -348,7 +348,6 @@ class Dashboard extends Component {
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
     let getTable = this.getTable()
-    alert(JSON.stringify(this.state.treemapData))
     return (
       
         <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)}/>
