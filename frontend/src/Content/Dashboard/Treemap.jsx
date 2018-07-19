@@ -335,10 +335,35 @@ class Treemap extends Component {
 
     }
 
+    handleMouseOverTd(inp, d){
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 1)
+        .style("left", (d.y+120) + "px")
+        .style("top", (d.x-20) + "px")
+        .html(
+			"<div>" + inp + "</div>"
+		);
+
+    }
+
+    createTextTool(text){
+ 
+    /*    var div = d3.select("body").append("div").html(text)
+            .attr("class", "tooltip")
+            .style("opacity", 1)
+            .style("left", (d.y+120) + "px")
+            .style("top", (d.x-20) + "px")
+		
+
+
+    return  div*/
+    }
     generateRow(tbody, columns, data, longitude, mark = "") {
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
+        let thiss = this 
 
         for (let j = 0; j < columns.length; j++) {
             let classN = ""
@@ -347,7 +372,9 @@ class Treemap extends Component {
                 classN += " nameBorder" + mark
                 tr.append('td')
                     .attr("class", classN)
-                    .text(data[columns[j]])
+                    .attr("data-tip", "")
+                    .attr("data-for", data[columns[j]])
+                    .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
 
             }
             else if (columns[j] === "longitude") {
