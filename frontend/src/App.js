@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   onChangeVisFacilities(values){
-
     this.setState({
       visFacilities: values
     })

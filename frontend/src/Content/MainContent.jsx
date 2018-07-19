@@ -27,7 +27,7 @@ class MainContent extends Component {
     }
 
     //lol, i know it's ugly
-    let contentVis = (<MapContent filters={this.props.filters}/>)
+    let contentVis = (<MapContent filters={this.props.filters}/>);
     if(tab === "dash"){
       contentVis = <Dashboard filters={this.props.filters}/>
     }
