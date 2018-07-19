@@ -165,7 +165,7 @@ class MapContent extends Component {
                                 "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs !== undefined && data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
                                 "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes !== undefined && data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
                                 "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons !== undefined && data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters !== undefined && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
 
                             mark.getPopup().setContent(popup);
                         } else {
