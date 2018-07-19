@@ -119,7 +119,6 @@ class NoneView(generics.ListAPIView):
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        print('test')
         return ParkingData.objects.filter(Q(region__isnull=True) | Q(region__exact=''))
 
 
