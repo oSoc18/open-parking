@@ -9,7 +9,7 @@ rect {
   }
 
 svg.TreemapData {
-    height: 100vh;
+    height: 80vh;
     width: 100vw;
 }
 
@@ -55,9 +55,11 @@ svg.TreemapData {
 }
 
 .nameCell th {
-    width: 120px; 
+    width: 150px; 
     
 }
+
+
 
 .heatMap .table {
    width: 0;
@@ -87,7 +89,7 @@ svg.TreemapData {
 
 .table .heatCellName {
     padding: 3px !important;
-    width: 100px;
+    width: 150px;
     white-space: nowrap; text-overflow:ellipsis; overflow: hidden;
 
 }
@@ -144,4 +146,8 @@ h1 {
 
 .heatMap{
     margin: 3 rem !important;
+}
+
+.th-name {
+    width: 150px !important;
 }
