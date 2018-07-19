@@ -13,6 +13,19 @@ class MapContent extends Component {
         super(props)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.filters !== this.props.filters) {
+             this.filterMarkers(this.facilities, this.cluster)
+        }
+     } 
+  
+  
+    componentDidUpdate(prevProps,prevState) {
+        if (prevProps.filters !== this.props.filters) {
+           // this.filterMarkers(this.facilities, this.cluster)
+         }
+     }
+
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
@@ -297,6 +310,9 @@ class MapContent extends Component {
             });
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
+
+        this.facilities = facilities
+        this.cluster = cluster
 
     }
 
