@@ -152,14 +152,9 @@ h1 {
     width: 150px !important;
 }
 
-#zoom-out-button{
-    margin-top: 20px;
-    margin-right: 700px !important;
-    float: right;
-}
 
 .dashboard-head h1 {
-    margin:20px;
+    margin-left:20px;
 }
 
 .dashboard-data{
@@ -167,7 +162,7 @@ h1 {
 }
 
 .dashboard-table{
-    margin-top: 20px; 
+    margin: 20px; 
 }
 
 div.tooltip {
@@ -178,4 +173,19 @@ div.tooltip {
     background: #ffff99;
     border: solid 1px #aaa;
     border-radius: 8px;
+}
+
+.two-buttons{
+    position: fixed;
+    top: 70px;
+    right: 450px;
+    z-index: 400;
+    width: 220px;
+    height: 50px;
+    text-align: left;
+}
+
+#single-button{
+    float: left;
+    margin-right: 20px;
 }
