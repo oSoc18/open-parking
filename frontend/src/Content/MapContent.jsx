@@ -110,7 +110,7 @@ class MapContent extends Component {
         if (!vis.includes("parkAndRide")) {
             for (let i = 0; i < markersToAdd.length; i++) {
 
-                if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+                if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                     delete markersToAdd[i];
                 }
             }
@@ -176,16 +176,21 @@ class MapContent extends Component {
                             }
                         });
                     }
-
+                    console.log(facility.staticDataUrl);
                     $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                        popup += "<br>Limited API access: " + facility.limitedAccess +
-                            "<br>Location: " + facility.latitude + " " + facility.longitude +
-                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length > 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                        if(data.parkingFacilityInformation!==undefined) {
+                            popup += "<br>Limited API access: " + facility.limitedAccess +
+                                "<br>Location: " + facility.latitude + " " + facility.longitude +
+                                "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                                "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                                "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                                "<br>Constraints: " + (data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : data.parkingFacilityInformation.specifications[0].minimumHeightInMeters + "<span class='text-danger'>No parking restrictions available</span>");
 
-                        mark.getPopup().setContent(popup);
+                            mark.getPopup().setContent(popup);
+                        }else{
+                            popup += "<br>parking static data not available";
+                            mark.getPopup().setContent(popup);
+                        }
                     });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
@@ -258,10 +263,6 @@ class MapContent extends Component {
             });
         });
 
-        $("#layers div input").on("click", function () {
-            main.filterMarkers(facilities, cluster);
-        });
-
         let heatmapSwitch = $("#heatmap-switch input");
         heatmapSwitch.on("click", function () {
             let showHeatmap = heatmapSwitch.prop("checked");
@@ -303,8 +304,8 @@ class MapContent extends Component {
 
     render() {
         // get visible facilities
-        //this.updateOnOff
 
+        //this.map.fire("moveend");
 
 
         return (
