@@ -198,7 +198,7 @@ class MapContent extends Component {
 
         cluster.addLayers(markers);
 
-        this.updateHeatmapPoints(facilities);
+        this.updateHeatmapPoints(markersToAdd);
     }
 
     updateHeatmapPoints(facilities) {
