@@ -4,6 +4,7 @@ import './Treemap.css'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import Legend from './Legend'
+import ReactTooltip from 'react-tooltip'
 import { Table, Button, Container, Row } from 'reactstrap';
 var colorDict = {
     "good": "goodBG",
@@ -13,15 +14,28 @@ var colorDict = {
 
 const QUALITYDATA = ["bad", "average", "good"]
 const LEVELS = ["country", "region", "province", "city"]
+var fieldsDict = []
 
 class Treemap extends Component {
 
     constructor(props) {
         super(props);
+        this.initFieldsDict();
         this.stackedTree = []
         this.goPrev = this.goPrev.bind(this)
         //this.root = d3.hierarchy(data);
         this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
+
+    }
+
+    initFieldsDict() {
+        fieldsDict["longitude"] = "location"
+        fieldsDict["tariffs"] = "tarrifs"
+        fieldsDict["contactPersons"] = "Contacts"
+        fieldsDict["minimumHeightInMeters"] = "Height restrict. (m)"
+        fieldsDict["capacity"] = "max capacity"
+        fieldsDict["openingTimes"] = "opening times"
+
     }
 
     componentDidMount() {
@@ -296,7 +310,7 @@ class Treemap extends Component {
             .data(columns).enter()
             .append('th')
             .attr("class", (d, i) => "th-" + d)
-            .text(function (column) { return column; });
+            .text(function (column) { return fieldsDict[column]; });
 
         this.setAllParkings(tbody, columns, data)
     }

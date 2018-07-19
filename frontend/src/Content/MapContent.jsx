@@ -13,6 +13,25 @@ class MapContent extends Component {
         super(props)
     }
 
+    componentWillReceiveProps(nextProps) {
+        let main = this;
+        if (nextProps.filters !== this.props.filters) {
+            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + this.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+                let facilities = json;
+                main.filterMarkers(facilities, main.cluster);
+
+            });
+
+        }
+     }
+
+
+    componentDidUpdate(prevProps,prevState) {
+        if (prevProps.filters !== this.props.filters) {
+           // this.filterMarkers(this.facilities, this.cluster)
+         }
+     }
+
     renderMap() {
         let map = L.map('mapid', {
             center: [52.1326, 5.2913],
@@ -24,7 +43,9 @@ class MapContent extends Component {
         return map;
     }
 
-    filterMarkers(facilities, cluster) {
+
+    filter(markersToAdd){
+        let main = this;
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -35,6 +56,23 @@ class MapContent extends Component {
             return this;
         };
 
+        for(let i=0; i<markersToAdd.length; i++){
+          switch(markersToAdd[i].facilityType){
+              case "onstreet":
+                  if(!main.extra.includes("onStreet")){
+                      delete markersToAdd[i];
+                  }
+                  break;
+
+          }
+        }
+        markersToAdd.clean(undefined);
+
+    }
+
+    filterMarkers(facilities, cluster) {
+
+
         let ParkingIcon = L.Icon.extend({
             options: {
                 iconSize: [36, 36],
@@ -43,13 +81,13 @@ class MapContent extends Component {
             }
         });
 
-        let vis = this.props.filters.visFacilities;
-        let inf = this.props.filters.information;
-        let extra = this.props.filters.extras;
+        this.vis = this.props.filters.visFacilities;
+        this.inf = this.props.filters.information;
+        this.extra = this.props.filters.extras;
 
-        console.log(vis);
-        console.log(inf);
-        console.log(extra);
+        console.log("vis " + this.vis);
+        console.log("inf " + this.inf);
+        console.log("extra " + this.extra);
 
         let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
         let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
@@ -61,101 +99,103 @@ class MapContent extends Component {
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
-        if (!extra.includes("onStreet")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].facilityType === "onstreet") {
-                    delete markersToAdd[i];
-                    console.log("onsteet");
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!extra.includes("offStreet")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].facilityType === "offstreet") {
-                    delete markersToAdd[i];
-                    console.log("offstreet");
-
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!extra.includes("noDynamic")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].dynamicDataUrl === null) {
-                    delete markersToAdd[i];
-                    console.log("no dynamic");
-
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!extra.includes("private")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true) {
-                    delete markersToAdd[i];
-                    console.log("private");
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!extra.includes("public")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false) {
-                    delete markersToAdd[i];
-                    console.log("public");
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!vis.includes("parkAndRide")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-
-                if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride")) || (markersToAdd[i].usage.toLowerCase().includes("p en r")) || (markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
-                    delete markersToAdd[i];
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-
-        if (!vis.includes("garage")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
-                    delete markersToAdd[i];
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!vis.includes("carpool")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")) {
-                    delete markersToAdd[i];
-
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!vis.includes("permit")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")) {
-                    delete markersToAdd[i];
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
-        if (!vis.includes("otherPlaces")) {
-            for (let i = 0; i < markersToAdd.length; i++) {
-                if (markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) &&
-                    !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
-                    !markersToAdd[i].usage.toLowerCase().includes("garage") &&
-                    !(markersToAdd[i].usage.toLowerCase().includes("ride")) &&
-                    !(markersToAdd[i].usage.toLowerCase().includes("p en r")) &&
-                    !(markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
-                    delete markersToAdd[i];
-                }
-            }
-        }
-        markersToAdd.clean(undefined);
+        this.filter(markersToAdd);
+        // if (!extra.includes("onStreet")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].facilityType === "onstreet") {
+        //             delete markersToAdd[i];
+        //             console.log("onsteet");
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!extra.includes("offStreet")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].facilityType === "offstreet") {
+        //             delete markersToAdd[i];
+        //             console.log("offstreet");
+        //
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!extra.includes("noDynamic")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].dynamicDataUrl === null) {
+        //             delete markersToAdd[i];
+        //             console.log("no dynamic");
+        //
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!extra.includes("private")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true) {
+        //             delete markersToAdd[i];
+        //             console.log("private");
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!extra.includes("public")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false) {
+        //             delete markersToAdd[i];
+        //             console.log("public");
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!vis.includes("parkAndRide")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //
+        //         if (markersToAdd[i].usage !== null && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+        //             delete markersToAdd[i];
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        //
+        // if (!vis.includes("garage")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("garage")) {
+        //             delete markersToAdd[i];
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!vis.includes("carpool")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("carpool")) {
+        //             delete markersToAdd[i];
+        //
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!vis.includes("permit")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].usage !== null && markersToAdd[i].usage.toLowerCase().includes("vergunning")) {
+        //             delete markersToAdd[i];
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
+        // if (!vis.includes("otherPlaces")) {
+        //     for (let i = 0; i < markersToAdd.length; i++) {
+        //         if (markersToAdd[i].usage === null || (!markersToAdd[i].usage.toLowerCase().includes("vergunning")) &&
+        //             !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
+        //             !markersToAdd[i].usage.toLowerCase().includes("garage") &&
+        //             !(markersToAdd[i].usage.toLowerCase().includes("ride")) &&
+        //             !(markersToAdd[i].usage.toLowerCase().includes("p en r")) &&
+        //             !(markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+        //             delete markersToAdd[i];
+        //             console.log("woops")
+        //         }
+        //     }
+        // }
+        // markersToAdd.clean(undefined);
 
         let markers = [];
         markersToAdd.forEach(function (facility) {
@@ -177,16 +217,21 @@ class MapContent extends Component {
                             }
                         });
                     }
-
+                    console.log(facility.staticDataUrl);
                     $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                        popup += "<br>Limited API access: " + facility.limitedAccess +
-                            "<br>Location: " + facility.latitude + " " + facility.longitude +
-                            "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Constraints: " + (data.parkingFacilityInformation.parkingRestrictions.length > 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                        if(data.parkingFacilityInformation!==undefined) {
+                            popup += "<br>Limited API access: " + facility.limitedAccess +
+                                "<br>Location: " + facility.latitude + " " + facility.longitude +
+                                "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                                "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                                "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                                "<br>Constraints: " + (data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : data.parkingFacilityInformation.specifications[0].minimumHeightInMeters + "<span class='text-danger'>No parking restrictions available</span>");
 
-                        mark.getPopup().setContent(popup);
+                            mark.getPopup().setContent(popup);
+                        }else{
+                            popup += "<br>parking static data not available";
+                            mark.getPopup().setContent(popup);
+                        }
                     });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
@@ -259,10 +304,6 @@ class MapContent extends Component {
             });
         });
 
-        $("#layers div input").on("click", function () {
-            main.filterMarkers(facilities, cluster);
-        });
-
         let heatmapSwitch = $("#heatmap-switch input");
         heatmapSwitch.on("click", function () {
             let showHeatmap = heatmapSwitch.prop("checked");
@@ -298,14 +339,17 @@ class MapContent extends Component {
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
 
+        this.facilities = facilities
+        this.cluster = cluster
+
     }
 
 
 
     render() {
         // get visible facilities
-        //this.updateOnOff
 
+        //this.map.fire("moveend");
 
 
         return (
