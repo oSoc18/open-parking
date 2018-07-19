@@ -151,3 +151,13 @@ h1 {
 .th-name {
     width: 150px !important;
 }
+
+div.tooltip {
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    background: #ffff99;
+    border: solid 1px #aaa;
+    border-radius: 8px;
+}
