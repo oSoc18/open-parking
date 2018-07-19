@@ -101,6 +101,7 @@ class Treemap extends Component {
         nodes
             .append('text')
             .attr('dx', 4)
+            .attr('style', "color:blue;")
             .attr('dy', 14)
             .attr('width', function (d) { return dict[d]; })
             .attr('height', function (d) { return d.y1 - d.y0; })
