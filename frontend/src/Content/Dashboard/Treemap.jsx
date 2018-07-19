@@ -243,6 +243,14 @@ class Treemap extends Component {
 
     }
 
+    getTitleDict(str){
+
+        if(str === "nl")
+            return "The Netherlands"
+
+        return str
+
+    }
     render() {
 
 
@@ -269,6 +277,8 @@ class Treemap extends Component {
             if (breadCrums !== "Loading data..." && this.props.level > 0) {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
+
+            breadCrums = this.getTitleDict(breadCrums)
 
 
         }
@@ -382,7 +392,9 @@ class Treemap extends Component {
                     .attr("class", classN)
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
+                    .text(data[columns[j]])
                     .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
+    
 
             }
             else if (columns[j] === "longitude") {
@@ -424,8 +436,8 @@ class Treemap extends Component {
             if (!nodeCapacity)
                 return null
 
-            if (nodeCapacity["capacity"]) {
-                return nodeCapacity["capacity"]
+            if (nodeCapacity[key]) {
+                return nodeCapacity[key]
 
             }
             return null // No capacity found
