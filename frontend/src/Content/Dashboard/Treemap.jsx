@@ -342,7 +342,7 @@ class Treemap extends Component {
 
         for (let i = 0; i < data.length; i++) {
 
-            if (data[i].mark === "onstreet")
+            if (data[i].mark === "onstreet" || this.checkInformationFilters(data[i]))
                 continue
 
             let resultJson = data[i]["staticData"]
@@ -350,6 +350,28 @@ class Treemap extends Component {
             //generate row
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
 
+        }
+
+    }
+
+    checkInformationFilters(node) {
+        let required = this.filers.information
+
+        if(required && required.length > 0){ //check if all checked are included 
+
+            for(let i = 0; i < required.length; i++){
+
+                if(["capacity", "minimumHeightInMeters"].indexOf(required[i])>-1){// special treatment
+                    return true
+                }
+            }
+
+            //everthing is included
+            return false
+
+        }
+        else{ // nothing is required
+            return false;
         }
 
     }

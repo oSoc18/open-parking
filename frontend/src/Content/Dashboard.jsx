@@ -356,6 +356,7 @@ class Dashboard extends Component {
     // set unknownView to true
     this.noLocation = true
   }
+
 }
 
 export default Dashboard;
