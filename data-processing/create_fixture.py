@@ -31,7 +31,7 @@ def get_region_name(facility):
     """Return the region name of a facility, based on its province."""
     if "province" in facility and facility["province"] is not None:
         provinces = {
-            ("Noord-Holland", "Utrecht", "Flavoland"): "Noordwest-Nederland",
+            ("Noord-Holland", "Utrecht", "Flevoland"): "Noordwest-Nederland",
             ("Zuid-Holland", "Zeeland"): "Zuidwest-Nederland",
             ("Noord-Brabant", "Limburg"): "Zuid-Nederland",
             ("Gelderland", "Overijsel"): "Oost-Nederland",
@@ -42,9 +42,11 @@ def get_region_name(facility):
                 return region
     return None
 
+
 def is_not_none(value, key, is_array=False):
     """Checks whether a value is contained in the object, and that it is not None."""
     return value is not None and key in value and value[key] is not None and (not is_array or len(value[key]) > 0)
+
 
 def get_mark(facilityType, longitude, latitude, staticData):
     if facilityType == "onstreet":
@@ -71,6 +73,7 @@ def get_mark(facilityType, longitude, latitude, staticData):
             return "average"
         else:
             return "bad"
+
 
 def get_usage(staticData):
     if staticData is not None and is_not_none(staticData, "specifications", True):
@@ -111,9 +114,10 @@ for filename in file_list:
     }
     # Add the mark field, based on some other fields
     fields["mark"] = get_mark(fields["facilityType"], fields["longitude"],
-            fields["latitude"], facility["staticData"])
+                              fields["latitude"], facility["staticData"])
 
-    output_json.append({"model": "api.parkingdata", "pk": pk, "fields": fields})
+    output_json.append({"model": "api.parkingdata",
+                        "pk": pk, "fields": fields})
     pk += 1
 
 print("Write data to {}...".format(output_filename))

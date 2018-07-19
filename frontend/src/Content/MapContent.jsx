@@ -128,6 +128,7 @@ class MapContent extends Component {
         let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
         let badIcon = new ParkingIcon({iconUrl: require('./images/parking-bad.png')});
         let onStreetIcon = new ParkingIcon({iconUrl: require('./images/parking-onstreet.png')});
+        let privateIcon = new ParkingIcon({iconUrl: require('./images/parking-private.png')});
 
 
         let main = this;
@@ -165,7 +166,7 @@ class MapContent extends Component {
                                 "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs !== undefined && data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
                                 "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes !== undefined && data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
                                 "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons !== undefined && data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters !== undefined && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
 
                             mark.getPopup().setContent(popup);
                         } else {
@@ -179,17 +180,20 @@ class MapContent extends Component {
 
                 }
             });
-            if (facility.mark !== "onstreet") {
-                if (facility.mark === "bad") {
-                    mark.setIcon(badIcon);
-                } else if (facility.mark === "average") {
-                    mark.setIcon(averageIcon);
+            if(facility.limitedAccess === false) {
+                if (facility.mark !== "onstreet") {
+                    if (facility.mark === "bad") {
+                        mark.setIcon(badIcon);
+                    } else if (facility.mark === "average") {
+                        mark.setIcon(averageIcon);
+                    } else {
+                        mark.setIcon(goodIcon);
+                    }
                 } else {
-                    mark.setIcon(goodIcon);
+                    mark.setIcon(onStreetIcon);
                 }
-            } else {
-                mark.setIcon(onStreetIcon);
-
+            }else {
+                mark.setIcon(privateIcon)
             }
             markers.push(mark);
         });

@@ -8,6 +8,7 @@ import { Table } from 'reactstrap';
 import './Dashboard.css'
 import Treemap from './Dashboard/Treemap';
 
+
 require('whatwg-fetch') //browser only!
 
 
@@ -74,6 +75,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.level = 0
+    this.noLocation = false
 
    
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
@@ -177,6 +179,7 @@ class Dashboard extends Component {
     fetch(url) 
     .then(response => response.json())
     .then(json => {
+      console.log(json)
       thiss.setTreeMap(json, city)
   }    )
   }
@@ -258,31 +261,6 @@ class Dashboard extends Component {
       .text(function (column) { return column; });
 
       this.setAllParkings(tbody, columns)
-      /*for(let i = 0; i < allParking.length; i++){
-        this.generateRow(tbody, columns, allParking[i] )
-      }*/
-    /*for (let i = 0; i < TESTJSON.length; i++) {
-
-      this.generateRow(tbody, columns )
-      let tr = tbody.append('tr')*/
-
-     /* for (let j = 0; j < columns.length; j++) {
-
-        let nameCell = ""
-        let colorClass = "invalidCell"
-
-        if (TESTJSON[i][columns[j]]) {
-          colorClass = "validCell"
-        }
-
-        if (j === 0) {
-          nameCell = "Name"
-          colorClass = ""
-        }
-
-        tr.append('td')
-          .attr("class", "heatCell" + nameCell + " " + colorClass)
-          .text(TESTJSON[i][columns[j]])*/
       
     }
 
@@ -326,9 +304,6 @@ class Dashboard extends Component {
           json["name"] = cityname
         }
   
-      
-      
-         
           this.setState({treemapData: json})
   
     }
@@ -350,6 +325,7 @@ class Dashboard extends Component {
     let getTable = this.getTable()
     return (
       
+      
         <Treemap level={this.level} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)}/>
     
       
@@ -360,6 +336,11 @@ class Dashboard extends Component {
     this.level = this.level - val
     let prev = null
 
+    if(this.noLocation){
+      this.level = 0; // back to whole overview
+    }
+
+
     if(this.state.stackedTree.length > 0){
       let temp = this.state.stackedTree
         prev = temp.pop()
@@ -368,6 +349,12 @@ class Dashboard extends Component {
             stackedTree: temp
         })
     }
+  }
+
+  onNoLocation(){
+    // set level to city
+    // set unknownView to true
+    this.noLocation = true
   }
 }
 
