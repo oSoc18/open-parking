@@ -243,6 +243,14 @@ class Treemap extends Component {
 
     }
 
+    getTitleDict(str){
+
+        if(str === "nl")
+            return "The Netherlands"
+
+        return str
+
+    }
     render() {
 
 
@@ -269,6 +277,8 @@ class Treemap extends Component {
             if (breadCrums !== "Loading data..." && this.props.level > 0) {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
+
+            breadCrums = this.getTitleDict(breadCrums)
 
 
         }
@@ -329,7 +339,7 @@ class Treemap extends Component {
     async setAllParkings(tbody, column, data) {
 
 
-        for (let i = 1; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
 
             if (data[i].mark === "onstreet")
                 continue
@@ -343,19 +353,54 @@ class Treemap extends Component {
 
     }
 
+    handleMouseOverTd(inp, d){
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 1)
+        .style("left", (d.y+120) + "px")
+        .style("top", (d.x-20) + "px")
+        .html(
+			"<div>" + inp + "</div>"
+		);
+
+    }
+
+    createTextTool(text){
+ 
+    /*    var div = d3.select("body").append("div").html(text)
+            .attr("class", "tooltip")
+            .style("opacity", 1)
+            .style("left", (d.y+120) + "px")
+            .style("top", (d.x-20) + "px")
+		
+
+
+    return  div*/
+    }
     generateRow(tbody, columns, data, longitude, mark = "") {
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
+        let thiss = this 
+
+        if(!data){
+            alert(data)
+            return
+        }
 
         for (let j = 0; j < columns.length; j++) {
             let classN = ""
             if (columns[j] === "name") {
+                
                 classN += " heatCellName"//normal cell
                 classN += " nameBorder" + mark
                 tr.append('td')
                     .attr("class", classN)
+                    .attr("data-tip", "")
+                    .attr("data-for", data[columns[j]])
                     .text(data[columns[j]])
+                    .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
+    
 
             }
             else if (columns[j] === "longitude") {
@@ -397,8 +442,8 @@ class Treemap extends Component {
             if (!nodeCapacity)
                 return null
 
-            if (nodeCapacity["capacity"]) {
-                return nodeCapacity["capacity"]
+            if (nodeCapacity[key]) {
+                return nodeCapacity[key]
 
             }
             return null // No capacity found

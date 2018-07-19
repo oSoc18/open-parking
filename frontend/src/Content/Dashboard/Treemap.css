@@ -124,6 +124,7 @@ thead {
 tbody td, thead th {
  
     float: left;
+    z-index: 5;
 }
 
 h1 {
