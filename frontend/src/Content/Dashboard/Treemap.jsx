@@ -38,7 +38,7 @@ class Treemap extends Component {
             return
 
 
-            d3.select('.heatMap').selectAll("*").remove()    
+        d3.select('.heatMap').selectAll("*").remove()
         d3.select('svg').selectAll("*").remove()
         d3.select('svg').append('g')
         let svgGroup = d3.select('svg g')
@@ -253,26 +253,28 @@ class Treemap extends Component {
             }
 
             if (breadCrums !== "Loading data..." && this.props.level > 0) {
-                buttonZoomOut = (<Button   outline color="primary"  onClick={this.goPrev}>Zoom out</Button>)
+                buttonZoomOut = (<Button id="zoom-out-button" outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
 
         }
         return (
             <div>
-                <Legend />
-                           <div>
-                        <h1 style={{"float": "left"}}>{breadCrums}</h1>
-                        <div>{buttonZoomOut}</div>
-                    </div>
 
-                    <div>
-                        <Table className="heatMap" width={0} />
-                    </div>
-        
-                <svg className="TreemapData"  >
+                <div className="dashboard-head">
+                    <h1>{breadCrums}</h1>
+                    <div>{buttonZoomOut}</div>
+                    <Legend />
+                </div>
 
-                </svg>
+                <div className="dashboard-table">
+                    <Table className="heatMap" width={0} />
+                </div>
+
+                <div className="dashboard-data">
+                    <svg className="TreemapData"  >
+                    </svg>
+                </div>
             </div>
         );
     }
@@ -293,7 +295,7 @@ class Treemap extends Component {
             .selectAll('th')
             .data(columns).enter()
             .append('th')
-            .attr("class", (d,i) => "th-" + d)
+            .attr("class", (d, i) => "th-" + d)
             .text(function (column) { return column; });
 
         this.setAllParkings(tbody, columns, data)
