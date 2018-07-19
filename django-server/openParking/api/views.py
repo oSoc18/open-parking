@@ -63,7 +63,7 @@ class RectangleView(generics.ListAPIView):
     """
     Get all instances located in a rectangle defined by two points.
     """
-    serializer_class = ParkingDataSerializer
+    serializer_class = ParkingStaticDataSerializer
 
     def get_queryset(self):
         southwest_lng = float(self.kwargs['southwest_lng'])
