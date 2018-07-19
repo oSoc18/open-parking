@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 rect {
     fill: rgb(177, 180, 180);
     opacity: 0.55;
@@ -125,6 +127,7 @@ tbody td, thead th {
 }
 
 h1 {
+    font-family: 'Montserrat', Helvetica, sans-serif;
     float: left;
 }
 
