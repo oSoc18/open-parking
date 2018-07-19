@@ -339,7 +339,7 @@ class Treemap extends Component {
     async setAllParkings(tbody, column, data) {
 
 
-        for (let i = 1; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
 
             if (data[i].mark === "onstreet")
                 continue
@@ -383,9 +383,15 @@ class Treemap extends Component {
         let v = ""
         let thiss = this 
 
+        if(!data){
+            alert(data)
+            return
+        }
+
         for (let j = 0; j < columns.length; j++) {
             let classN = ""
             if (columns[j] === "name") {
+                
                 classN += " heatCellName"//normal cell
                 classN += " nameBorder" + mark
                 tr.append('td')
