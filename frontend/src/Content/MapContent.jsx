@@ -255,7 +255,7 @@ class MapContent extends Component {
                 }
             }
 
-            main.updateHeatmapPoints(facilities);
+            main.filterMarkers(facilities, cluster);
         });
 
 
