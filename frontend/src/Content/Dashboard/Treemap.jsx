@@ -4,6 +4,7 @@ import './Treemap.css'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import Legend from './Legend'
+import ReactTooltip from 'react-tooltip'
 import { Table, Button, Container, Row } from 'reactstrap';
 var colorDict = {
     "good": "goodBG",
