@@ -115,9 +115,10 @@ class NoneView(generics.ListAPIView):
     """
     Get all the parkingplaces without location
     """
-    serializer_class = ParkingStaticDataSerializer
+    serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
+        print("yeeeeeee boyyy")
         return ParkingData.objects.filter(region__isnull=True)
 
 
@@ -139,7 +140,7 @@ def generic_summary_view(field_name, area_name, lower_field_name):
                 {"name": "average", "value": areas[area]["average"]},
                 {"name": "bad", "value": areas[area]["bad"]}
             ]
-        # We do not want to return None locations to the summary frontend
+            # We do not want to return None locations to the summary frontend
         } for area in areas if area is not None]
     })
     return HttpResponse(dump, content_type='application/json')

@@ -151,3 +151,21 @@ h1 {
 .th-name {
     width: 150px !important;
 }
+
+#zoom-out-button{
+    margin-top: 20px;
+    margin-right: 700px !important;
+    float: right;
+}
+
+.dashboard-head h1 {
+    margin:20px;
+}
+
+.dashboard-data{
+    margin-left: 20px; 
+}
+
+.dashboard-table{
+    margin-top: 20px; 
+}
