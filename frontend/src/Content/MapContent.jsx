@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import './MapContent.css';
 import onstreetIcon from './images/onstreet-legend.png';
+import privateIcon from './images/private-legend.png';
 
 
 class MapContent extends Component {
@@ -49,7 +50,7 @@ class MapContent extends Component {
             delete markersToAdd[i];
             return;
         }
-        if(!main.extra.includes("offStreet") && markersToAdd[i].facilityType === "offstreet"){
+        if (!main.extra.includes("offStreet") && markersToAdd[i].facilityType === "offstreet") {
             delete markersToAdd[i];
             return;
         }
@@ -65,7 +66,7 @@ class MapContent extends Component {
             delete markersToAdd[i];
             return;
         }
-        if(markersToAdd[i].usage !== null) {
+        if (markersToAdd[i].usage !== null) {
             if (!main.vis.includes("parkAndRide") && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                 delete markersToAdd[i];
                 return;
@@ -83,15 +84,15 @@ class MapContent extends Component {
                 return;
             }
             if (!main.vis.includes("otherPlaces") && (!markersToAdd[i].usage.toLowerCase().includes("vergunning") &&
-                            !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
-                            !markersToAdd[i].usage.toLowerCase().includes("garage") &&
-                            !markersToAdd[i].usage.toLowerCase().includes("ride") &&
-                            !markersToAdd[i].usage.toLowerCase().includes("p en r") &&
-                            !markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+                !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
+                !markersToAdd[i].usage.toLowerCase().includes("garage") &&
+                !markersToAdd[i].usage.toLowerCase().includes("ride") &&
+                !markersToAdd[i].usage.toLowerCase().includes("p en r") &&
+                !markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
                 delete markersToAdd[i];
                 return;
             }
-        }else if(!main.vis.includes("otherPlaces")){
+        } else if (!main.vis.includes("otherPlaces")) {
             delete markersToAdd[i];
             return;
         }
@@ -124,18 +125,18 @@ class MapContent extends Component {
         this.inf = this.props.filters.information;
         this.extra = this.props.filters.extras;
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-bad.png')});
-        let onStreetIcon = new ParkingIcon({iconUrl: require('./images/parking-onstreet.png')});
-        let privateIcon = new ParkingIcon({iconUrl: require('./images/parking-private.png')});
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-good.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
+        let onStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
+        let privateIcon = new ParkingIcon({ iconUrl: require('./images/parking-private.png') });
 
 
         let main = this;
 
         cluster.clearLayers();
         let markersToAdd = facilities.slice(0);
-        for(let i=0; i<markersToAdd.length; i++){
+        for (let i = 0; i < markersToAdd.length; i++) {
             main.filter(markersToAdd, i);
         }
         markersToAdd.clean(undefined);
@@ -180,7 +181,7 @@ class MapContent extends Component {
 
                 }
             });
-            if(facility.limitedAccess === false) {
+            if (facility.limitedAccess === false) {
                 if (facility.mark !== "onstreet") {
                     if (facility.mark === "bad") {
                         mark.setIcon(badIcon);
@@ -192,7 +193,7 @@ class MapContent extends Component {
                 } else {
                     mark.setIcon(onStreetIcon);
                 }
-            }else {
+            } else {
                 mark.setIcon(privateIcon)
             }
             markers.push(mark);
@@ -205,7 +206,7 @@ class MapContent extends Component {
 
     updateHeatmapPoints(facilities) {
         if ($("#heatmap-switch input").prop("checked")) {
-            let heatPoints = {good: [], average: [], bad: []};
+            let heatPoints = { good: [], average: [], bad: [] };
             for (let i = 0; i < facilities.length; i++) {
                 if (facilities[i].mark in heatPoints) {
                     heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
@@ -278,7 +279,7 @@ class MapContent extends Component {
                 blur: 15,
                 minOpacity: 0.6,
                 max: 1,
-                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
+                gradient: { 0: heatmapColors[i][1], 1: heatmapColors[i][1] }
             });
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
@@ -298,9 +299,9 @@ class MapContent extends Component {
 
             <div id="mapParent">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
-                      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-                      crossorigin=""/>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
+                    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+                    crossorigin="" />
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
 
                 <div id="search-container"></div>
 
@@ -310,19 +311,23 @@ class MapContent extends Component {
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
-                        <div id="color-and-text">
+                        <div id="color-and-text" data-tooltip="Private parking." data-tooltip-position="bottom">
+                            <img id="onstreetIcon" src={privateIcon} alt="icon" width="15px" height="15px"></img>
+                            <span>private</span>
+                        </div>
+                        <div id="color-and-text" data-tooltip="On-street parking." data-tooltip-position="bottom">
                             <img id="onstreetIcon" src={onstreetIcon} alt="icon" width="15px" height="15px"></img>
                             <span>On-street</span>
                         </div>
-                        <div id="color-and-text">
+                        <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in." data-tooltip-position="bottom">
                             <div class="small-box blue"></div>
                             <span>Excellent</span>
                         </div>
-                        <div id="color-and-text">
+                        <div id="color-and-text" data-tooltip="3, 4 or 5 fields of 6 are filled in." data-tooltip-position="bottom">
                             <div class="small-box orange"></div>
                             <span>Mediocre</span>
                         </div>
-                        <div id="color-and-text">
+                        <div id="color-and-text" data-tooltip="Less than half the fields are filled in." data-tooltip-position="bottom">
                             <div class="small-box red"></div>
                             <span>Poor</span>
                         </div>
@@ -332,7 +337,7 @@ class MapContent extends Component {
                 <div className="switch-field" id="heatmap-switch">
                     <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
-                        <label class="switch"><input type="checkbox"/>
+                        <label class="switch"><input type="checkbox" />
                             <div></div>
                         </label>
                     </div>
