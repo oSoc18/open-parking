@@ -192,3 +192,9 @@ div.tooltip {
     float: left;
     margin-right: 20px;
 }
+
+.titel-tabel{
+    background: #d7181d !important;
+    font-family: 'Montserrat', Helvetica, sans-serif;
+    float: left;
+}
