@@ -254,7 +254,7 @@ class Treemap extends Component {
     }
     render() {
 
-
+        console.log(this.props.data)
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
 
