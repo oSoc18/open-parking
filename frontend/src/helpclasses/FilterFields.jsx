@@ -1,11 +1,17 @@
-
+const checkOther = function (key, node) {
+        
+    if(node && node[key] && node[key]  && JSON.stringify(node[key]).length > 0 && JSON.stringify(node[key]) !==  "[]"){
+        return true
+    }
+    return false
+}
 
 export default{
 
 
     //capacity
 
-    checkCapacity : function checkCapacity(node){
+    checkCapacity: function (node){
         if(node === undefined || node === null){
             return false;
         }
@@ -27,7 +33,12 @@ export default{
     },
     //location
 
-    checkRestrictions: function checkRestrictions(node){
+    
+    checkRestrictions: function (node){
+
+        if(node === undefined || node === null){
+            return false;
+        }
 
         if(node["specifications"] && node["specifications"].length > 0){
             let nodeCapacity = node["specifications"][0]
@@ -35,14 +46,17 @@ export default{
             if(!nodeCapacity)
                 return false
             
-            if(nodeCapacity["minimumHeightInMeters"] && nodeCapacity["capacity"] !== "[]")
+            if(nodeCapacity["minimumHeightInMeters"] && nodeCapacity["minimumHeightInMeters"] !== "[]" ){
                 return true
+            }
 
 
         }
         return false
 
-    }
-    
+    },
 
+    checkTarrifs: function (node) { return checkOther("tariffs", node) },
+    checkContactData: function (node) { return checkOther("contactPersons", node) },
+    checkOpeningHours: function (node) { return checkOther("openingTimes", node) },
 }

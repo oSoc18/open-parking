@@ -175,6 +175,10 @@ class Dashboard extends Component {
 
   FILTERFUNCTION = {
     "capacity": FilterFields.checkCapacity,
+    "restrictions": Filterfields.checkRestrictions,
+    "contactData" : FilterFields.checkContactData,
+    "tariffs": Filterfields.checkTarrifs,
+    "openingHours": Filterfields.checkOpeningHours
   }
 
   filterEntries(parkings) {
@@ -183,6 +187,7 @@ class Dashboard extends Component {
 
     if (this.level === LEVEL_ENUM.city) {
       //foreach filter
+      console.log(this.props.filters.information)
 
       for (let option of this.props.filters.information) {
    

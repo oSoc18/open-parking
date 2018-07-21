@@ -316,6 +316,7 @@ class Treemap extends Component {
     generateTable(data) {
 
 
+        d3.select(".heatMap").selectAll("*").remove()
         var table = d3.select('.heatMap')
         var thead = table.append('thead') // create the header
         var tbody = table.append('tbody');
