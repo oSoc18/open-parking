@@ -407,10 +407,19 @@ class Dashboard extends Component {
     return (
 
 
-      <Treemap level={this.level} filters={this.props.filters} data={this.state.treemapData} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)} />
+      <Treemap level={this.level} filters={this.props.filters} data={this.getFilteredData()} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)} />
 
 
     );
+  }
+
+  getFilteredData(){
+    if(this.level === LEVEL_ENUM.city){
+      return this.filterEntries(this.state.treemapData)
+    }
+    else{
+      return this.state.treemapData
+    }
   }
 
   onDezoom(val = 1) {
