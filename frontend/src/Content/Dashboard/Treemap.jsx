@@ -354,15 +354,17 @@ class Treemap extends Component {
 
     }
 
+/**
+Only show the facilities with the required stuff */
     checkInformationFilters(node) {
-        let required = this.filers.information
+        let required = this.props.filters.information
 
         if(required && required.length > 0){ //check if all checked are included 
 
             for(let i = 0; i < required.length; i++){
 
-                if(["capacity", "minimumHeightInMeters"].indexOf(required[i])>-1){// special treatment
-                    return true
+                if(["capacity", "minimumHeightInMeters"].indexOf(required[i]) > -1){// special treatment
+                    // if empty return true
                 }
             }
 
@@ -370,9 +372,7 @@ class Treemap extends Component {
             return false
 
         }
-        else{ // nothing is required
-            return false;
-        }
+        return false // nothing is required or all required fields are included
 
     }
 
@@ -459,7 +459,10 @@ class Treemap extends Component {
 
     getValueJsonResult(key, node) {
 
-        if ((key === "capacity" || key === "minimumHeightInMeters") && node && node["specifications"] && node["specifications"].length > 0) {
+        if ((key === "capacity" || key === "minimumHeightInMeters") 
+                && node && node["specifications"] 
+                && node["specifications"].length > 0) {
+
             let nodeCapacity = node["specifications"][0]
 
             if (!nodeCapacity)
