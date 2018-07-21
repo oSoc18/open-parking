@@ -169,27 +169,27 @@ class SideBar extends Component {
 
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                            value="capacity" onChange={this.handleInformation} />
+                            value="capacity" onChange={this.handleInformation} defaultChecked={true}/>
                         <label for="capacity">Capacity</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" onChange={this.handleInformation}/>
+                            value="tariffs" onChange={this.handleInformation} defaultChecked={true}/>
                         <label for="tariffs">Tariffs</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" onChange={this.handleInformation}/>
+                            value="restrictions" onChange={this.handleInformation} defaultChecked={true}/>
                         <label for="restrictions">Restrictions</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" onChange={this.handleInformation}/>
+                            value="openingHours" onChange={this.handleInformation} defaultChecked={true}/>
                         <label for="openingHours">Opening hours</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" onChange={this.handleInformation}/>
+                            value="contactData" onChange={this.handleInformation} defaultChecked={true}/>
                         <label for="contactData">Contact data</label>
                     </div>
 

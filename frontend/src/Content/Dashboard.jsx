@@ -9,6 +9,7 @@ import './Dashboard.css'
 import Treemap from './Dashboard/Treemap';
 
 import Filterfields from '../helpclasses/FilterFields';
+import FilterFields from '../helpclasses/FilterFields';
 
 
 require('whatwg-fetch') //browser only!
@@ -51,7 +52,9 @@ const realJson = [
 
 const levels = ["country", "region", "province", "city", "facility"];
 
-var LEVEL_ENUM = Object.freeze({"country": 0, "region": 1, "province": 2, "city": 3, "facility": 4})
+var LEVEL_ENUM = Object.freeze({ "country": 0, "region": 1, "province": 2, "city": 3, "facility": 4 })
+
+
 
 
 class Dashboard extends Component {
@@ -165,30 +168,39 @@ class Dashboard extends Component {
       .then(json => {
 
         //this.handleFilters is not used until a solution is found
-        json = thiss.filterEntrees(json)
+        json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
       })
   }
 
-  filterEntrees(parkings){
-
-    if(this.level === LEVEL_ENUM.city ){
-      //filter on available fields
-      for(let i = 0; i < parkings.length; i++){
-
-        if(!this.allFieldsIncluded(parkings[i])){
-          console.log(parkings[i])
-          delete parkings[i]
-        }
-      }
-    }
-    return parkings
+  FILTERFUNCTION = {
+    "capacity": FilterFields.checkCapacity,
   }
 
-  allFieldsIncluded(parking){
-    if(this.props.filters && this.props.filters.information && this.props.filters.information.length > 0){
+  filterEntries(parkings) {
+    
+    let newParkings = parkings
+
+    if (this.level === LEVEL_ENUM.city) {
+      //foreach filter
+
+      for (let option of this.props.filters.information) {
+   
+        //if (this.props.filters.information.includes("capacity")) 
+          //newParkings = parkings.filter(parking => Filterfields.checkCapacity(staticData))
+          newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
+          //
+      }
+      
+
+    }
+    return newParkings
+  }
+
+  allFieldsIncluded(parking) {
+    if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
       console.log(this.props.filters.information)
-      if(this.props.filters.information.indexOf("capacity") > -1){
+      if (this.props.filters.information.indexOf("capacity") > -1) {
         console.log("no capacity")
         return Filterfields.checkCapacity(parking)
       }
@@ -196,7 +208,7 @@ class Dashboard extends Component {
     return true
   }
 
-  specialFieldsIncluded(parking){
+  specialFieldsIncluded(parking) {
 
   }
 

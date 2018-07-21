@@ -6,3 +6,5 @@ db.sqlite3
 *.sqlite3
 data-processing/cache_list.json
 data-processing/cache-dir
+
+frontend/\.vs/slnx\.sqlite

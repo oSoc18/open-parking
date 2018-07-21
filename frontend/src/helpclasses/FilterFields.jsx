@@ -6,9 +6,7 @@ export default{
     //capacity
 
     checkCapacity : function checkCapacity(node){
-        if(node === undefined){
-            console.log("UNDEFINED" + node)
-
+        if(node === undefined || node === null){
             return false;
         }
 
