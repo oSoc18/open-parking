@@ -59,9 +59,15 @@ class Treemap extends Component {
         svgGroup.selectAll("*").remove();
         let thiss = this
         var treemap = d3.treemap()
-        treemap.tile(d3.treemapSquarify)
+       // treemap.tile(d3.treemapSquarify)
+       treemap.tile(d3.treemapBinary)
+       treemap.paddingOuter(10)
 
-        treemap.size([960, 570])
+        let svgW = d3.select('svg').node().getBBox()
+  
+
+        treemap.size([document.documentElement.clientWidth * .8
+            , document.documentElement.clientHeight *0.8])
             .paddingTop(20)
             .paddingInner(2);
 
