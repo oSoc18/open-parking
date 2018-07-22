@@ -111,7 +111,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.information = temp;
-        console.log(temp)
+    
 
 
 

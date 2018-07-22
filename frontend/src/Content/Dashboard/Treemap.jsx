@@ -93,7 +93,7 @@ class Treemap extends Component {
             })
             .attr('height', function (d) { return d.y1 - d.y0; })
             .attr('class', d => thiss.getColorByName(d.data.name))
-            .attr('id', d => d.data.name)
+            .attr('id', d => this.getId(d.data.name))
             .on("mouseover", d => { thiss.handleMouseOverNode(null, d.data.name, d.parent) })
             .on("mouseout", d => thiss.handleMouseOutNode(null, d.data.name, d.parent))
         // .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
@@ -124,11 +124,11 @@ class Treemap extends Component {
 
     handleMouseOverNode(obj, name, parent) {
 
-        let rect = d3.select("#" + name)
+        let rect = d3.select("#" + this.getId(name))
 
-        if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
+        if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) { //if mark is hovered 
             // handle parent
-            rect = d3.select("#" + parent.data.name)
+            rect = d3.select("#" + this.getId(parent.data.name))
         }
 
 
@@ -139,13 +139,24 @@ class Treemap extends Component {
 
     }
 
+    getId(name){
+
+        if(name){
+            return name.split("'").join("_").split(" ").join("_").split("'").join("");
+
+        }
+        return ""
+
+        
+    }
+
     handleMouseOutNode(obj, name, parent) {
 
-        let rect = d3.select("#" + name.replace(/ /g, "_"))
+        let rect = d3.select("#" + this.getId(name))
 
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
             // handle parent
-            rect = d3.select("#" + parent.data.name)
+            rect = d3.select("#" + this.getId(parent.data.name))
         }
 
 
@@ -219,25 +230,6 @@ class Treemap extends Component {
 
     goPrev() {
 
-        /*let prevData = null
-        let prevName = ""
-    
-        d3.select(".heatMap").selectAll("*").remove()
-        if(this.stackedTree.length < 1)
-            return //this shouldn't happen
-    
-        if(this.stackedTree.length > 0){
-            let temp = this.stackedTree.pop()
-            prevData = temp.data
-            prevName = temp.name
-            console.log(this.stackedTree)
-        }
-        else{
-            alert("nothing in tree")
-        }
-    
-        this.drawMap(d3.hierarchy(prevData))*/
-
         if (this.props.onDezoom) {
             this.props.onDezoom()
         }
@@ -254,7 +246,6 @@ class Treemap extends Component {
     }
     render() {
 
-        console.log(this.props.data)
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
 
@@ -401,14 +392,13 @@ Only show the facilities with the required stuff */
 
     return  div*/
     }
-    generateRow(tbody, columns, data, longitude, mark = "") {
+     generateRow(tbody, columns, data, longitude, mark = "") {
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
         let thiss = this 
 
         if(!data){
-            alert(data)
             return
         }
 
@@ -423,7 +413,7 @@ Only show the facilities with the required stuff */
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
                     .text(data[columns[j]])
-                    .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
+                    // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
     
 
             }

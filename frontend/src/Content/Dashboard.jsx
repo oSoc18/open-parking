@@ -168,7 +168,7 @@ class Dashboard extends Component {
       .then(json => {
 
         //this.handleFilters is not used until a solution is found
-        json = thiss.filterEntries(json)
+        //json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
       })
   }
@@ -185,6 +185,7 @@ class Dashboard extends Component {
     
     let newParkings = parkings
 
+    let city = parkings["name"]
     if (this.level === LEVEL_ENUM.city) {
       //foreach filter
       console.log(this.props.filters.information)
@@ -196,6 +197,7 @@ class Dashboard extends Component {
           newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
           //
       }
+      newParkings["name"] = city
       
 
     }
@@ -385,6 +387,7 @@ class Dashboard extends Component {
         json["name"] = cityname
       }
 
+      
       this.setState({ treemapData: json })
 
     }
