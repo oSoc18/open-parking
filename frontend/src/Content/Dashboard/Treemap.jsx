@@ -59,9 +59,15 @@ class Treemap extends Component {
         svgGroup.selectAll("*").remove();
         let thiss = this
         var treemap = d3.treemap()
-        treemap.tile(d3.treemapSquarify)
+       // treemap.tile(d3.treemapSquarify)
+       treemap.tile(d3.treemapBinary)
+       treemap.paddingOuter(10)
 
-        treemap.size([960, 570])
+        let svgW = d3.select('svg').node().getBBox()
+  
+
+        treemap.size([document.documentElement.clientWidth * .8
+            , document.documentElement.clientHeight *0.8])
             .paddingTop(20)
             .paddingInner(2);
 
@@ -93,13 +99,14 @@ class Treemap extends Component {
             })
             .attr('height', function (d) { return d.y1 - d.y0; })
             .attr('class', d => thiss.getColorByName(d.data.name))
-            .attr('id', d => d.data.name)
+            .attr('id', d => this.getId(d.data.name))
             .on("mouseover", d => { thiss.handleMouseOverNode(null, d.data.name, d.parent) })
             .on("mouseout", d => thiss.handleMouseOutNode(null, d.data.name, d.parent))
         // .on('click', d => /*thiss.listenForZooms(d.data.name)*/ console.log( d))
 
         nodes
             .append('text')
+            .attr('id', d => thiss.getId(d.data.name) + "text")
             .attr('dx', 4)
             .attr('style', "color:blue;")
             .attr('dy', 14)
@@ -124,32 +131,50 @@ class Treemap extends Component {
 
     handleMouseOverNode(obj, name, parent) {
 
-        let rect = d3.select("#" + name)
+        let rect = d3.select("#" + this.getId(name))
+        let text = d3.select("#" + this.getId(name) +"text")
 
-        if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
+        if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) { //if mark is hovered 
             // handle parent
-            rect = d3.select("#" + parent.data.name)
+            rect = d3.select("#" + this.getId(parent.data.name))
+            text = d3.select("#" + this.getId(parent.data.name) +"text")
         }
 
 
-        rect.attr("stroke", "green")
+        rect.attr("stroke", "#1111FF")
             .attr("stroke-width", 5)
-            .attr("font-weight", "bold")
+
+        text.attr("font-weight", "bold")
 
 
     }
 
+    getId(name){
+
+        if(name){
+            return name.split("'").join("_").split(" ").join("_").split("'").join("");
+
+        }
+        return ""
+
+        
+    }
+
     handleMouseOutNode(obj, name, parent) {
 
-        let rect = d3.select("#" + name.replace(/ /g, "_"))
+        let rect = d3.select("#" + this.getId(name))
+        let text = d3.select("#" + this.getId(name) + "text")
 
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
             // handle parent
-            rect = d3.select("#" + parent.data.name)
+            rect = d3.select("#" + this.getId(parent.data.name))
+            text = d3.select("#" + this.getId(parent.data.name)+ "text")
         }
 
 
-        rect.attr("stroke-width", 0)
+        rect.attr("stroke-width", 1)
+            .attr("stroke", "#000000")
+        text.attr("font-weight", "normal")
 
 
     }
@@ -219,25 +244,6 @@ class Treemap extends Component {
 
     goPrev() {
 
-        /*let prevData = null
-        let prevName = ""
-    
-        d3.select(".heatMap").selectAll("*").remove()
-        if(this.stackedTree.length < 1)
-            return //this shouldn't happen
-    
-        if(this.stackedTree.length > 0){
-            let temp = this.stackedTree.pop()
-            prevData = temp.data
-            prevName = temp.name
-            console.log(this.stackedTree)
-        }
-        else{
-            alert("nothing in tree")
-        }
-    
-        this.drawMap(d3.hierarchy(prevData))*/
-
         if (this.props.onDezoom) {
             this.props.onDezoom()
         }
@@ -253,7 +259,6 @@ class Treemap extends Component {
 
     }
     render() {
-
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
@@ -316,6 +321,7 @@ class Treemap extends Component {
     generateTable(data) {
 
 
+        d3.select(".heatMap").selectAll("*").remove()
         var table = d3.select('.heatMap')
         var thead = table.append('thead') // create the header
         var tbody = table.append('tbody');
@@ -342,7 +348,7 @@ class Treemap extends Component {
 
         for (let i = 0; i < data.length; i++) {
 
-            if (data[i].mark === "onstreet")
+            if (data[i].mark === "onstreet" || this.checkInformationFilters(data[i]))
                 continue
 
             let resultJson = data[i]["staticData"]
@@ -351,6 +357,28 @@ class Treemap extends Component {
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
 
         }
+
+    }
+
+/**
+Only show the facilities with the required stuff */
+    checkInformationFilters(node) {
+        let required = this.props.filters.information
+
+        if(required && required.length > 0){ //check if all checked are included 
+
+            for(let i = 0; i < required.length; i++){
+
+                if(["capacity", "minimumHeightInMeters"].indexOf(required[i]) > -1){// special treatment
+                    // if empty return true
+                }
+            }
+
+            //everthing is included
+            return false
+
+        }
+        return false // nothing is required or all required fields are included
 
     }
 
@@ -378,14 +406,13 @@ class Treemap extends Component {
 
     return  div*/
     }
-    generateRow(tbody, columns, data, longitude, mark = "") {
+     generateRow(tbody, columns, data, longitude, mark = "") {
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
         let thiss = this 
 
         if(!data){
-            alert(data)
             return
         }
 
@@ -400,7 +427,7 @@ class Treemap extends Component {
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
                     .text(data[columns[j]])
-                    .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
+                    // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
     
 
             }
@@ -437,7 +464,10 @@ class Treemap extends Component {
 
     getValueJsonResult(key, node) {
 
-        if ((key === "capacity" || key === "minimumHeightInMeters") && node && node["specifications"] && node["specifications"].length > 0) {
+        if ((key === "capacity" || key === "minimumHeightInMeters") 
+                && node && node["specifications"] 
+                && node["specifications"].length > 0) {
+
             let nodeCapacity = node["specifications"][0]
 
             if (!nodeCapacity)
