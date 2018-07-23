@@ -54,10 +54,6 @@ class MapContent extends Component {
         //carpool
         //others
 
-        if (!main.extra.includes("offStreet") && markersToAdd[i].usage !== "onstreet") {
-            delete markersToAdd[i];
-            return;
-        }
         if (!main.extra.includes("noDynamic") && markersToAdd[i].dynamicDataUrl === null) {
             delete markersToAdd[i];
             return;

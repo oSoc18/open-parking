@@ -21,7 +21,7 @@ class SideBar extends Component {
     initFilters() {
         let jsn = {};
         this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
-        this.information = []; // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData", "accessPoint"]; // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
         this.extras = ["noDynamic", "private", "public"];
 
     }
@@ -170,32 +170,37 @@ class SideBar extends Component {
 
                 <p></p>
 
-                <h4 className="title">Visible facilities</h4>
+                <h4 className="title">Information</h4>
 
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                           value="capacity" onChange={this.handleInformation}/>
+                           value="capacity" onChange={this.handleInformation} defaultChecked={true}/>
                     <label for="capacity">Capacity</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                           value="tariffs" onChange={this.handleInformation}/>
+                           value="tariffs" onChange={this.handleInformation} defaultChecked={true}/>
                     <label for="tariffs">Tariffs</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                           value="restrictions" onChange={this.handleInformation}/>
+                           value="restrictions" onChange={this.handleInformation} defaultChecked={true}/>
                     <label for="restrictions">Restrictions</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                           value="openingHours" onChange={this.handleInformation}/>
+                           value="openingHours" onChange={this.handleInformation} defaultChecked={true}/>
                     <label for="openingHours">Opening hours</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                           value="contactData" onChange={this.handleInformation}/>
+                           value="contactData" onChange={this.handleInformation} defaultChecked={true}/>
                     <label for="contactData">Contact data</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"
+                           value="accessPoint" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="accessPoint">Access point</label>
                 </div>
 
 
