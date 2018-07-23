@@ -155,14 +155,15 @@ class MapContent extends Component {
                         $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
-                                popup += "<br> vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces + "/" + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+                                popup += "<br>Limited API access: " + facility.limitedAccess +
+                                    "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces +
+                                    "<br>Capacity: " + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
                             }
                         });
                     }
                     $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
                         if (data.parkingFacilityInformation !== undefined) {
-                            popup += "<br>Limited API access: " + facility.limitedAccess +
-                                "<br>Location: " + facility.latitude + " " + facility.longitude +
+                            popup += "<br>Location: " + facility.latitude + " " + facility.longitude +
                                 "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs !== undefined && data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
                                 "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes !== undefined && data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
                                 "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons !== undefined && data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
