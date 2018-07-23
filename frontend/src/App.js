@@ -13,7 +13,7 @@ class App extends Component {
     //this.handleNavigation = this.handleNavigation.bind(this)
     this.state = { mainContent: "map",
                     visFacilities: ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"],
-                    information: ["capacity", "tariffs", "restrictions", "openingHours", "contactData"],
+                    information: [],
                     extras: ["onStreet", "offStreet", "noDynamic", "private", "public"]
   }
   }

@@ -21,7 +21,7 @@ class SideBar extends Component {
     initFilters() {
         let jsn = {};
         this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
-        this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.information = [] // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
         this.extras = ["onStreet", "offStreet", "noDynamic", "private", "public"];
 
     }
@@ -111,6 +111,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.information = temp;
+    
 
 
 
@@ -174,22 +175,22 @@ class SideBar extends Component {
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" onChange={this.handleInformation}/>
+                            value="tariffs" onChange={this.handleInformation} />
                         <label for="tariffs">Tariffs</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" onChange={this.handleInformation}/>
+                            value="restrictions" onChange={this.handleInformation} />
                         <label for="restrictions">Restrictions</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" onChange={this.handleInformation}/>
+                            value="openingHours" onChange={this.handleInformation} />
                         <label for="openingHours">Opening hours</label>
                     </div>
                     <div>
                         <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" onChange={this.handleInformation}/>
+                            value="contactData" onChange={this.handleInformation} />
                         <label for="contactData">Contact data</label>
                     </div>
 
