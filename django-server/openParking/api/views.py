@@ -122,9 +122,50 @@ class NoneView(generics.ListAPIView):
         return ParkingData.objects.filter(Q(region__isnull=True) | Q(region__exact='')
                                           )
 
+def create_summary_view(field_name, lower_field_name):
+    return api_view(["GET"])(
+        lambda request, area_name: \
+        generic_summary_view(field_name, lower_field_name, area_name, request.GET))
 
-def generic_summary_view(field_name, area_name, lower_field_name):
-    parkings = ParkingData.objects.filter(**{field_name: area_name})
+def generic_summary_view(field_name, lower_field_name, area_name, get_params):
+    usage_mapping = {
+        "parkAndRide": "park and ride",
+        "garage": "garage",
+        "carpool": "carpool",
+        "onstreet": "onstreet",
+        "terrain": "terrain",
+        "otherPlaces": "others"
+    }
+
+    fields_mapping = {
+        "capacity": ("capacity__isnull", False),
+        "tariffs": ("tariffs", True),
+        "restrictions": ("minimumHeightInMeters__gt", 0),
+        "openingTimes": ("openingTimes", True),
+        "contactPersons": ("contactPersons", True),
+        "accessPoint": ("accessPoint", True),
+        "noDynamic": ("dynamicDataUrl__isnull", True),
+        "private": ("limitedAccess", True)
+    }
+
+    possible_usages = []
+    filter_params = {field_name: area_name, "usage__in": possible_usages}
+    exclude_params = {}
+    for name, value in get_params.items():
+        if name in usage_mapping:
+            possible_usages.append(usage_mapping[name])
+        else:
+            if value != "unknown":
+                query_name, query_value = fields_mapping[name]
+                if json.loads(value):
+                    filter_params[query_name] = query_value
+                else:
+                    exclude_params[query_name] = query_value
+
+    print(filter_params)
+    print(exclude_params)
+
+    parkings = ParkingData.objects.filter(**filter_params).exclude(**exclude_params)
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
