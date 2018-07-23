@@ -20,9 +20,9 @@ class SideBar extends Component {
 
     initFilters() {
         let jsn = {};
-        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
-        this.information = [] // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
-        this.extras = ["onStreet", "offStreet", "noDynamic", "private", "public"];
+        this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
+        this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData", "accessPoint"]; // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.extras = ["noDynamic", "private", "public"];
 
     }
 
@@ -111,7 +111,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.information = temp;
-    
+
 
 
 
@@ -143,9 +143,9 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="permit" name="permit"
-                        value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
-                    <label for="permit">Permit</label>
+                    <input class="styled-checkbox" type="checkbox" id="terrain" name="terrain"
+                        value="terrain" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
+                    <label for="terrain">Terrain</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
@@ -158,6 +158,11 @@ class SideBar extends Component {
                     <label for="carpool">Carpool</label>
                 </div>
                 <div>
+                    <input class="styled-checkbox" type="checkbox" id="onstreet" name="onstreet"
+                           value="onstreet" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                    <label for="onstreet">Onstreet</label>
+                </div>
+                <div>
                     <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
                         value="otherPlaces" onChange={this.handleVisibleFacilities} defaultChecked={true} />
                     <label for="otherPlaces">Other places</label>
@@ -165,50 +170,43 @@ class SideBar extends Component {
 
                 <p></p>
 
-                <button class="collapsible">Information <span id="expand_tag">&#x25BC;</span></button>
-                <div class="content">
+                <h4 className="title">Information</h4>
 
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                            value="capacity" onChange={this.handleInformation} />
-                        <label for="capacity">Capacity</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" onChange={this.handleInformation} />
-                        <label for="tariffs">Tariffs</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" onChange={this.handleInformation} />
-                        <label for="restrictions">Restrictions</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" onChange={this.handleInformation} />
-                        <label for="openingHours">Opening hours</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" onChange={this.handleInformation} />
-                        <label for="contactData">Contact data</label>
-                    </div>
-
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
+                           value="capacity" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="capacity">Capacity</label>
                 </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
+                           value="tariffs" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="tariffs">Tariffs</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
+                           value="restrictions" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="restrictions">Restrictions</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
+                           value="openingHours" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="openingHours">Opening hours</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
+                           value="contactData" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="contactData">Contact data</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"
+                           value="accessPoint" onChange={this.handleInformation} defaultChecked={true}/>
+                    <label for="accessPoint">Access point</label>
+                </div>
+
 
                 <h4 className="title">Extra</h4>
 
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="onStreet" name="onStreet"
-                        value="onStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="onStreet">On-street</label>
-                </div>
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="offStreet" name="offStreet"
-                        value="offStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="offStreet">Off-street</label>
-                </div>
-                <div data-tooltip="Get all parkings without dynamic data." data-tooltip-position="right" >
+                <div data-tooltip="Show facilities without dynamic data?" data-tooltip-position="right" >
                     <input class="styled-checkbox-extra" type="checkbox" id="noDynamic" name="noDynamic"
                         value="noDynamic" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="noDynamic">No dynamic data</label>

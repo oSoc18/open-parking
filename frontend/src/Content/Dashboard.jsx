@@ -8,6 +8,7 @@ import { Table } from 'reactstrap';
 import './Dashboard.css'
 import Treemap from './Dashboard/Treemap';
 
+
 import Filterfields from '../helpclasses/FilterFields';
 import FilterFields from '../helpclasses/FilterFields';
 
@@ -86,7 +87,7 @@ class Dashboard extends Component {
   }
 
 
-  async  generateRow(tbody, columns, node) {
+  generateRow(tbody, columns, node) {
 
     let tr = tbody.append('tr')
 
@@ -113,10 +114,9 @@ class Dashboard extends Component {
         let resultJson = null
         classN += " heatCell"//colored heatcell
         // get json 
-        await fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/" + node["uuid"])
+         fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/" + node["uuid"])
           .then(response => response.json())
           .then(json => {
-            console.log(json);
             resultJson = json
 
             let v = this.getValueJsonResult(columns[j], resultJson)
@@ -157,15 +157,21 @@ class Dashboard extends Component {
     if (forceLevel) {
       this.level = 3
     }
+    let level =  levels[levelIndex] + "/"
+
+    if("region/none" === name){
+        level = ""
+    } 
 
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
-    let sub = levels[levelIndex] + "/" + name
+    let sub = level  + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
     let thiss = this
     fetch(url)
       .then(response => response.json())
       .then(json => {
+        console.log(json)
 
         //this.handleFilters is not used until a solution is found
         //json = thiss.filterEntries(json)
@@ -178,7 +184,8 @@ class Dashboard extends Component {
     "restrictions": Filterfields.checkRestrictions,
     "contactData" : FilterFields.checkContactData,
     "tariffs": Filterfields.checkTarrifs,
-    "openingHours": Filterfields.checkOpeningHours
+    "openingHours": Filterfields.checkOpeningHours,
+    "accessPoint": Filterfields.checkOpeningHours
   }
 
   filterEntries(parkings) {
@@ -192,6 +199,7 @@ class Dashboard extends Component {
 
       for (let option of this.props.filters.information) {
    
+        console.log("Next:" + option)
         //if (this.props.filters.information.includes("capacity")) 
           //newParkings = parkings.filter(parking => Filterfields.checkCapacity(staticData))
           newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
@@ -208,7 +216,7 @@ class Dashboard extends Component {
     if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
       console.log(this.props.filters.information)
       if (this.props.filters.information.indexOf("capacity") > -1) {
-        console.log("no capacity")
+
         return Filterfields.checkCapacity(parking)
       }
     }
@@ -270,7 +278,6 @@ class Dashboard extends Component {
       await fetch(url)
         .then(response => response.json())
         .then(json => {
-          console.log(json);
           resultJson = json
           this.generateRow(tbody, column, resultJson)
         })
@@ -410,10 +417,14 @@ class Dashboard extends Component {
     return (
 
 
-      <Treemap level={this.level} filters={this.props.filters} data={this.getFilteredData()} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)} />
+      <Treemap level={this.level} setReset={this.setReset.bind(this)} filters={this.props.filters} data={this.getFilteredData()} onZoomChange={this.onZoomChange2.bind(this)} onDezoom={this.onDezoom.bind(this)} />
 
 
     );
+  }
+
+  setReset(){
+    this.onZoomChange("region/none", true)
   }
 
   getFilteredData(){

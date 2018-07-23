@@ -12,9 +12,9 @@ class App extends Component {
     super(props);
     //this.handleNavigation = this.handleNavigation.bind(this)
     this.state = { mainContent: "map",
-                    visFacilities: ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"],
-                    information: [],
-                    extras: ["onStreet", "offStreet", "noDynamic", "private", "public"]
+                    visFacilities: ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"],
+                    information: ["capacity", "tariffs", "restrictions", "openingHours", "contactData", "accessPoint"],
+                    extras: ["noDynamic", "private", "public"]
   }
   }
 
