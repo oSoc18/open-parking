@@ -10,7 +10,8 @@ class ParkingDataSerializer(serializers.ModelSerializer):
         model = ParkingData
         fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
             'limitedAccess', 'latitude', 'longitude', 'country_code', 'region',
-            'city', 'province', 'mark', 'usage')
+            'city', 'province', 'mark', 'usage', 'accessPoints', 'capacity',
+            'tariffs', 'minimumHeightInMeters', 'openingTimes', 'contactPersons')
 
 class ParkingStaticDataSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format, plus the static
@@ -22,4 +23,6 @@ class ParkingStaticDataSerializer(serializers.ModelSerializer):
         model = ParkingData
         fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
             'limitedAccess', 'latitude', 'longitude', 'country_code', 'region',
-            'city', 'province', 'mark', 'usage', 'staticData')
+            'city', 'province', 'mark', 'usage', 'accessPoints', 'capacity',
+            'tariffs', 'minimumHeightInMeters', 'openingTimes',
+            'contactPersons', 'staticData')

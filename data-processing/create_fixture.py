@@ -12,6 +12,7 @@ import json
 from sys import argv
 from os import listdir
 from os.path import isfile, join
+from find_location import get_value
 
 def get_region_name(facility):
     """Return the region name of a facility, based on its province."""
@@ -179,7 +180,13 @@ for filename in file_list:
         "province": facility["province"] if "province" in facility else None,
         "region": get_region_name(facility),
         "country_code": facility["country_code"] if "country_code" in facility else None,
-        "usage": get_usage(facility["staticData"])
+        "usage": get_usage(facility["staticData"]),
+        "accessPoints": is_not_none(facility["staticData"], "accessPoints", True),
+        "capacity": get_value(facility, ["staticData", "specifications", 0, "capacity"]),
+        "tariffs": is_not_none(facility["staticData"], "tariffs", True),
+        "minimumHeightInMeters": get_value(facility, ["staticData", "specifications", 0, "minimumHeightInMeters"]),
+        "openingTimes": is_not_none(facility["staticData"], "openingTimes", True),
+        "contactPersons": is_not_none(facility["staticData"], "contactPersons", True)
     }
     # Add the mark field, based on some other fields
     fields["mark"] = get_mark(fields["usage"], fields["longitude"],

@@ -16,6 +16,12 @@ class ParkingData(models.Model):
     city = models.CharField(max_length=255, blank=True, null=True)
     mark = models.CharField(max_length=255, blank=True, null=True)
     usage = models.CharField(max_length=255, blank=True, null=True)
+    accessPoints = models.BooleanField(default=False)
+    capacity = models.IntegerField(blank=True, null=True)
+    tariffs = models.BooleanField(default=False)
+    minimumHeightInMeters = models.FloatField(blank=True, null=True)
+    openingTimes = models.BooleanField(default=False)
+    contactPersons = models.BooleanField(default=False)
 
     def __str__(self):
         """Return a human readable representation of the model instance."""
