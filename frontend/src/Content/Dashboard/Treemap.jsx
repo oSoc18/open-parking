@@ -47,7 +47,6 @@ class Treemap extends Component {
 
     drawMap(data) {
         this.root = data
-
         if (!this.root)
             return
 
@@ -61,7 +60,7 @@ class Treemap extends Component {
         var treemap = d3.treemap()
        // treemap.tile(d3.treemapSquarify)
        treemap.tile(d3.treemapBinary)
-       treemap.paddingOuter(10)
+       treemap.paddingOuter(5)
 
         let svgW = d3.select('svg').node().getBBox()
   
@@ -296,7 +295,7 @@ class Treemap extends Component {
                     <h1>{breadCrums}</h1>
                     <div className="two-buttons">
                         <div id="single-button">
-                            <Button outline color="primary" onClick={this.goPrev}>none</Button>
+                            <Button outline color="primary" onClick={this.setReset.bind(this)}>none</Button>
                         </div>
                         <div id="single-button">
                             {buttonZoomOut}
@@ -351,6 +350,8 @@ class Treemap extends Component {
             if (data[i].mark === "onstreet" || this.checkInformationFilters(data[i]))
                 continue
 
+            console.log("############################################")
+            console.log(data)
             let resultJson = data[i]["staticData"]
 
             //generate row
@@ -382,6 +383,13 @@ Only show the facilities with the required stuff */
 
     }
 
+    setReset(){
+
+        if(this.props.setReset){
+            this.props.setReset();
+        }
+    }
+
     handleMouseOverTd(inp, d){
         var div = d3.select("body").append("div")
         .attr("class", "tooltip")
@@ -407,6 +415,8 @@ Only show the facilities with the required stuff */
     return  div*/
     }
      generateRow(tbody, columns, data, longitude, mark = "") {
+        console.log("--------------------")
+        console.log(data)
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
