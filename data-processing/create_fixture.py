@@ -171,7 +171,6 @@ for filename in file_list:
         "name": facility["name"],
         "uuid": facility["uuid"],
         "staticDataUrl": facility["staticDataUrl"],
-        "staticData": json.dumps(facility["staticData"]),
         "dynamicDataUrl": facility.get("dynamicDataUrl", None),
         "limitedAccess": facility["limitedAccess"],
         "latitude": facility["geoLocation"]["latitude"] if facility["geoLocation"] is not None else None,

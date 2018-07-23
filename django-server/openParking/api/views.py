@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from .serializers import ParkingDataSerializer, ParkingStaticDataSerializer
+from .serializers import ParkingDataSerializer
 from .models import ParkingData
 import requests
 import json
@@ -9,9 +9,6 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from rest_framework import status
-
-import pprint
-
 
 class DetailsView(generics.RetrieveAPIView):
     """
