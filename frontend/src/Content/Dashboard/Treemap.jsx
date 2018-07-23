@@ -106,6 +106,7 @@ class Treemap extends Component {
 
         nodes
             .append('text')
+            .attr('id', d => thiss.getId(d.data.name) + "text")
             .attr('dx', 4)
             .attr('style', "color:blue;")
             .attr('dy', 14)
@@ -131,16 +132,19 @@ class Treemap extends Component {
     handleMouseOverNode(obj, name, parent) {
 
         let rect = d3.select("#" + this.getId(name))
+        let text = d3.select("#" + this.getId(name) +"text")
 
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) { //if mark is hovered 
             // handle parent
             rect = d3.select("#" + this.getId(parent.data.name))
+            text = d3.select("#" + this.getId(parent.data.name) +"text")
         }
 
 
-        rect.attr("stroke", "green")
+        rect.attr("stroke", "#1111FF")
             .attr("stroke-width", 5)
-            .attr("font-weight", "bold")
+
+        text.attr("font-weight", "bold")
 
 
     }
@@ -159,14 +163,18 @@ class Treemap extends Component {
     handleMouseOutNode(obj, name, parent) {
 
         let rect = d3.select("#" + this.getId(name))
+        let text = d3.select("#" + this.getId(name) + "text")
 
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
             // handle parent
             rect = d3.select("#" + this.getId(parent.data.name))
+            text = d3.select("#" + this.getId(parent.data.name)+ "text")
         }
 
 
-        rect.attr("stroke-width", 0)
+        rect.attr("stroke-width", 1)
+            .attr("stroke", "#000000")
+        text.attr("font-weight", "normal")
 
 
     }
