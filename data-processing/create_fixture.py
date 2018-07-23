@@ -34,7 +34,7 @@ def get_region_name(facility):
             ("Noord-Holland", "Utrecht", "Flevoland"): "Noordwest-Nederland",
             ("Zuid-Holland", "Zeeland"): "Zuidwest-Nederland",
             ("Noord-Brabant", "Limburg"): "Zuid-Nederland",
-            ("Gelderland", "Overijsel"): "Oost-Nederland",
+            ("Gelderland", "Overijssel"): "Oost-Nederland",
             ("Groningen", "Friesland", "Drenthe", "Fryslân"): "Noord-Nederland"
         }
         for province_list, region in provinces.items():
