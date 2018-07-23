@@ -20,9 +20,9 @@ class SideBar extends Component {
 
     initFilters() {
         let jsn = {};
-        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
-        this.information = [] // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
-        this.extras = ["onStreet", "offStreet", "noDynamic", "private", "public"];
+        this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
+        this.information = []; // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.extras = ["noDynamic", "private", "public"];
 
     }
 
@@ -143,9 +143,9 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="permit" name="permit"
-                        value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
-                    <label for="permit">Permit</label>
+                    <input class="styled-checkbox" type="checkbox" id="terrain" name="terrain"
+                        value="terrain" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
+                    <label for="terrain">Terrain</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
@@ -156,6 +156,11 @@ class SideBar extends Component {
                     <input class="styled-checkbox" type="checkbox" id="carpool" name="carpool"
                         value="carpool" onChange={this.handleVisibleFacilities} defaultChecked={true} />
                     <label for="carpool">Carpool</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="onstreet" name="onstreet"
+                           value="onstreet" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                    <label for="onstreet">Onstreet</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
@@ -198,17 +203,7 @@ class SideBar extends Component {
 
                 <h4 className="title">Extra</h4>
 
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="onStreet" name="onStreet"
-                        value="onStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="onStreet">On-street</label>
-                </div>
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="offStreet" name="offStreet"
-                        value="offStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="offStreet">Off-street</label>
-                </div>
-                <div data-tooltip="Get all parkings without dynamic data." data-tooltip-position="right" >
+                <div data-tooltip="Show facilities without dynamic data?" data-tooltip-position="right" >
                     <input class="styled-checkbox-extra" type="checkbox" id="noDynamic" name="noDynamic"
                         value="noDynamic" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="noDynamic">No dynamic data</label>
