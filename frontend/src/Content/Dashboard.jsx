@@ -117,7 +117,6 @@ class Dashboard extends Component {
          fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/" + node["uuid"])
           .then(response => response.json())
           .then(json => {
-            console.log(json);
             resultJson = json
 
             let v = this.getValueJsonResult(columns[j], resultJson)
@@ -185,7 +184,8 @@ class Dashboard extends Component {
     "restrictions": Filterfields.checkRestrictions,
     "contactData" : FilterFields.checkContactData,
     "tariffs": Filterfields.checkTarrifs,
-    "openingHours": Filterfields.checkOpeningHours
+    "openingHours": Filterfields.checkOpeningHours,
+    "accessPoint": Filterfields.checkOpeningHours
   }
 
   filterEntries(parkings) {
@@ -199,6 +199,7 @@ class Dashboard extends Component {
 
       for (let option of this.props.filters.information) {
    
+        console.log("Next:" + option)
         //if (this.props.filters.information.includes("capacity")) 
           //newParkings = parkings.filter(parking => Filterfields.checkCapacity(staticData))
           newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
@@ -215,7 +216,7 @@ class Dashboard extends Component {
     if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
       console.log(this.props.filters.information)
       if (this.props.filters.information.indexOf("capacity") > -1) {
-        console.log("no capacity")
+
         return Filterfields.checkCapacity(parking)
       }
     }
@@ -277,7 +278,6 @@ class Dashboard extends Component {
       await fetch(url)
         .then(response => response.json())
         .then(json => {
-          console.log(json);
           resultJson = json
           this.generateRow(tbody, column, resultJson)
         })
@@ -424,7 +424,6 @@ class Dashboard extends Component {
   }
 
   setReset(){
-    console.log("reset cliecked")
     this.onZoomChange("region/none", true)
   }
 

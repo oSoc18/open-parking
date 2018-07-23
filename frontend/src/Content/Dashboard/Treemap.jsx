@@ -221,7 +221,6 @@ class Treemap extends Component {
         }
         if (this.props.onZoomChange) {
             this.stackedTree.push({ "data": this.props.data, "name": this.props.data.name })
-            console.log(this.stackedTree)
             if (this.props.level !== 3) {
 
                 this.props.onZoomChange(name)
@@ -350,8 +349,6 @@ class Treemap extends Component {
             if (data[i].mark === "onstreet" || this.checkInformationFilters(data[i]))
                 continue
 
-            console.log("############################################")
-            console.log(data)
             let resultJson = data[i]["staticData"]
 
             //generate row
@@ -415,8 +412,7 @@ Only show the facilities with the required stuff */
     return  div*/
     }
      generateRow(tbody, columns, data, longitude, mark = "") {
-        console.log("--------------------")
-        console.log(data)
+
         data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
