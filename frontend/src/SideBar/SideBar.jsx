@@ -21,7 +21,7 @@ class SideBar extends Component {
     initFilters() {
         let jsn = {};
         this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
-        this.information = ["capacity", "tariffs", "restrictions", "openingHours", "contactData", "accessPoint"]; // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
+        this.information = ["capacity", "tariffs", "restrictions", "openingTimes", "contactPersons", "accessPoint"]; // ["capacity", "tariffs", "restrictions", "openingTimes", "contactPersons"];
         this.extras = ["noDynamic", "private", "public"];
 
     }
@@ -132,6 +132,7 @@ class SideBar extends Component {
             // side bar
             // content
 
+
             <div className="sideBar">
                 <h1 className="title">Open Parking</h1>
                 <img id="logo" src={LogoImg} alt="logo" width="31" height="40"></img>
@@ -168,39 +169,66 @@ class SideBar extends Component {
                     <label for="otherPlaces">Other places</label>
                 </div>
 
-                <p></p>
-
                 <h4 className="title">Information</h4>
-
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                           value="capacity" onChange={this.handleInformation} defaultChecked={true}/>
+                    {/*<input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"*/}
+                           {/*value="capacity" onChange={this.handleInformation}/>*/}
                     <label for="capacity">Capacity</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="capacity" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="capacity" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="capacity" autocomplete="off"/></label>
+                    </div>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                           value="tariffs" onChange={this.handleInformation} defaultChecked={true}/>
+                    {/*<input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"*/}
+                           {/*value="tariffs" onChange={this.handleInformation}/>*/}
                     <label for="tariffs">Tariffs</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="tariffs" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="tariffs" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="tariffs" autocomplete="off"/></label>
+                    </div>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                           value="restrictions" onChange={this.handleInformation} defaultChecked={true}/>
+                    {/*<input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"*/}
+                           {/*value="restrictions" onChange={this.handleInformation}/>*/}
                     <label for="restrictions">Restrictions</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="restrictions" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="restrictions" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="restrictions" autocomplete="off"/></label>
+                    </div>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                           value="openingHours" onChange={this.handleInformation} defaultChecked={true}/>
-                    <label for="openingHours">Opening hours</label>
+                    {/*<input class="styled-checkbox" type="checkbox" id="openingTimes" name="openingTimes"*/}
+                           {/*value="openingTimes" onChange={this.handleInformation}/>*/}
+                    <label for="openingTimes">Opening Times</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="openingTimes" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="openingTimes" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="openingTimes" autocomplete="off"/></label>
+                    </div>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                           value="contactData" onChange={this.handleInformation} defaultChecked={true}/>
-                    <label for="contactData">Contact data</label>
+                    {/*<input class="styled-checkbox" type="checkbox" id="contactPersons" name="contactPersons"*/}
+                           {/*value="contactPersons" onChange={this.handleInformation}/>*/}
+                    <label for="contactPersons">Contact Person</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="contactPersons" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="contactPersons" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="contactPersons" autocomplete="off"/></label>
+                    </div>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"
-                           value="accessPoint" onChange={this.handleInformation} defaultChecked={true}/>
+                    {/*<input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"*/}
+                           {/*value="accessPoint" onChange={this.handleInformation}/>*/}
                     <label for="accessPoint">Access point</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="accessPoint" autocomplete="off"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="accessPoint" autocomplete="off" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="accessPoint" autocomplete="off"/></label>
+                    </div>
                 </div>
 
 

@@ -47,13 +47,6 @@ class MapContent extends Component {
     filter(markersToAdd, i) {
         let main = this;
 
-        //onstreet
-        //terrein
-        //park and ride
-        //garage
-        //carpool
-        //others
-
         if (!main.extra.includes("noDynamic") && markersToAdd[i].dynamicDataUrl === null) {
             delete markersToAdd[i];
             return;
@@ -96,6 +89,32 @@ class MapContent extends Component {
             return;
         }
 
+        // if(markersToAdd[i].usage !=="onstreet") {
+            if (!this.inf.includes("capacity") && markersToAdd[i].capacity === null) {
+                delete markersToAdd[i];
+                return;
+            }
+            if (!this.inf.includes("tariffs") && markersToAdd[i].tariffs === false) {
+                delete markersToAdd[i];
+                return;
+            }
+            if (!this.inf.includes("restrictions") && markersToAdd[i].minimumHeightInMeters === null) {
+                delete markersToAdd[i];
+                return;
+            }
+            if (!this.inf.includes("openingTimes") && markersToAdd[i].openingTimes === false) {
+                delete markersToAdd[i];
+                return;
+            }
+            if (!this.inf.includes("contactPersons") && markersToAdd[i].contactPersons === false) {
+                delete markersToAdd[i];
+                return;
+            }
+            if (!this.inf.includes("accessPoint") && markersToAdd[i].accessPoints === false) {
+                delete markersToAdd[i];
+                return;
+            }
+        // }
 
     }
 
@@ -128,8 +147,7 @@ class MapContent extends Component {
         this.inf = this.props.filters.information;
         this.extra = this.props.filters.extras;
 
-        console.log(this.vis);
-        console.log(this.extra);
+        console.log(this.inf);
 
         let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
         let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
