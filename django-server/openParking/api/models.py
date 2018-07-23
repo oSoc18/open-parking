@@ -10,7 +10,6 @@ class ParkingData(models.Model):
     limitedAccess = models.BooleanField()
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-    facilityType = models.CharField(max_length=255, default="offstreet")
     country_code = models.CharField(max_length=10, blank=True, null=True)
     region = models.CharField(max_length=255, blank=True, null=True, default="default")
     province = models.CharField(max_length=255, blank=True, null=True)
