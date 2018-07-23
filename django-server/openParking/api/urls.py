@@ -43,8 +43,7 @@ urlpatterns = {
         AreaView.as_view(area_level="city"), name="city_parkings"),
 
     # Gives all parkings without locations
-    url(r'^parkingdata/region/none/$',
-        NoneView.as_view(), name="none_location"),
+    url(r'^parkingdata/region/none/$', NoneView.as_view(), name="none_location"),
 
     # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/country/nl/
     url(r'^parkingdata/summary/country/(?P<area_name>[^/]+)/$',

@@ -106,7 +106,7 @@ class DynamicView(generics.ListAPIView):
 class AreaView(generics.ListAPIView):
     """Gets all the parkingplaces from a specified area."""
 
-    serializer_class = ParkingStaticDataSerializer
+    serializer_class = ParkingDataSerializer
     area_level = None
 
     def get_queryset(self):
@@ -115,14 +115,11 @@ class AreaView(generics.ListAPIView):
 
 
 class NoneView(generics.ListAPIView):
-    """
-    Get all the parkingplaces without location
-    """
+    """Gets all the parkingplaces without region."""
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        return ParkingData.objects.filter(Q(region__isnull=True) | Q(region__exact='')
-                                          )
+        return ParkingData.objects.filter(Q(region__isnull=True)|Q(region=""))
 
 def create_summary_view(field_name, lower_field_name):
     return api_view(["GET"])(
