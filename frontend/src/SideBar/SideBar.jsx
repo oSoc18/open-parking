@@ -111,7 +111,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.information = temp;
-    
+
 
 
 
@@ -170,36 +170,34 @@ class SideBar extends Component {
 
                 <p></p>
 
-                <button class="collapsible">Information <span id="expand_tag">&#x25BC;</span></button>
-                <div class="content">
+                <h4 className="title">Visible facilities</h4>
 
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                            value="capacity" onChange={this.handleInformation} />
-                        <label for="capacity">Capacity</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" onChange={this.handleInformation} />
-                        <label for="tariffs">Tariffs</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" onChange={this.handleInformation} />
-                        <label for="restrictions">Restrictions</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" onChange={this.handleInformation} />
-                        <label for="openingHours">Opening hours</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" onChange={this.handleInformation} />
-                        <label for="contactData">Contact data</label>
-                    </div>
-
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
+                           value="capacity" onChange={this.handleInformation}/>
+                    <label for="capacity">Capacity</label>
                 </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
+                           value="tariffs" onChange={this.handleInformation}/>
+                    <label for="tariffs">Tariffs</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
+                           value="restrictions" onChange={this.handleInformation}/>
+                    <label for="restrictions">Restrictions</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
+                           value="openingHours" onChange={this.handleInformation}/>
+                    <label for="openingHours">Opening hours</label>
+                </div>
+                <div>
+                    <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
+                           value="contactData" onChange={this.handleInformation}/>
+                    <label for="contactData">Contact data</label>
+                </div>
+
 
                 <h4 className="title">Extra</h4>
 
