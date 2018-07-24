@@ -370,7 +370,7 @@ class MapContent extends Component {
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
-                        <div id="color-and-text" data-tooltip="Private parking." data-tooltip-position="bottom">
+                        <div id="color-and-text" data-tooltip="Private parking.">
                             <img id="onstreetIcon" src={privateIcon} alt="icon" width="15px" height="15px"></img>
                             <span>private</span>
                         </div>

@@ -200,60 +200,65 @@ class SideBar extends Component {
                 </div>
 
                 <h4 className="title">Information</h4>
+                <div class="text-right">
+                    <span class="faicons" data-tooltip="Remove data with unavailable attribute" data-tooltip-position="top"><i class="fa fa-times"></i></span>
+                    <span class="faicons" data-tooltip="Show all data" data-tooltip-position="top"><i class="fa fa-minus"></i></span>
+                    <span class="faicons" data-tooltip="Remove data with available attribute" data-tooltip-position="top"><i class="fa fa-check"></i></span>
+                </div>
                 <div class="three-states-group">
                     <label for="capacity">Capacity</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="false" data-tooltip="Remove markers without available capacity" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="capacity" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true" data-tooltip="Remove markers with available capacity" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2"  onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"   onClick={this.handleInformation}><input type="radio" name="capacity" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="tariffs">Tariffs</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false" data-tooltip="Remove markers without available tariffs" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="tariffs" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true" data-tooltip="Remove markers with available tariffs" data-tooltip-position="top" /></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="tariffs" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="restrictions">Restrictions</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false" data-tooltip="Remove markers without available restrictions" data-tooltip-position="top" /></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="restrictions" value="unknown" data-tooltip="" data-tooltip-position="top" /></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true" data-tooltip="Remove markers with available restrictions" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="restrictions" value="unknown"/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="openingTimes">Opening Times</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false" data-tooltip="Remove markers without available opening times" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true" data-tooltip="Remove markers with available opening times" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="contactPersons">Contact Person</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false" data-tooltip="Remove markers without available contact persons" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true" data-tooltip="Remove markers with available contact persons" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="accessPoints">Access point</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false" data-tooltip="Remove markers without available access points" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true" data-tooltip="Remove markers with available access points" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
                     <label for="dynamic">Dynamic data</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="false" data-tooltip="Remove markers without available dynamic data" data-tooltip-position="top"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="dynamic" value="unknown" data-tooltip="" data-tooltip-position="top" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="true" data-tooltip="Remove markers with available dynamic data" data-tooltip-position="top"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="dynamic" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="true"/></label>
                     </div>
                 </div>
 
