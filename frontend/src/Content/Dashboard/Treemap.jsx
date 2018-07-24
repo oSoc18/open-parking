@@ -253,6 +253,8 @@ class Treemap extends Component {
 
         if (str === "nl")
             return "The Netherlands"
+        else if (str === "region/none")
+            return "Facilities with no location"
 
         return str
 
