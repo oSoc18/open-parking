@@ -47,15 +47,11 @@ class MapContent extends Component {
     filter(markersToAdd, i) {
         let main = this;
 
-        if (!main.extra.includes("noDynamic") && markersToAdd[i].dynamicDataUrl === null) {
+        if (!main.extra.includes("private") && markersToAdd[i].limitedAccess === true) {
             delete markersToAdd[i];
             return;
         }
-        if (!main.extra.includes("private") && (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === true)) {
-            delete markersToAdd[i];
-            return;
-        }
-        if (!main.extra.includes("public") && (markersToAdd[i].dynamicDataUrl !== null && markersToAdd[i].limitedAccess === false)) {
+        if (!main.extra.includes("public") && markersToAdd[i].limitedAccess === false) {
             delete markersToAdd[i];
             return;
         }
@@ -135,6 +131,14 @@ class MapContent extends Component {
             }
         }
 
+        if (this.inf["dynamic"] !== undefined) {
+            if ((main.inf["dynamic"] === "true" && markersToAdd[i].dynamicDataUrl === null) || (main.inf["dynamic"] === "false" && markersToAdd[i].dynamicDataUrl !== null)) {
+                delete markersToAdd[i];
+                return;
+            }
+        }
+
+
     }
 
     filterMarkers(facilities, cluster) {
@@ -189,7 +193,6 @@ class MapContent extends Component {
 
         let markers = [];
         markersToAdd.forEach(function (facility) {
-            let correct = 0;
             let mark = L.marker([facility.latitude, facility.longitude]);
             mark.bindPopup();
 
@@ -201,22 +204,21 @@ class MapContent extends Component {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
-                                correct++;
                                 popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
                             }
                         });
+                        // $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
+                        //     if (data.parkingFacilityInformation !== undefined) {
+                        popup += "<br>Limited API access: " + facility.limitedAccess +
+                            "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+                            "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
+                            "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                            "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
+                            "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                            "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                            "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
+                            "<br><a href='" + window.location.hostname + "/parkingdata/html/" + facility.uuid + "'>Details</a>";
                     }
-                    // $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                    //     if (data.parkingFacilityInformation !== undefined) {
-                    popup += "<br>Limited API access: " + facility.limitedAccess +
-                        "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-                        "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
-                        "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
-                        "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                        "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                        "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>");
-
                     mark.getPopup().setContent(popup);
                     //     } else {
                     //         popup += "<br>parking static data not available";
