@@ -89,32 +89,51 @@ class MapContent extends Component {
             return;
         }
 
-        // if(markersToAdd[i].usage !=="onstreet") {
-            if (!this.inf.includes("capacity") && markersToAdd[i].capacity === null) {
+        if(this.inf["capacity"] === "false"){
+            console.log("ararar")
+        }
+
+        if(this.inf["capacity"] !== undefined){
+            if((main.inf["capacity"] === "true" && markersToAdd[i].capacity === null) || (main.inf["capacity"] === "false" && markersToAdd[i].capacity !== null)){
                 delete markersToAdd[i];
                 return;
             }
-            if (!this.inf.includes("tariffs") && markersToAdd[i].tariffs === false) {
+        }
+
+        if(this.inf["tariffs"] !== undefined){
+            if((main.inf["tariffs"] === "true" && markersToAdd[i].tariffs === false) || (main.inf["tariffs"] === "false" && markersToAdd[i].tariffs === true)){
                 delete markersToAdd[i];
                 return;
             }
-            if (!this.inf.includes("restrictions") && markersToAdd[i].minimumHeightInMeters === null) {
+        }
+
+        if(this.inf["restrictions"] !== undefined){
+            if((main.inf["restrictions"] === "true" && markersToAdd[i].minimumHeightInMeters === null) || (main.inf["restrictions"] === "false" && markersToAdd[i].minimumHeightInMeters !== null)){
                 delete markersToAdd[i];
                 return;
             }
-            if (!this.inf.includes("openingTimes") && markersToAdd[i].openingTimes === false) {
+        }
+
+        if(this.inf["openingTimes"] !== undefined){
+            if((main.inf["openingTimes"] === "true" && markersToAdd[i].openingTimes === false) || (main.inf["openingTimes"] === "false" && markersToAdd[i].openingTimes === true)){
                 delete markersToAdd[i];
                 return;
             }
-            if (!this.inf.includes("contactPersons") && markersToAdd[i].contactPersons === false) {
+        }
+
+        if(this.inf["contactPersons"] !== undefined){
+            if((main.inf["contactPersons"] === "true" && markersToAdd[i].contactPersons === false) || (main.inf["contactPersons"] === "false" && markersToAdd[i].contactPersons === true)){
                 delete markersToAdd[i];
                 return;
             }
-            if (!this.inf.includes("accessPoint") && markersToAdd[i].accessPoints === false) {
+        }
+
+        if(this.inf["accessPoints"] !== undefined){
+            if((main.inf["accessPoints"] === "true" && markersToAdd[i].accessPoints === false) || (main.inf["accessPoints"] === "false" && markersToAdd[i].accessPoints === true)){
                 delete markersToAdd[i];
                 return;
             }
-        // }
+        }
 
     }
 
@@ -183,26 +202,27 @@ class MapContent extends Component {
                         $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
-                                popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces +
-                                    "<br>Capacity: " + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+                                popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
                             }
                         });
                     }
-                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                        if (data.parkingFacilityInformation !== undefined) {
-                            popup += "<br>Limited API access: " + facility.limitedAccess +
-                                "<br>Location: " + facility.latitude + " " + facility.longitude +
-                                "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs !== undefined && data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                                "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes !== undefined && data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                                "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons !== undefined && data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters !== undefined && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                    // $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
+                    //     if (data.parkingFacilityInformation !== undefined) {
+                    popup += "<br>Limited API access: " + facility.limitedAccess +
+                        "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+                        "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
+                        "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters  : "<span class='text-danger'>No parking restrictions available</span>") +
+                        "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                        "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                        "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>");
 
                             mark.getPopup().setContent(popup);
-                        } else {
-                            popup += "<br>parking static data not available";
-                            mark.getPopup().setContent(popup);
-                        }
-                    });
+                    //     } else {
+                    //         popup += "<br>parking static data not available";
+                    //         mark.getPopup().setContent(popup);
+                    //     }
+                    // });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
                     mark.getPopup().setContent(popup);
