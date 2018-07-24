@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -68,7 +68,7 @@ class MapContent extends Component {
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("carpool") && markersToAdd[i].usage === "carpool"){
+            if (!main.vis.includes("carpool") && markersToAdd[i].usage === "carpool") {
                 delete markersToAdd[i];
                 return;
             }
@@ -80,7 +80,7 @@ class MapContent extends Component {
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("onstreet") && markersToAdd[i].usage === "onstreet"){
+            if (!main.vis.includes("onstreet") && markersToAdd[i].usage === "onstreet") {
                 delete markersToAdd[i];
                 return
             }
@@ -89,47 +89,47 @@ class MapContent extends Component {
             return;
         }
 
-        if(this.inf["capacity"] === "false"){
+        if (this.inf["capacity"] === "false") {
             console.log("ararar")
         }
 
-        if(this.inf["capacity"] !== undefined){
-            if((main.inf["capacity"] === "true" && markersToAdd[i].capacity === null) || (main.inf["capacity"] === "false" && markersToAdd[i].capacity !== null)){
+        if (this.inf["capacity"] !== undefined) {
+            if ((main.inf["capacity"] === "true" && markersToAdd[i].capacity === null) || (main.inf["capacity"] === "false" && markersToAdd[i].capacity !== null)) {
                 delete markersToAdd[i];
                 return;
             }
         }
 
-        if(this.inf["tariffs"] !== undefined){
-            if((main.inf["tariffs"] === "true" && markersToAdd[i].tariffs === false) || (main.inf["tariffs"] === "false" && markersToAdd[i].tariffs === true)){
+        if (this.inf["tariffs"] !== undefined) {
+            if ((main.inf["tariffs"] === "true" && markersToAdd[i].tariffs === false) || (main.inf["tariffs"] === "false" && markersToAdd[i].tariffs === true)) {
                 delete markersToAdd[i];
                 return;
             }
         }
 
-        if(this.inf["restrictions"] !== undefined){
-            if((main.inf["restrictions"] === "true" && markersToAdd[i].minimumHeightInMeters === null) || (main.inf["restrictions"] === "false" && markersToAdd[i].minimumHeightInMeters !== null)){
+        if (this.inf["restrictions"] !== undefined) {
+            if ((main.inf["restrictions"] === "true" && markersToAdd[i].minimumHeightInMeters === null) || (main.inf["restrictions"] === "false" && markersToAdd[i].minimumHeightInMeters !== null)) {
                 delete markersToAdd[i];
                 return;
             }
         }
 
-        if(this.inf["openingTimes"] !== undefined){
-            if((main.inf["openingTimes"] === "true" && markersToAdd[i].openingTimes === false) || (main.inf["openingTimes"] === "false" && markersToAdd[i].openingTimes === true)){
+        if (this.inf["openingTimes"] !== undefined) {
+            if ((main.inf["openingTimes"] === "true" && markersToAdd[i].openingTimes === false) || (main.inf["openingTimes"] === "false" && markersToAdd[i].openingTimes === true)) {
                 delete markersToAdd[i];
                 return;
             }
         }
 
-        if(this.inf["contactPersons"] !== undefined){
-            if((main.inf["contactPersons"] === "true" && markersToAdd[i].contactPersons === false) || (main.inf["contactPersons"] === "false" && markersToAdd[i].contactPersons === true)){
+        if (this.inf["contactPersons"] !== undefined) {
+            if ((main.inf["contactPersons"] === "true" && markersToAdd[i].contactPersons === false) || (main.inf["contactPersons"] === "false" && markersToAdd[i].contactPersons === true)) {
                 delete markersToAdd[i];
                 return;
             }
         }
 
-        if(this.inf["accessPoints"] !== undefined){
-            if((main.inf["accessPoints"] === "true" && markersToAdd[i].accessPoints === false) || (main.inf["accessPoints"] === "false" && markersToAdd[i].accessPoints === true)){
+        if (this.inf["accessPoints"] !== undefined) {
+            if ((main.inf["accessPoints"] === "true" && markersToAdd[i].accessPoints === false) || (main.inf["accessPoints"] === "false" && markersToAdd[i].accessPoints === true)) {
                 delete markersToAdd[i];
                 return;
             }
@@ -168,11 +168,11 @@ class MapContent extends Component {
 
         console.log(this.inf);
 
-        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
-        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
-        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-bad.png')});
-        let onStreetIcon = new ParkingIcon({iconUrl: require('./images/parking-onstreet.png')});
-        let privateIcon = new ParkingIcon({iconUrl: require('./images/parking-private.png')});
+        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-good.png') });
+        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
+        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
+        let onStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
+        let privateIcon = new ParkingIcon({ iconUrl: require('./images/parking-private.png') });
 
         let main = this;
 
@@ -212,12 +212,12 @@ class MapContent extends Component {
                         "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
                         "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
                         "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters  : "<span class='text-danger'>No parking restrictions available</span>") +
+                        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
                         "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
                         "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
                         "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>");
 
-                            mark.getPopup().setContent(popup);
+                    mark.getPopup().setContent(popup);
                     //     } else {
                     //         popup += "<br>parking static data not available";
                     //         mark.getPopup().setContent(popup);
@@ -254,7 +254,7 @@ class MapContent extends Component {
 
     updateHeatmapPoints(facilities) {
         if ($("#heatmap-switch input").prop("checked")) {
-            let heatPoints = {good: [], average: [], bad: []};
+            let heatPoints = { good: [], average: [], bad: [] };
             for (let i = 0; i < facilities.length; i++) {
                 if (facilities[i].mark in heatPoints) {
                     heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
@@ -327,7 +327,7 @@ class MapContent extends Component {
                 blur: 15,
                 minOpacity: 0.6,
                 max: 1,
-                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
+                gradient: { 0: heatmapColors[i][1], 1: heatmapColors[i][1] }
             });
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
@@ -347,9 +347,9 @@ class MapContent extends Component {
 
             <div id="mapParent">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
-                      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-                      crossorigin=""/>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
+                    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+                    crossorigin="" />
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
 
                 <div id="search-container"></div>
 
@@ -368,17 +368,17 @@ class MapContent extends Component {
                             <span>On-street</span>
                         </div>
                         <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in."
-                             data-tooltip-position="bottom">
+                            data-tooltip-position="bottom">
                             <div class="small-box blue"></div>
                             <span>Excellent</span>
                         </div>
                         <div id="color-and-text" data-tooltip="3, 4 or 5 fields of 6 are filled in."
-                             data-tooltip-position="bottom">
+                            data-tooltip-position="bottom">
                             <div class="small-box orange"></div>
                             <span>Mediocre</span>
                         </div>
                         <div id="color-and-text" data-tooltip="Less than half the fields are filled in."
-                             data-tooltip-position="bottom">
+                            data-tooltip-position="bottom">
                             <div class="small-box red"></div>
                             <span>Poor</span>
                         </div>
@@ -388,7 +388,7 @@ class MapContent extends Component {
                 <div className="switch-field" id="heatmap-switch">
                     <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
-                        <label class="switch"><input type="checkbox"/>
+                        <label class="switch"><input type="checkbox" />
                             <div></div>
                         </label>
                     </div>
