@@ -45,7 +45,6 @@ class SideBar extends Component {
 
     handleVisibleFacilities(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         let temp = this.visibleFacilities;
 
@@ -69,7 +68,6 @@ class SideBar extends Component {
     }
     handleExtras(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         let temp = this.extras;
 
@@ -169,8 +167,6 @@ class SideBar extends Component {
 
                 <h4 className="title">Information</h4>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"*/}
-                           {/*value="capacity" onChange={this.handleInformation}/>*/}
                     <label for="capacity">Capacity</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
@@ -179,8 +175,6 @@ class SideBar extends Component {
                     </div>
                 </div>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"*/}
-                           {/*value="tariffs" onChange={this.handleInformation}/>*/}
                     <label for="tariffs">Tariffs</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
@@ -189,8 +183,6 @@ class SideBar extends Component {
                     </div>
                 </div>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"*/}
-                           {/*value="restrictions" onChange={this.handleInformation}/>*/}
                     <label for="restrictions">Restrictions</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false" /></label>
@@ -199,8 +191,6 @@ class SideBar extends Component {
                     </div>
                 </div>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="openingTimes" name="openingTimes"*/}
-                           {/*value="openingTimes" onChange={this.handleInformation}/>*/}
                     <label for="openingTimes">Opening Times</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
@@ -209,8 +199,6 @@ class SideBar extends Component {
                     </div>
                 </div>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="contactPersons" name="contactPersons"*/}
-                           {/*value="contactPersons" onChange={this.handleInformation}/>*/}
                     <label for="contactPersons">Contact Person</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
@@ -219,8 +207,6 @@ class SideBar extends Component {
                     </div>
                 </div>
                 <div>
-                    {/*<input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"*/}
-                           {/*value="accessPoint" onChange={this.handleInformation}/>*/}
                     <label for="accessPoints">Access point</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>
@@ -228,15 +214,17 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
                     </div>
                 </div>
-
+                <div>
+                    <label for="dynamic">Dynamic data</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="dynamic" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="true"/></label>
+                    </div>
+                </div>
 
                 <h4 className="title">Extra</h4>
 
-                <div data-tooltip="Show facilities without dynamic data?" data-tooltip-position="right" >
-                    <input class="styled-checkbox-extra" type="checkbox" id="noDynamic" name="noDynamic"
-                        value="noDynamic" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="noDynamic">No dynamic data</label>
-                </div>
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="private" name="private"
                         value="private" onChange={this.handleExtras} defaultChecked={true} />
