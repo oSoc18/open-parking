@@ -150,7 +150,7 @@ class Dashboard extends Component {
   componentWillReceiveProps(nextProps){
 
     let name = this.state.treemapData["name"]
-    console.log("COMPO" + name)
+
     let levelIndex = this.level
     let level =  levels[levelIndex] + "/"
     let summaryStr = this.level === 3 ? "" : "summary/"
@@ -158,13 +158,12 @@ class Dashboard extends Component {
     let sub = level  + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
 
-    console.log("Little+" + url)
 let thiss = this
     fetch(url)
     .then(response => response.json())
     .then(json => {
 
-      console.log(json)
+  
       //this.handleFilters is not used until a solution is found
       //json = thiss.filterEntries(json)
       thiss.setTreeMap(json, city)
@@ -193,7 +192,6 @@ let thiss = this
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
 
     let thiss = this
-    console.log("  URLTJE =" + url)
     fetch(url)
       .then(response => response.json())
       .then(json => {
@@ -484,12 +482,16 @@ let thiss = this
     return this.state.treemapData
   }
 
-  onDezoom(val = 1) {
-    this.level = this.level - val
+  onDezoom(val = false) {
+    if(val === true){
+    this.level = this.level - 1
+    }
     let prev = null
 
-    if (this.noLocation) {
-      this.level = 0; // back to whole overview
+    
+    alert(val + " in DEZOOM")
+    if (val === true) {
+      this.level = this.state.stackedTree.length - 1; // back to whole overview
     }
 
 
