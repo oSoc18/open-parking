@@ -23,7 +23,7 @@
 
 .detailButton{
     text-decoration: none;
-    color: white;
+    color: white !important;
     margin-top: 5px;
 }
 
