@@ -4,7 +4,6 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import './MapContent.css';
-import onstreetIcon from './images/onstreet-legend.png';
 import privateIcon from './images/private-legend.png';
 
 
@@ -260,7 +259,6 @@ class MapContent extends Component {
             "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
             "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
             "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
-            "<br><a class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>" +
             "<br><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
 
     }
@@ -368,7 +366,7 @@ class MapContent extends Component {
 
                 <div id="mapid"></div>
 
-                <div className="legend-field">
+                <div className="legend-field-map">
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
@@ -377,7 +375,7 @@ class MapContent extends Component {
                             <span>private</span>
                         </div>
                         <div id="color-and-text" data-tooltip="On-street parking." data-tooltip-position="bottom">
-                            <img id="onstreetIcon" src={onstreetIcon} alt="icon" width="15px" height="15px"></img>
+                            <div class="small-box purple"></div>
                             <span>On-street</span>
                         </div>
                         <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in."
