@@ -166,17 +166,30 @@ class Dashboard extends Component {
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
+    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+    console.log(url)
     let thiss = this
     fetch(url)
       .then(response => response.json())
       .then(json => {
-        console.log(json)
 
         //this.handleFilters is not used until a solution is found
         //json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
       })
+  }
+
+  getParameters(){
+
+    let params = ""
+    if(this.props.filters.visFacilities){
+
+      for(let visF of this.props.filters.visFacilities){
+        params += "&" + visF + "=true"
+      }
+    }
+    
+    return params
   }
 
   FILTERFUNCTION = {
@@ -199,7 +212,6 @@ class Dashboard extends Component {
 
       for (let option of this.props.filters.information) {
    
-        console.log("Next:" + option)
         //if (this.props.filters.information.includes("capacity")) 
           //newParkings = parkings.filter(parking => Filterfields.checkCapacity(staticData))
           newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
@@ -213,13 +225,13 @@ class Dashboard extends Component {
   }
 
   allFieldsIncluded(parking) {
-    if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
+   /* if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
       console.log(this.props.filters.information)
       if (this.props.filters.information.indexOf("capacity") > -1) {
 
         return Filterfields.checkCapacity(parking)
       }
-    }
+    }*/
     return true
   }
 
@@ -329,7 +341,7 @@ class Dashboard extends Component {
 
 
     let thiss = this
-    let url = "http://localhost:8000/parkingdata/summary/country/nl/"
+    let url = "http://localhost:8000/parkingdata/summary/country/nl/" + "?" + this.getParameters()
     let resultJson = null
     fetch(url)
       .then(response => response.json())
@@ -341,7 +353,7 @@ class Dashboard extends Component {
   }
 
   handleFilters(json) {
-    let url = "http://localhost:8000/parkingdata/country/nl/"
+    let url = "http://localhost:8000/parkingdata/country/nl/" + "?" + this.getParameters()
     let thiss = this
 
     fetch(url)
@@ -414,6 +426,7 @@ class Dashboard extends Component {
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
     let getTable = this.getTable()
+
     return (
 
 
@@ -428,12 +441,14 @@ class Dashboard extends Component {
   }
 
   getFilteredData(){
-    if(this.level === LEVEL_ENUM.city){
+   /* if(this.level === LEVEL_ENUM.city){
       return this.filterEntries(this.state.treemapData)
     }
     else{
       return this.state.treemapData
-    }
+    }*/
+
+    return this.state.treemapData
   }
 
   onDezoom(val = 1) {
