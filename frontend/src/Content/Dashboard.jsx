@@ -212,7 +212,6 @@ class Dashboard extends Component {
 
       for (let option of this.props.filters.information) {
    
-        console.log("Next:" + option)
         //if (this.props.filters.information.includes("capacity")) 
           //newParkings = parkings.filter(parking => Filterfields.checkCapacity(staticData))
           newParkings = newParkings.filter(parking => this.FILTERFUNCTION[option](JSON.parse(parking["staticData"])))
@@ -226,13 +225,13 @@ class Dashboard extends Component {
   }
 
   allFieldsIncluded(parking) {
-    if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
+   /* if (this.props.filters && this.props.filters.information && this.props.filters.information.length > 0) {
       console.log(this.props.filters.information)
       if (this.props.filters.information.indexOf("capacity") > -1) {
 
         return Filterfields.checkCapacity(parking)
       }
-    }
+    }*/
     return true
   }
 
@@ -354,7 +353,7 @@ class Dashboard extends Component {
   }
 
   handleFilters(json) {
-    let url = "http://localhost:8000/parkingdata/country/nl/"
+    let url = "http://localhost:8000/parkingdata/country/nl/" + "?" + this.getParameters()
     let thiss = this
 
     fetch(url)
@@ -427,6 +426,7 @@ class Dashboard extends Component {
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
     let getTable = this.getTable()
+
     return (
 
 
@@ -441,12 +441,14 @@ class Dashboard extends Component {
   }
 
   getFilteredData(){
-    if(this.level === LEVEL_ENUM.city){
+   /* if(this.level === LEVEL_ENUM.city){
       return this.filterEntries(this.state.treemapData)
     }
     else{
       return this.state.treemapData
-    }
+    }*/
+
+    return this.state.treemapData
   }
 
   onDezoom(val = 1) {
