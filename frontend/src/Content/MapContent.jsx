@@ -257,14 +257,14 @@ class MapContent extends Component {
 
     getStaticString(facility) {
         return "<br>Limited API access: " + facility.limitedAccess +
-            "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-            "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'><b>No Capacity available</b></span>") +
-            "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'><b>No Tariffs available</b></span>") +
-            "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
-            "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
-            "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
-            "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
-            "<br><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
+            "<br />Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+            "<br />Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'><b>No Capacity available</b></span>") +
+            "<br />Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'><b>No Tariffs available</b></span>") +
+            "<br />Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
+            "<br />Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
+            "<br />Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
+            "<br />Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
+            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
 
     }
 
