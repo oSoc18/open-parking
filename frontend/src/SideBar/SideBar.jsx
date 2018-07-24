@@ -202,7 +202,7 @@ class SideBar extends Component {
                 </div>
 
                 <h4 className="title">Information</h4>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"*/}
                            {/*value="capacity" onChange={this.handleInformation}/>*/}
                     <label for="capacity">Capacity</label>
@@ -212,7 +212,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"*/}
                            {/*value="tariffs" onChange={this.handleInformation}/>*/}
                     <label for="tariffs">Tariffs</label>
@@ -222,7 +222,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true" /></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"*/}
                            {/*value="restrictions" onChange={this.handleInformation}/>*/}
                     <label for="restrictions">Restrictions</label>
@@ -232,7 +232,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="openingTimes" name="openingTimes"*/}
                            {/*value="openingTimes" onChange={this.handleInformation}/>*/}
                     <label for="openingTimes">Opening Times</label>
@@ -242,7 +242,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="contactPersons" name="contactPersons"*/}
                            {/*value="contactPersons" onChange={this.handleInformation}/>*/}
                     <label for="contactPersons">Contact Person</label>
@@ -252,7 +252,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     {/*<input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"*/}
                            {/*value="accessPoint" onChange={this.handleInformation}/>*/}
                     <label for="accessPoints">Access point</label>
