@@ -217,7 +217,7 @@ class MapContent extends Component {
                             "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
                             "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
                             "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
-                            "<br><a href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Details</a>";
+                            "<br><a class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
                     }
                     mark.getPopup().setContent(popup);
                     //     } else {
