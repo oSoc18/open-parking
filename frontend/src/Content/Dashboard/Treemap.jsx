@@ -260,6 +260,7 @@ class Treemap extends Component {
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
+        
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -350,8 +351,6 @@ class Treemap extends Component {
                 continue
 
             let resultJson = data[i]
-            console.log("-----------------------")
-            console.log(resultJson)
 
             //generate row
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
