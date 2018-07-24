@@ -1,0 +1,138 @@
+{% load static %}
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{name}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link href="{% static 'css/detail.css' %}" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="text-center">
+                    <h2>Details of {{name}}</h2>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="window.print();">Print</button>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6 col-lg-6 pull-left">
+                <div class="panel panel-default height">
+                    <div class="panel-heading" id="{{mark}}">General information</div>
+                    <div class="panel-body ">
+                        <strong>Name: </strong> {{name}}
+                        <br>
+                        <strong>Operator: </strong> {{operator}}
+                        <br>
+                        <strong>Region: </strong> {{region}}
+                        <br>
+                        <strong>Province: </strong> {{province}}
+                        <br>
+                        <strong>City: </strong> {{city}}
+                        <br>
+                        <strong>Usage: </strong> {{usage}}
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6 col-lg-6">
+                <div class="panel panel-default height">
+                    <div class="panel-heading" id="{{mark}}">Rating</div>
+                    <div class="panel-body">
+                        <strong>Access points: </strong> {{accessPoints}}
+                        <br>
+                        <strong>Tariff: </strong> {{tariffs}}
+                        <br>
+                        <strong>Opening hours: </strong> {{opening_times}}
+                        <br>
+                        <strong>Restrictions: </strong> {{restrictions}}
+                        <br>
+                        <strong>Contact data: </strong> {{contact_person}}
+                        <br>
+                        <strong>Capacity: </strong> {{capacity_alg}}
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Details</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>{{name}}</td>
+                </tr>
+                <tr>
+                    <td>Location</td>
+                    <td>{{country_code}} > {{region}} > {{province}} > {{city}}</td>
+                </tr>
+                <tr>
+                    <td>Mark</td>
+                    <td>{{mark}}</td>
+                </tr>
+                <tr>
+                    <td>Identifier</td>
+                    <td>{{identifier}}</td>
+                </tr>
+                <tr>
+                    <td>Static URL</td>
+                    <td>{{static_url}}</td>
+                </tr>
+                <tr>
+                    <td>Dynamic URL</td>
+                    <td>{{dynamic_url}}</td>
+                </tr>
+                <tr>
+                    <td>Usage</td>
+                    <td>{{usage}}</td>
+                </tr>
+                <tr>
+                    <td>Capacity</td>
+                    <td>{{capacity}}</td>
+                </tr>
+                <tr>
+                    <td>Latitude</td>
+                    <td>{{latitude}}</td>
+                </tr>
+                <tr>
+                    <td>Longitude</td>
+                    <td>{{longitude}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div class="row">
+            {% if latitude %}
+            <div class="text-center">
+                <iframe width="95%" height="250" frameborder="0 " scrolling="no " marginheight="0 " marginwidth="0 " src="https://www.openstreetmap.org/export/embed.html?bbox={{longitude1}}%2C{{latitude1}}%2C{{longitude2}}%2C{{latitude2}}&amp;layer=mapnik&amp;marker={{latitude}}%2C{{longitude}}"
+                    style="border: 1px solid black "></iframe>
+                <br/>
+
+            </div>
+            {% else %} {% endif %}
+        </div>
+
+        </tbody>
+    </div>
+
+</body>
+
+<footer>
+    <img src="../website/logo-2.jpg" alt="Open Parking">
+</footer>
