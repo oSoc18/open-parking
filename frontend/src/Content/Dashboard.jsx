@@ -166,17 +166,30 @@ class Dashboard extends Component {
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/"
+    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+    console.log(url)
     let thiss = this
     fetch(url)
       .then(response => response.json())
       .then(json => {
-        console.log(json)
 
         //this.handleFilters is not used until a solution is found
         //json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
       })
+  }
+
+  getParameters(){
+
+    let params = ""
+    if(this.props.filters.visFacilities){
+
+      for(let visF of this.props.filters.visFacilities){
+        params += "&" + visF + "=true"
+      }
+    }
+    
+    return params
   }
 
   FILTERFUNCTION = {
@@ -329,7 +342,7 @@ class Dashboard extends Component {
 
 
     let thiss = this
-    let url = "http://localhost:8000/parkingdata/summary/country/nl/"
+    let url = "http://localhost:8000/parkingdata/summary/country/nl/" + "?" + this.getParameters()
     let resultJson = null
     fetch(url)
       .then(response => response.json())
