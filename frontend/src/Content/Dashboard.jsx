@@ -195,8 +195,6 @@ let thiss = this
     fetch(url)
       .then(response => response.json())
       .then(json => {
-
-        console.log(json)
         //this.handleFilters is not used until a solution is found
         //json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
@@ -489,7 +487,7 @@ let thiss = this
     let prev = null
 
     
-    alert(val + " in DEZOOM")
+
     if (val === true) {
       this.level = this.state.stackedTree.length - 1; // back to whole overview
     }
