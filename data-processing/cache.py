@@ -2,7 +2,8 @@
 Sends a request to every static data link in the index file and stores the
 result in a folder, in a file named after the UUID of the facility. It allows
 to cache locally the static data, in order not to send requests every time.
-It uses a small JSON file to keep track of which files have been cached so far.
+It uses a small JSON file to keep track of which files have been cached so far,
+which will be created if it does not exist.
 
 Example:
     python cache.py cache-dir/ cache_list.json data_index_1_3_fixed.json
@@ -18,7 +19,10 @@ cache_list_filename = argv[2]
 index_filename = argv[3]
 
 index_json = json.load(open(index_filename))
-cache_list = json.load(open(cache_list_filename))
+try:
+    cache_list = json.load(open(cache_list_filename))
+except FileNotFoundError:
+    cache_list = {"cached": []}
 
 index_facilities = index_json["ParkingFacilities"]
 

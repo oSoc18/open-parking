@@ -1,8 +1,5 @@
 # Create the required cache files and folders
 mkdir cache-dir
-if [ ! -f cache_list.json ]; then
-	echo {\"cached\": []} > cache_list.json
-fi
 
 # Download all the static data in the cache directory
 echo python cache.py cache-dir/ cache_list.json data_index_1_3_fixed.json
