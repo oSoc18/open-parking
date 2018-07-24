@@ -203,14 +203,19 @@ class MapContent extends Component {
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.usage !== "onstreet") {
                     if (facility.dyna !== undefined || facility.dynamicDataUrl !== null) {
-                        $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
-                            if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
-                                popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
-                            }
-                            popup += main.getStaticString(facility);
-                            mark.getPopup().setContent(popup);
+                        if(facility.limitedAccess === false) {
+                            $.getJSON("http://127.0.0.1:8000/parkingdata/dynamicdata/" + facility.uuid + "/", function (data) {
+                                if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
+                                    popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
+                                }
+                                popup += main.getStaticString(facility);
+                                mark.getPopup().setContent(popup);
 
-                        });
+                            });
+                        }else{
+                            popup+=main.getStaticString(facility);
+                            mark.getPopup().setContent(popup);
+                        }
                     } else {
                         popup += main.getStaticString(facility);
                         mark.getPopup().setContent(popup);
@@ -252,14 +257,14 @@ class MapContent extends Component {
 
     getStaticString(facility) {
         return "<br>Limited API access: " + facility.limitedAccess +
-            "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-            "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
-            "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-            "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
-            "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-            "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-            "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
-            "<br><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
+            "<br />Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+            "<br />Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'><b>No Capacity available</b></span>") +
+            "<br />Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'><b>No Tariffs available</b></span>") +
+            "<br />Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
+            "<br />Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
+            "<br />Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
+            "<br />Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
+            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
 
     }
 
@@ -327,7 +332,7 @@ class MapContent extends Component {
         // There is one layer per marker color, there is no way to do it with
         // only one heatmap
         let heatmapColors = [
-            ["bad", "#d55e00"], // Vermillion
+            ["bad", "#d7191c"], // Red
             ["average", "#e69f00"], // Orange
             ["good", "#56b4e9"],  // Sky blue
         ];

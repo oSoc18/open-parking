@@ -1,3 +1,7 @@
+"""Contains classes and functions for the different views. One view matches
+with one or several API calls.
+"""
+
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import ParkingDataSerializer
@@ -12,122 +16,8 @@ from rest_framework import status
 from django.template import loader
 
 
-class DetailsView(generics.RetrieveAPIView):
-    """
-    Get a detailed view of a parking by its ID
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        parking_id = self.kwargs['pk']
-        return ParkingData.objects.filter(id=parking_id)
-
-
-class UuidView(generics.ListAPIView):
-    """
-    Get a detailed view of a parking by its UUID
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        parking_uuid = self.kwargs['uuid']
-        return ParkingData.objects.filter(uuid=parking_uuid)
-
-
-@api_view(['GET'])
-def get_static_url(request, uuid):
-    """
-    Get the info of the static URL of a parking with a specified UUID
-    """
-    url = ParkingData.objects.get(
-        uuid=uuid).staticDataUrl
-    r = requests.get(url)
-    dump = json.dumps(r.json())
-    return HttpResponse(dump, content_type='application/json')
-
-
-@api_view(['GET'])
-def get_dynamic_url(request, uuid):
-    """
-    Get the info of the static URL of a parking with a specified UUID
-    """
-    url = ParkingData.objects.get(
-        uuid=uuid).dynamicDataUrl
-    if url is None:
-        return HttpResponse("Sorry, we could not find a dynamic URL.")
-    else:
-        r = requests.get(url)
-        dump = json.dumps(r.json())
-        return HttpResponse(dump, content_type='application/json')
-
-
-class RectangleView(generics.ListAPIView):
-    """
-    Get all instances located in a rectangle defined by two points.
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        southwest_lng = float(self.kwargs['southwest_lng'])
-        southwest_lat = float(self.kwargs['southwest_lat'])
-        northeast_lng = float(self.kwargs['northeast_lng'])
-        northeast_lat = float(self.kwargs['northeast_lat'])
-
-        return ParkingData.objects.filter(longitude__gte=southwest_lng,
-                                          latitude__gte=southwest_lat, longitude__lte=northeast_lng,
-                                          latitude__lte=northeast_lat)
-
-
-class StaticView(generics.ListAPIView):
-    """
-    Get all the parkingplaces without dynamic data
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the parkingdata
-        with no dynamic data link .
-        """
-        return ParkingData.objects.filter(dynamicDataUrl__isnull=True)
-
-
-class DynamicView(generics.ListAPIView):
-    """
-    Get all the parkingplaces with dynamic data
-    """
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        return ParkingData.objects.filter(dynamicDataUrl__isnull=False)
-
-
-class AreaView(generics.ListAPIView):
-    """Gets all the parkingplaces from a specified area."""
-
-    serializer_class = ParkingDataSerializer
-    area_level = None
-
-    def get_queryset(self):
-        area_name = self.kwargs['area_name']
-        return ParkingData.objects.filter(**{self.area_level: area_name})
-
-
-class NoneView(generics.ListAPIView):
-    """Gets all the parkingplaces without region."""
-    serializer_class = ParkingDataSerializer
-
-    def get_queryset(self):
-        return ParkingData.objects.filter(Q(region__isnull=True) | Q(region=""))
-
-
-def create_summary_view(field_name, lower_field_name):
-    return api_view(["GET"])(
-        lambda request, area_name:
-        generic_summary_view(field_name, lower_field_name, area_name, request.GET))
-
-
-def generic_summary_view(field_name, lower_field_name, area_name, get_params):
+def get_filtered_facilities(get_params):
+    """Returns a set of facilities filtered from GET parameters."""
     usage_mapping = {
         "parkAndRide": "park and ride",
         "garage": "garage",
@@ -149,24 +39,104 @@ def generic_summary_view(field_name, lower_field_name, area_name, get_params):
     }
 
     possible_usages = []
-    filter_params = {field_name: area_name, "usage__in": possible_usages}
+    filter_params = {"usage__in": possible_usages}
     exclude_params = {}
     for name, value in get_params.items():
-        if name in usage_mapping:
+        if name in usage_mapping and json.loads(value):
             possible_usages.append(usage_mapping[name])
-        else:
-            try:
-                query_name, query_value = fields_mapping[name]
-                if json.loads(value):
-                    filter_params[query_name] = query_value
-                else:
-                    exclude_params[query_name] = query_value
-            except (KeyError, JSONDecodeError):
-                return Response({"invalid key/value pair in GET parameters":
-                                 "'{}':'{}'".format(name, value)}, status=status.HTTP_400_BAD_REQUEST)
+        elif name in fields_mapping:
+            query_name, query_value = fields_mapping[name]
+            if json.loads(value):
+                filter_params[query_name] = query_value
+            else:
+                exclude_params[query_name] = query_value
+    return  ParkingData.objects.filter(**filter_params).exclude(**exclude_params)
 
-    parkings = ParkingData.objects.filter(
-        **filter_params).exclude(**exclude_params)
+class IdView(generics.RetrieveAPIView):
+    """Gets the data of a parking by its database ID."""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        parking_id = self.kwargs['pk']
+        return ParkingData.objects.filter(id=parking_id)
+
+
+class UuidView(generics.ListAPIView):
+    """Gets the data of a parking by its UUID."""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        parking_uuid = self.kwargs['uuid']
+        return ParkingData.objects.filter(uuid=parking_uuid)
+
+@api_view(['GET'])
+def get_dynamic_data(request, uuid):
+    """Gets the dynamic data of a parking selected by its UUID."""
+    url = ParkingData.objects.get(uuid=uuid).dynamicDataUrl
+    if url is None:
+        return HttpResponse("Sorry, we could not find a dynamic URL.")
+    else:
+        r = requests.get(url)
+        dump = json.dumps(r.json())
+        return HttpResponse(dump, content_type='application/json')
+
+
+class RectangleView(generics.ListAPIView):
+    """Get all facilities located in a rectangle defined by two points."""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        southwest_lng = float(self.kwargs['southwest_lng'])
+        southwest_lat = float(self.kwargs['southwest_lat'])
+        northeast_lng = float(self.kwargs['northeast_lng'])
+        northeast_lat = float(self.kwargs['northeast_lat'])
+
+        return ParkingData.objects.filter(longitude__gte=southwest_lng,
+                                          latitude__gte=southwest_lat,
+                                          longitude__lte=northeast_lng,
+                                          latitude__lte=northeast_lat)
+
+
+class AreaView(generics.ListAPIView):
+    """Gets all the parkingplaces from a specified area."""
+
+    serializer_class = ParkingDataSerializer
+    area_level = None
+
+    def get_queryset(self):
+        area_name = self.kwargs['area_name']
+        try:
+            return get_filtered_facilities(self.request.GET).filter(**{self.area_level: area_name})
+        except JSONDecodeError as e:
+            return Response({"invalid value in GET parameters": str(e)},
+                             status=status.HTTP_400_BAD_REQUEST)
+
+
+class NoneView(generics.ListAPIView):
+    """Gets all the parkingplaces without region."""
+    serializer_class = ParkingDataSerializer
+
+    def get_queryset(self):
+        try:
+            return get_filtered_facilities(self.request.GET).filter(Q(region__isnull=True) | Q(region=""))
+        except JSONDecodeError as e:
+            return Response({"invalid value in GET parameters": str(e)},
+                             status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_summary_view(field_name, lower_field_name):
+    return api_view(["GET"])(
+        lambda request, area_name:
+        generic_summary_view(field_name, lower_field_name, area_name, request.GET))
+
+
+def generic_summary_view(field_name, lower_field_name, area_name, get_params):
+    try:
+        parkings = get_filtered_facilities(get_params).filter(**{field_name: area_name})
+    except JSONDecodeError as e:
+        return Response({"invalid value in GET parameters": str(e)},
+                         status=status.HTTP_400_BAD_REQUEST)
+
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)

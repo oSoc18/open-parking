@@ -184,9 +184,8 @@ div.tooltip {
 .two-buttons{
     position: fixed;
     top: 70px;
-    right: 350px;
+    right: 400px;
     z-index: 400;
-    width: 220px;
     height: 50px;
     text-align: left;
 }
