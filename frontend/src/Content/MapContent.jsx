@@ -176,7 +176,9 @@ class MapContent extends Component {
         let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
         let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
         let onStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
-        let privateIcon = new ParkingIcon({ iconUrl: require('./images/parking-private.png') });
+        let privateGoodIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-good.png') });
+        let privateBadIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-bad.png') });
+        let privateAverageIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-average.png') });
 
         let main = this;
 
@@ -201,30 +203,19 @@ class MapContent extends Component {
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.usage !== "onstreet") {
-                    if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
+                    if (facility.dyna !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
                             }
+                            popup += main.getStaticString(facility);
+                            mark.getPopup().setContent(popup);
+
                         });
-                        // $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                        //     if (data.parkingFacilityInformation !== undefined) {
-                        popup += "<br>Limited API access: " + facility.limitedAccess +
-                            "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-                            "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
-                            "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                            "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
-                            "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                            "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                            "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
-                            "<br><a href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Details</a>";
+                    }else {
+                        popup += main.getStaticString(facility);
+                        mark.getPopup().setContent(popup);
                     }
-                    mark.getPopup().setContent(popup);
-                    //     } else {
-                    //         popup += "<br>parking static data not available";
-                    //         mark.getPopup().setContent(popup);
-                    //     }
-                    // });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
                     mark.getPopup().setContent(popup);
@@ -244,7 +235,13 @@ class MapContent extends Component {
                     mark.setIcon(onStreetIcon);
                 }
             } else {
-                mark.setIcon(privateIcon)
+                if(facility.mark === "bad"){
+                    mark.setIcon(privateBadIcon);
+                }else if(facility.mark === "average"){
+                    mark.setIcon(privateAverageIcon);
+                }else{
+                    mark.setIcon(privateGoodIcon);
+                }
             }
             markers.push(mark);
         });
@@ -252,6 +249,18 @@ class MapContent extends Component {
 
 
         this.updateHeatmapPoints(markersToAdd);
+    }
+
+    getStaticString(facility){
+        return "<br>Limited API access: " + facility.limitedAccess +
+        "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+        "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
+        "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
+        "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+        "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+        "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
+        "<br><a class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
     }
 
     updateHeatmapPoints(facilities) {
