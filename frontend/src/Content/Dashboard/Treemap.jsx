@@ -22,6 +22,7 @@ class Treemap extends Component {
         super(props);
         this.initFieldsDict();
         this.stackedTree = []
+        this.reset = false
         this.goPrev = this.goPrev.bind(this)
         //this.root = d3.hierarchy(data);
         this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
@@ -243,7 +244,7 @@ class Treemap extends Component {
     goPrev() {
 
         if (this.props.onDezoom) {
-            this.props.onDezoom()
+            this.props.onDezoom(this.reset)
         }
 
     }
@@ -260,6 +261,7 @@ class Treemap extends Component {
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
+        
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -282,7 +284,16 @@ class Treemap extends Component {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
+
+
             breadCrums = this.getTitleDict(breadCrums)
+
+            if(this.props.data.name === "region/none"){
+                this.reset = true
+            }
+            else{
+                this.reset = false
+            }
 
 
         }
@@ -350,8 +361,6 @@ class Treemap extends Component {
                 continue
 
             let resultJson = data[i]
-            console.log("-----------------------")
-            console.log(resultJson)
 
             //generate row
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
