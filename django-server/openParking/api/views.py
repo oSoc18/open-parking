@@ -4,9 +4,11 @@ from .serializers import ParkingDataSerializer, ParkingStaticDataSerializer
 from .models import ParkingData
 import requests
 import json
+from json.decoder import JSONDecodeError
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from rest_framework import status
 
 import pprint
 
@@ -155,15 +157,15 @@ def generic_summary_view(field_name, lower_field_name, area_name, get_params):
         if name in usage_mapping:
             possible_usages.append(usage_mapping[name])
         else:
-            if value != "unknown":
+            try:
                 query_name, query_value = fields_mapping[name]
                 if json.loads(value):
                     filter_params[query_name] = query_value
                 else:
                     exclude_params[query_name] = query_value
-
-    print(filter_params)
-    print(exclude_params)
+            except (KeyError, JSONDecodeError):
+                return Response({"invalid key/value pair in GET parameters":
+                    "'{}':'{}'".format(name, value)}, status=status.HTTP_400_BAD_REQUEST)
 
     parkings = ParkingData.objects.filter(**filter_params).exclude(**exclude_params)
     areas = {}

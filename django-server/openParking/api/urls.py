@@ -46,7 +46,6 @@ urlpatterns = {
     url(r'^parkingdata/region/none/$',
         NoneView.as_view(), name="none_location"),
 
-    # In the following
     # Summary of the country-level data: http://127.0.0.1:8000/parkingdata/summary/country/nl/
     url(r'^parkingdata/summary/country/(?P<area_name>[^/]+)/$',
         create_summary_view("country_code", "region"), name="countrySummary"),
