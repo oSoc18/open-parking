@@ -94,6 +94,10 @@
     background: #762a83;
   }
 
+#details-button{
+    float: right;
+}
+
 .switch-field{
     position: fixed;
     top: 50px;
