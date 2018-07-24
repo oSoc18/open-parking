@@ -176,7 +176,9 @@ class MapContent extends Component {
         let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
         let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
         let onStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
-        let privateIcon = new ParkingIcon({ iconUrl: require('./images/parking-private.png') });
+        let privateGoodIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-good.png') });
+        let privateBadIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-bad.png') });
+        let privateAverageIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-average.png') });
 
         let main = this;
 
@@ -233,7 +235,13 @@ class MapContent extends Component {
                     mark.setIcon(onStreetIcon);
                 }
             } else {
-                mark.setIcon(privateIcon)
+                if(facility.mark === "bad"){
+                    mark.setIcon(privateBadIcon);
+                }else if(facility.mark === "average"){
+                    mark.setIcon(privateAverageIcon);
+                }else{
+                    mark.setIcon(privateGoodIcon);
+                }
             }
             markers.push(mark);
         });
