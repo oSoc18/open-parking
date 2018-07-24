@@ -16,6 +16,8 @@ class SideBar extends Component {
         this.handleVisibleFacilities = this.handleVisibleFacilities.bind(this);
         this.handleInformation = this.handleInformation.bind(this);
         this.handleExtras = this.handleExtras.bind(this);
+
+        //this.handleInformationCapacity = this.handleInformationCapacity.bind(this)
     }
 
     initFilters() {
@@ -61,6 +63,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.visibleFacilities = temp;
+        console.log(temp)
 
 
 
@@ -109,6 +112,37 @@ class SideBar extends Component {
 
 
         this.information = temp;
+
+
+
+
+        if (this.props.onChangeInformation)
+            this.props.onChangeInformation(temp)
+
+
+    }
+
+    handleInformationCapacity(event) {
+        const target = event.target;
+        const value = target.value
+        const name = target.name;
+        let temp = this.information;
+        console.log("aaaaaaaaaaaaaaaaaaaa")
+
+
+
+
+        /*var index = temp.indexOf(name);    // <-- Not supported in <IE9
+        if (index !== -1) {
+            temp.splice(index, 1);
+        }
+
+        else {
+            temp.push(name)
+        }*/
+        temp[name] = value
+        this.information = temp;
+        console.log(this.information)
 
 
 
