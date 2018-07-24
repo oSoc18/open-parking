@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from rest_framework import status
+from django.template import loader
 
 
 class DetailsView(generics.RetrieveAPIView):
