@@ -9,18 +9,6 @@ class ParkingDataSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = ParkingData
         fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
-                  'limitedAccess', 'latitude', 'longitude', 'facilityType',
-                  'country_code', 'region', 'city', 'province', 'mark', 'usage')
-
-class ParkingStaticDataSerializer(serializers.ModelSerializer):
-    """Serializer to map the Model instance into JSON format, plus the static
-    data field.
-    """
-
-    class Meta:
-        """Meta class to map serializer's fields with the model fields."""
-        model = ParkingData
-        fields = ('id', 'name', 'uuid', 'staticDataUrl', 'dynamicDataUrl',
-            'limitedAccess', 'latitude', 'longitude', 'facilityType',
-            'country_code', 'region', 'city', 'province', 'mark', 'usage',
-            'staticData')
+            'limitedAccess', 'latitude', 'longitude', 'country_code', 'region',
+            'city', 'province', 'mark', 'usage', 'accessPoints', 'capacity',
+            'tariffs', 'minimumHeightInMeters', 'openingTimes', 'contactPersons')

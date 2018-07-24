@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import $ from 'jquery';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -46,14 +46,7 @@ class MapContent extends Component {
 
     filter(markersToAdd, i) {
         let main = this;
-        if (!main.extra.includes("onStreet") && markersToAdd[i].facilityType === "onstreet") {
-            delete markersToAdd[i];
-            return;
-        }
-        if (!main.extra.includes("offStreet") && markersToAdd[i].facilityType === "offstreet") {
-            delete markersToAdd[i];
-            return;
-        }
+
         if (!main.extra.includes("noDynamic") && markersToAdd[i].dynamicDataUrl === null) {
             delete markersToAdd[i];
             return;
@@ -67,38 +60,80 @@ class MapContent extends Component {
             return;
         }
         if (markersToAdd[i].usage !== null) {
-            if (!main.vis.includes("parkAndRide") && (markersToAdd[i].usage.toLowerCase().includes("ride") || markersToAdd[i].usage.toLowerCase().includes("p en r") || markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+            if (!main.vis.includes("parkAndRide") && markersToAdd[i].usage === "park and ride") {
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("garage") && markersToAdd[i].usage.toLowerCase().includes("garage")) {
+            if (!main.vis.includes("garage") && markersToAdd[i].usage === "garage") {
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("carpool") && markersToAdd[i].usage.toLowerCase().includes("carpool")) {
+            if (!main.vis.includes("carpool") && markersToAdd[i].usage === "carpool"){
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("permit") && markersToAdd[i].usage.toLowerCase().includes("vergunning")) {
+            if (!main.vis.includes("terrain") && markersToAdd[i].usage === "terrain") {
                 delete markersToAdd[i];
                 return;
             }
-            if (!main.vis.includes("otherPlaces") && (!markersToAdd[i].usage.toLowerCase().includes("vergunning") &&
-                !markersToAdd[i].usage.toLowerCase().includes("carpool") &&
-                !markersToAdd[i].usage.toLowerCase().includes("garage") &&
-                !markersToAdd[i].usage.toLowerCase().includes("ride") &&
-                !markersToAdd[i].usage.toLowerCase().includes("p en r") &&
-                !markersToAdd[i].usage.toLowerCase().includes("p+r"))) {
+            if (!main.vis.includes("otherPlaces") && markersToAdd[i].usage === "others") {
                 delete markersToAdd[i];
                 return;
+            }
+            if (!main.vis.includes("onstreet") && markersToAdd[i].usage === "onstreet"){
+                delete markersToAdd[i];
+                return
             }
         } else if (!main.vis.includes("otherPlaces")) {
             delete markersToAdd[i];
             return;
         }
 
+        if(this.inf["capacity"] === "false"){
+            console.log("ararar")
+        }
 
+        if(this.inf["capacity"] !== undefined){
+            if((main.inf["capacity"] === "true" && markersToAdd[i].capacity === null) || (main.inf["capacity"] === "false" && markersToAdd[i].capacity !== null)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
 
+        if(this.inf["tariffs"] !== undefined){
+            if((main.inf["tariffs"] === "true" && markersToAdd[i].tariffs === false) || (main.inf["tariffs"] === "false" && markersToAdd[i].tariffs === true)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
+
+        if(this.inf["restrictions"] !== undefined){
+            if((main.inf["restrictions"] === "true" && markersToAdd[i].minimumHeightInMeters === null) || (main.inf["restrictions"] === "false" && markersToAdd[i].minimumHeightInMeters !== null)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
+
+        if(this.inf["openingTimes"] !== undefined){
+            if((main.inf["openingTimes"] === "true" && markersToAdd[i].openingTimes === false) || (main.inf["openingTimes"] === "false" && markersToAdd[i].openingTimes === true)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
+
+        if(this.inf["contactPersons"] !== undefined){
+            if((main.inf["contactPersons"] === "true" && markersToAdd[i].contactPersons === false) || (main.inf["contactPersons"] === "false" && markersToAdd[i].contactPersons === true)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
+
+        if(this.inf["accessPoints"] !== undefined){
+            if((main.inf["accessPoints"] === "true" && markersToAdd[i].accessPoints === false) || (main.inf["accessPoints"] === "false" && markersToAdd[i].accessPoints === true)){
+                delete markersToAdd[i];
+                return;
+            }
+        }
 
     }
 
@@ -113,6 +148,12 @@ class MapContent extends Component {
             return this;
         };
 
+        Array.prototype.diff = function (a) {
+            return this.filter(function (i) {
+                return a.indexOf(i) < 0;
+            });
+        };
+
         let ParkingIcon = L.Icon.extend({
             options: {
                 iconSize: [36, 36],
@@ -125,12 +166,13 @@ class MapContent extends Component {
         this.inf = this.props.filters.information;
         this.extra = this.props.filters.extras;
 
-        let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-good.png') });
-        let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
-        let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
-        let onStreetIcon = new ParkingIcon({ iconUrl: require('./images/parking-onstreet.png') });
-        let privateIcon = new ParkingIcon({ iconUrl: require('./images/parking-private.png') });
+        console.log(this.inf);
 
+        let goodIcon = new ParkingIcon({iconUrl: require('./images/parking-good.png')});
+        let averageIcon = new ParkingIcon({iconUrl: require('./images/parking-average.png')});
+        let badIcon = new ParkingIcon({iconUrl: require('./images/parking-bad.png')});
+        let onStreetIcon = new ParkingIcon({iconUrl: require('./images/parking-onstreet.png')});
+        let privateIcon = new ParkingIcon({iconUrl: require('./images/parking-private.png')});
 
         let main = this;
 
@@ -140,6 +182,10 @@ class MapContent extends Component {
             main.filter(markersToAdd, i);
         }
         markersToAdd.clean(undefined);
+
+        // let array1 = markersToAdd.map((a) => [a.latitude, a.longitude]);
+        // let array2 = cluster.getLayers().map((a) => [a._latlng.lat, a._latlng.lng]);
+        // console.log(array1.diff(array2));
 
         let markers = [];
         markersToAdd.forEach(function (facility) {
@@ -151,31 +197,32 @@ class MapContent extends Component {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
                 mark.getPopup().setContent(popup);
                 popup = "<b>" + facility.name + "</b>";
-                if (facility.facilityType === "offstreet") {
+                if (facility.usage !== "onstreet") {
                     if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
                             if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                 correct++;
-                                popup += "<br>Limited API access: " + facility.limitedAccess +
-                                    "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces +
-                                    "<br>Capacity: " + data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity;
+                                popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
                             }
                         });
                     }
-                    $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
-                        if (data.parkingFacilityInformation !== undefined) {
-                            popup += "<br>Location: " + facility.latitude + " " + facility.longitude +
-                                "<br>Tariffs: " + (data.parkingFacilityInformation.tariffs !== undefined && data.parkingFacilityInformation.tariffs.length > 0 ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-                                "<br>Opening Hours: " + (data.parkingFacilityInformation.openingTimes !== undefined && data.parkingFacilityInformation.openingTimes.length > 0 ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-                                "<br>Contact Person: " + (data.parkingFacilityInformation.contactPersons !== undefined && data.parkingFacilityInformation.contactPersons.length > 0 ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-                                "<br>Constraints: " + (facility.usage !== null && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters !== undefined && data.parkingFacilityInformation.specifications[0].minimumHeightInMeters.length !== 0 ? "Available" : "<span class='text-danger'>No parking restrictions available</span>");
+                    // $.getJSON("http://127.0.0.1:8000/parkingdata/request/staticurl/" + facility.uuid + "/", function (data) {
+                    //     if (data.parkingFacilityInformation !== undefined) {
+                    popup += "<br>Limited API access: " + facility.limitedAccess +
+                        "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+                        "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
+                        "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
+                        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters  : "<span class='text-danger'>No parking restrictions available</span>") +
+                        "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
+                        "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
+                        "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>");
 
                             mark.getPopup().setContent(popup);
-                        } else {
-                            popup += "<br>parking static data not available";
-                            mark.getPopup().setContent(popup);
-                        }
-                    });
+                    //     } else {
+                    //         popup += "<br>parking static data not available";
+                    //         mark.getPopup().setContent(popup);
+                    //     }
+                    // });
                 } else {
                     popup += "<br>This is an onstreet parking spot";
                     mark.getPopup().setContent(popup);
@@ -199,15 +246,15 @@ class MapContent extends Component {
             }
             markers.push(mark);
         });
-
         cluster.addLayers(markers);
+
 
         this.updateHeatmapPoints(markersToAdd);
     }
 
     updateHeatmapPoints(facilities) {
         if ($("#heatmap-switch input").prop("checked")) {
-            let heatPoints = { good: [], average: [], bad: [] };
+            let heatPoints = {good: [], average: [], bad: []};
             for (let i = 0; i < facilities.length; i++) {
                 if (facilities[i].mark in heatPoints) {
                     heatPoints[facilities[i].mark].push([facilities[i].latitude, facilities[i].longitude, 1]);
@@ -280,7 +327,7 @@ class MapContent extends Component {
                 blur: 15,
                 minOpacity: 0.6,
                 max: 1,
-                gradient: { 0: heatmapColors[i][1], 1: heatmapColors[i][1] }
+                gradient: {0: heatmapColors[i][1], 1: heatmapColors[i][1]}
             });
             this.heatmaps[heatmapColors[i][0]].addTo(this.map);
         }
@@ -300,9 +347,9 @@ class MapContent extends Component {
 
             <div id="mapParent">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
-                    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-                    crossorigin="" />
-                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+                      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+                      crossorigin=""/>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
 
                 <div id="search-container"></div>
 
@@ -320,15 +367,18 @@ class MapContent extends Component {
                             <img id="onstreetIcon" src={onstreetIcon} alt="icon" width="15px" height="15px"></img>
                             <span>On-street</span>
                         </div>
-                        <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in." data-tooltip-position="bottom">
+                        <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in."
+                             data-tooltip-position="bottom">
                             <div class="small-box blue"></div>
                             <span>Excellent</span>
                         </div>
-                        <div id="color-and-text" data-tooltip="3, 4 or 5 fields of 6 are filled in." data-tooltip-position="bottom">
+                        <div id="color-and-text" data-tooltip="3, 4 or 5 fields of 6 are filled in."
+                             data-tooltip-position="bottom">
                             <div class="small-box orange"></div>
                             <span>Mediocre</span>
                         </div>
-                        <div id="color-and-text" data-tooltip="Less than half the fields are filled in." data-tooltip-position="bottom">
+                        <div id="color-and-text" data-tooltip="Less than half the fields are filled in."
+                             data-tooltip-position="bottom">
                             <div class="small-box red"></div>
                             <span>Poor</span>
                         </div>
@@ -338,7 +388,7 @@ class MapContent extends Component {
                 <div className="switch-field" id="heatmap-switch">
                     <label className="heat-label">Heat view</label>
                     <div class="container" className="switch-total">
-                        <label class="switch"><input type="checkbox" />
+                        <label class="switch"><input type="checkbox"/>
                             <div></div>
                         </label>
                     </div>

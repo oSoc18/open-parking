@@ -16,13 +16,15 @@ class SideBar extends Component {
         this.handleVisibleFacilities = this.handleVisibleFacilities.bind(this);
         this.handleInformation = this.handleInformation.bind(this);
         this.handleExtras = this.handleExtras.bind(this);
+
+        //this.handleInformationCapacity = this.handleInformationCapacity.bind(this)
     }
 
     initFilters() {
         let jsn = {};
-        this.visibleFacilities = ["parkAndRide", "permit", "garage", "carpool", "otherPlaces"];
-        this.information = [] // ["capacity", "tariffs", "restrictions", "openingHours", "contactData"];
-        this.extras = ["onStreet", "offStreet", "noDynamic", "private", "public"];
+        this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
+        this.information = {}; // {"capacity": "", "tariffs": "", "restrictions": "", "openingTimes":"", "contactPersons":"", "accessPoint":""};
+        this.extras = ["noDynamic", "private", "public"];
 
     }
 
@@ -61,6 +63,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.visibleFacilities = temp;
+        console.log(temp)
 
 
 
@@ -94,24 +97,53 @@ class SideBar extends Component {
 
 
     handleInformation(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const target = event.target.children[0];
+        const value = target.value;
         const name = target.name;
         let temp = this.information;
 
+        console.log(name);
+
+        if(value !== "unknown"){
+            temp[name] = value;
+        }else {
+            delete temp[name];
+        }
+
+
+        this.information = temp;
 
 
 
-        var index = temp.indexOf(name);    // <-- Not supported in <IE9
+
+        if (this.props.onChangeInformation)
+            this.props.onChangeInformation(temp)
+
+
+    }
+
+    handleInformationCapacity(event) {
+        const target = event.target;
+        const value = target.value
+        const name = target.name;
+        let temp = this.information;
+        console.log("aaaaaaaaaaaaaaaaaaaa")
+
+
+
+
+        /*var index = temp.indexOf(name);    // <-- Not supported in <IE9
         if (index !== -1) {
             temp.splice(index, 1);
         }
 
         else {
             temp.push(name)
-        }
+        }*/
+        temp[name] = value
         this.information = temp;
-    
+        console.log(this.information)
+
 
 
 
@@ -132,6 +164,7 @@ class SideBar extends Component {
             // side bar
             // content
 
+
             <div className="sideBar">
                 <h1 className="title">Open Parking</h1>
                 <img id="logo" src={LogoImg} alt="logo" width="31" height="40"></img>
@@ -143,9 +176,9 @@ class SideBar extends Component {
                     <label for="parkAndRide">Park + Ride</label>
                 </div>
                 <div>
-                    <input class="styled-checkbox" type="checkbox" id="permit" name="permit"
-                        value="permit" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
-                    <label for="permit">Permit</label>
+                    <input class="styled-checkbox" type="checkbox" id="terrain" name="terrain"
+                        value="terrain" onChange={this.handleVisibleFacilities} defaultChecked={true}/>
+                    <label for="terrain">Terrain</label>
                 </div>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="garage" name="garage"
@@ -158,57 +191,82 @@ class SideBar extends Component {
                     <label for="carpool">Carpool</label>
                 </div>
                 <div>
+                    <input class="styled-checkbox" type="checkbox" id="onstreet" name="onstreet"
+                           value="onstreet" onChange={this.handleVisibleFacilities} defaultChecked={true} />
+                    <label for="onstreet">Onstreet</label>
+                </div>
+                <div>
                     <input class="styled-checkbox" type="checkbox" id="otherPlaces" name="otherPlaces"
                         value="otherPlaces" onChange={this.handleVisibleFacilities} defaultChecked={true} />
                     <label for="otherPlaces">Other places</label>
                 </div>
 
-                <p></p>
-
-                <button class="collapsible">Information <span id="expand_tag">&#x25BC;</span></button>
-                <div class="content">
-
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"
-                            value="capacity" onChange={this.handleInformation} />
-                        <label for="capacity">Capacity</label>
+                <h4 className="title">Information</h4>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="capacity" name="capacity"*/}
+                           {/*value="capacity" onChange={this.handleInformation}/>*/}
+                    <label for="capacity">Capacity</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="capacity" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"
-                            value="tariffs" onChange={this.handleInformation} />
-                        <label for="tariffs">Tariffs</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"
-                            value="restrictions" onChange={this.handleInformation} />
-                        <label for="restrictions">Restrictions</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="openingHours" name="openingHours"
-                            value="openingHours" onChange={this.handleInformation} />
-                        <label for="openingHours">Opening hours</label>
-                    </div>
-                    <div>
-                        <input class="styled-checkbox" type="checkbox" id="contactData" name="contactData"
-                            value="contactData" onChange={this.handleInformation} />
-                        <label for="contactData">Contact data</label>
-                    </div>
-
                 </div>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="tariffs" name="tariffs"*/}
+                           {/*value="tariffs" onChange={this.handleInformation}/>*/}
+                    <label for="tariffs">Tariffs</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="tariffs" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true" /></label>
+                    </div>
+                </div>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="restrictions" name="restrictions"*/}
+                           {/*value="restrictions" onChange={this.handleInformation}/>*/}
+                    <label for="restrictions">Restrictions</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false" /></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="restrictions" value="unknown" /></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
+                    </div>
+                </div>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="openingTimes" name="openingTimes"*/}
+                           {/*value="openingTimes" onChange={this.handleInformation}/>*/}
+                    <label for="openingTimes">Opening Times</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
+                    </div>
+                </div>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="contactPersons" name="contactPersons"*/}
+                           {/*value="contactPersons" onChange={this.handleInformation}/>*/}
+                    <label for="contactPersons">Contact Person</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
+                    </div>
+                </div>
+                <div>
+                    {/*<input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"*/}
+                           {/*value="accessPoint" onChange={this.handleInformation}/>*/}
+                    <label for="accessPoints">Access point</label>
+                    <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
+                    </div>
+                </div>
+
 
                 <h4 className="title">Extra</h4>
 
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="onStreet" name="onStreet"
-                        value="onStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="onStreet">On-street</label>
-                </div>
-                <div>
-                    <input class="styled-checkbox-extra" type="checkbox" id="offStreet" name="offStreet"
-                        value="offStreet" onChange={this.handleExtras} defaultChecked={true} />
-                    <label for="offStreet">Off-street</label>
-                </div>
-                <div data-tooltip="Get all parkings without dynamic data." data-tooltip-position="right" >
+                <div data-tooltip="Show facilities without dynamic data?" data-tooltip-position="right" >
                     <input class="styled-checkbox-extra" type="checkbox" id="noDynamic" name="noDynamic"
                         value="noDynamic" onChange={this.handleExtras} defaultChecked={true} />
                     <label for="noDynamic">No dynamic data</label>

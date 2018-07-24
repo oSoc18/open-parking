@@ -1,14 +1,14 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from .serializers import ParkingDataSerializer, ParkingStaticDataSerializer
+from .serializers import ParkingDataSerializer
 from .models import ParkingData
 import requests
 import json
+from json.decoder import JSONDecodeError
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.db.models import Q
-from django.template import loader
-import pprint
+from rest_framework import status
 
 
 class DetailsView(generics.RetrieveAPIView):
@@ -104,7 +104,7 @@ class DynamicView(generics.ListAPIView):
 class AreaView(generics.ListAPIView):
     """Gets all the parkingplaces from a specified area."""
 
-    serializer_class = ParkingStaticDataSerializer
+    serializer_class = ParkingDataSerializer
     area_level = None
 
     def get_queryset(self):
@@ -113,18 +113,59 @@ class AreaView(generics.ListAPIView):
 
 
 class NoneView(generics.ListAPIView):
-    """
-    Get all the parkingplaces without location
-    """
+    """Gets all the parkingplaces without region."""
     serializer_class = ParkingDataSerializer
 
     def get_queryset(self):
-        return ParkingData.objects.filter(Q(region__isnull=True) | Q(region__exact='')
-                                          )
+        return ParkingData.objects.filter(Q(region__isnull=True) | Q(region=""))
 
 
-def generic_summary_view(field_name, area_name, lower_field_name):
-    parkings = ParkingData.objects.filter(**{field_name: area_name})
+def create_summary_view(field_name, lower_field_name):
+    return api_view(["GET"])(
+        lambda request, area_name:
+        generic_summary_view(field_name, lower_field_name, area_name, request.GET))
+
+
+def generic_summary_view(field_name, lower_field_name, area_name, get_params):
+    usage_mapping = {
+        "parkAndRide": "park and ride",
+        "garage": "garage",
+        "carpool": "carpool",
+        "onstreet": "onstreet",
+        "terrain": "terrain",
+        "otherPlaces": "others"
+    }
+
+    fields_mapping = {
+        "capacity": ("capacity__isnull", False),
+        "tariffs": ("tariffs", True),
+        "restrictions": ("minimumHeightInMeters__gt", 0),
+        "openingTimes": ("openingTimes", True),
+        "contactPersons": ("contactPersons", True),
+        "accessPoint": ("accessPoint", True),
+        "noDynamic": ("dynamicDataUrl__isnull", True),
+        "private": ("limitedAccess", True)
+    }
+
+    possible_usages = []
+    filter_params = {field_name: area_name, "usage__in": possible_usages}
+    exclude_params = {}
+    for name, value in get_params.items():
+        if name in usage_mapping:
+            possible_usages.append(usage_mapping[name])
+        else:
+            try:
+                query_name, query_value = fields_mapping[name]
+                if json.loads(value):
+                    filter_params[query_name] = query_value
+                else:
+                    exclude_params[query_name] = query_value
+            except (KeyError, JSONDecodeError):
+                return Response({"invalid key/value pair in GET parameters":
+                                 "'{}':'{}'".format(name, value)}, status=status.HTTP_400_BAD_REQUEST)
+
+    parkings = ParkingData.objects.filter(
+        **filter_params).exclude(**exclude_params)
     areas = {}
     for parking in parkings:
         lower_field = getattr(parking, lower_field_name)
