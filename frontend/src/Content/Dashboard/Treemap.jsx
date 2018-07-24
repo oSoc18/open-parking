@@ -349,7 +349,9 @@ class Treemap extends Component {
             if (data[i].mark === "onstreet" || this.checkInformationFilters(data[i]))
                 continue
 
-            let resultJson = data[i]["staticData"]
+            let resultJson = data[i]
+            console.log("-----------------------")
+            console.log(resultJson)
 
             //generate row
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
@@ -413,7 +415,7 @@ Only show the facilities with the required stuff */
     }
      generateRow(tbody, columns, data, longitude, mark = "") {
 
-        data = JSON.parse(data)
+       // data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
         let thiss = this 
@@ -451,7 +453,7 @@ Only show the facilities with the required stuff */
                 v = this.getValueJsonResult(columns[j], data)
 
 
-                if (v && this.notEmptyArray(v)) {
+                if (v && this.notEmptyArray(v) && v !== false) {
                     classN += " validCell"  // is this field in the json?
                 }
                 else {
@@ -462,7 +464,6 @@ Only show the facilities with the required stuff */
                     .text(v)
 
             }
-
         }
 
     }
@@ -470,7 +471,9 @@ Only show the facilities with the required stuff */
 
     getValueJsonResult(key, node) {
 
-        if ((key === "capacity" || key === "minimumHeightInMeters") 
+        return node[key]
+
+        /*if ((key === "capacity" || key === "minimumHeightInMeters") 
                 && node && node["specifications"] 
                 && node["specifications"].length > 0) {
 
@@ -496,7 +499,7 @@ Only show the facilities with the required stuff */
                 console.log(e)
                 return null // not found
             }
-        }
+        }*/
     }
 }
 

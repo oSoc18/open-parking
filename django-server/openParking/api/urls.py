@@ -2,7 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import DetailsView, UuidView, RectangleView, StaticView, \
     DynamicView, AreaView, generic_summary_view, get_static_url, NoneView, \
-    create_summary_view, get_dynamic_url
+    create_summary_view, get_dynamic_url, get_html_page
 from rest_framework.decorators import api_view
 
 
@@ -53,7 +53,11 @@ urlpatterns = {
         create_summary_view("region", "province"), name="regionSummary"),
     # Summary of the province-level data: http://127.0.0.1:8000/parkingdata/summary/province/Zeeland/
     url(r'^parkingdata/summary/province/(?P<area_name>.+)/$',
-        create_summary_view("province", "city"), name="provinceSummary")
+        create_summary_view("province", "city"), name="provinceSummary"),
+
+    # get a full html page with details of the parking
+    url(r'^parkingdata/html/(?P<uuid>.+)/$',
+        get_html_page, name="html_page"),
 }
 
 

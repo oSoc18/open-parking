@@ -21,6 +21,27 @@
     height: 160px;
 }
 
+.detailButton{
+    text-decoration: none;
+    color: white;
+    margin-top: 5px;
+}
+
+.detailButton:link{
+    text-decoration: none;
+    color: white;
+    margin-top: 5px;
+
+}
+
+.detailButton:hover{
+    text-decoration: none;
+    color: white;
+    margin-top: 5px;
+
+}
+
+
 .legend-field{
 
     background: white;
