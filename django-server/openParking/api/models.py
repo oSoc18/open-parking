@@ -5,7 +5,6 @@ class ParkingData(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     uuid = models.CharField(max_length=255, blank=False, unique=True)
     staticDataUrl = models.CharField(max_length=255, blank=False)
-    staticData = models.TextField(blank=True, null=True)
     dynamicDataUrl = models.CharField(max_length=255, blank=True, null=True)
     limitedAccess = models.BooleanField()
     latitude = models.FloatField(blank=True, null=True)
