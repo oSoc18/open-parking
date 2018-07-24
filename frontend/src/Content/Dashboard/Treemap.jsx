@@ -305,7 +305,7 @@ class Treemap extends Component {
                     <h1>{breadCrums}</h1>
                     <div className="two-buttons">
                         <div id="single-button">
-                            <Button outline color="primary" onClick={this.setReset.bind(this)}>none</Button>
+                            <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
                         </div>
                         <div id="single-button">
                             {buttonZoomOut}
@@ -443,6 +443,9 @@ Only show the facilities with the required stuff */
                     .attr("class", classN)
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
+                    .append('a')
+                    .attr("href", "http://127.0.0.1:8000/parkingdata/html/" + data["uuid"] )
+                    .attr("target", "_blank")
                     .text(data[columns[j]])
                     // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
     

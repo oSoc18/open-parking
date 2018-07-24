@@ -481,8 +481,9 @@ let thiss = this
   }
 
   onDezoom(val = false) {
-    if(val === true){
+    if(val === false && this.level !== 0){
     this.level = this.level - 1
+
     }
     let prev = null
 
