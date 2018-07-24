@@ -4,7 +4,6 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import './MapContent.css';
-import onstreetIcon from './images/onstreet-legend.png';
 import privateIcon from './images/private-legend.png';
 
 
@@ -204,15 +203,20 @@ class MapContent extends Component {
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.usage !== "onstreet") {
                     if (facility.dyna !== undefined || facility.dynamicDataUrl !== null) {
-                        $.getJSON("http://127.0.0.1:8000/parkingdata/request/dynamicurl/" + facility.uuid + "/", function (data) {
-                            if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
-                                popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
-                            }
-                            popup += main.getStaticString(facility);
-                            mark.getPopup().setContent(popup);
+                        if(facility.limitedAccess === false) {
+                            $.getJSON("http://127.0.0.1:8000/parkingdata/dynamicdata/" + facility.uuid + "/", function (data) {
+                                if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
+                                    popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
+                                }
+                                popup += main.getStaticString(facility);
+                                mark.getPopup().setContent(popup);
 
-                        });
-                    }else {
+                            });
+                        }else{
+                            popup+=main.getStaticString(facility);
+                            mark.getPopup().setContent(popup);
+                        }
+                    } else {
                         popup += main.getStaticString(facility);
                         mark.getPopup().setContent(popup);
                     }
@@ -235,11 +239,11 @@ class MapContent extends Component {
                     mark.setIcon(onStreetIcon);
                 }
             } else {
-                if(facility.mark === "bad"){
+                if (facility.mark === "bad") {
                     mark.setIcon(privateBadIcon);
-                }else if(facility.mark === "average"){
+                } else if (facility.mark === "average") {
                     mark.setIcon(privateAverageIcon);
-                }else{
+                } else {
                     mark.setIcon(privateGoodIcon);
                 }
             }
@@ -251,16 +255,17 @@ class MapContent extends Component {
         this.updateHeatmapPoints(markersToAdd);
     }
 
-    getStaticString(facility){
+    getStaticString(facility) {
         return "<br>Limited API access: " + facility.limitedAccess +
-        "<br>Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-        "<br>Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'>No Capacity available</span>") +
-        "<br>Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'>No Tariffs available</span>") +
-        "<br>Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'>No parking restrictions available</span>") +
-        "<br>Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'>No opening hours available</span>") +
-        "<br>Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'>No contact persons available</span>") +
-        "<br>Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'>No Access points available</span>") +
-        "<br><a class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
+            "<br />Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
+            "<br />Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'><b>No Capacity available</b></span>") +
+            "<br />Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'><b>No Tariffs available</b></span>") +
+            "<br />Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
+            "<br />Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
+            "<br />Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
+            "<br />Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
+            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
+
     }
 
     updateHeatmapPoints(facilities) {
@@ -327,7 +332,7 @@ class MapContent extends Component {
         // There is one layer per marker color, there is no way to do it with
         // only one heatmap
         let heatmapColors = [
-            ["bad", "#d55e00"], // Vermillion
+            ["bad", "#d7191c"], // Red
             ["average", "#e69f00"], // Orange
             ["good", "#56b4e9"],  // Sky blue
         ];
@@ -366,7 +371,7 @@ class MapContent extends Component {
 
                 <div id="mapid"></div>
 
-                <div className="legend-field">
+                <div className="legend-field-map">
                     <span className="legend-label">Data availability of facilities</span>
                     <br></br>
                     <div className="legend-field-text">
@@ -375,7 +380,7 @@ class MapContent extends Component {
                             <span>private</span>
                         </div>
                         <div id="color-and-text" data-tooltip="On-street parking." data-tooltip-position="bottom">
-                            <img id="onstreetIcon" src={onstreetIcon} alt="icon" width="15px" height="15px"></img>
+                            <div class="small-box purple"></div>
                             <span>On-street</span>
                         </div>
                         <div id="color-and-text" data-tooltip="All 6 necessary fields are filled in."

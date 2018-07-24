@@ -22,6 +22,7 @@ class Treemap extends Component {
         super(props);
         this.initFieldsDict();
         this.stackedTree = []
+        this.reset = false
         this.goPrev = this.goPrev.bind(this)
         //this.root = d3.hierarchy(data);
         this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
@@ -58,15 +59,15 @@ class Treemap extends Component {
         svgGroup.selectAll("*").remove();
         let thiss = this
         var treemap = d3.treemap()
-       // treemap.tile(d3.treemapSquarify)
-       treemap.tile(d3.treemapBinary)
-       treemap.paddingOuter(5)
+        // treemap.tile(d3.treemapSquarify)
+        treemap.tile(d3.treemapBinary)
+        treemap.paddingOuter(5)
 
         let svgW = d3.select('svg').node().getBBox()
-  
+
 
         treemap.size([document.documentElement.clientWidth * .8
-            , document.documentElement.clientHeight *0.8])
+            , document.documentElement.clientHeight * 0.8])
             .paddingTop(20)
             .paddingInner(2);
 
@@ -131,12 +132,12 @@ class Treemap extends Component {
     handleMouseOverNode(obj, name, parent) {
 
         let rect = d3.select("#" + this.getId(name))
-        let text = d3.select("#" + this.getId(name) +"text")
+        let text = d3.select("#" + this.getId(name) + "text")
 
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) { //if mark is hovered 
             // handle parent
             rect = d3.select("#" + this.getId(parent.data.name))
-            text = d3.select("#" + this.getId(parent.data.name) +"text")
+            text = d3.select("#" + this.getId(parent.data.name) + "text")
         }
 
 
@@ -148,15 +149,15 @@ class Treemap extends Component {
 
     }
 
-    getId(name){
+    getId(name) {
 
-        if(name){
+        if (name) {
             return name.split("'").join("_").split(" ").join("_").split("'").join("");
 
         }
         return ""
 
-        
+
     }
 
     handleMouseOutNode(obj, name, parent) {
@@ -167,7 +168,7 @@ class Treemap extends Component {
         if (QUALITYDATA.indexOf(name) > -1 && parent !== null && parent.data !== null && parent.data.name !== null) {
             // handle parent
             rect = d3.select("#" + this.getId(parent.data.name))
-            text = d3.select("#" + this.getId(parent.data.name)+ "text")
+            text = d3.select("#" + this.getId(parent.data.name) + "text")
         }
 
 
@@ -243,14 +244,14 @@ class Treemap extends Component {
     goPrev() {
 
         if (this.props.onDezoom) {
-            this.props.onDezoom()
+            this.props.onDezoom(this.reset)
         }
 
     }
 
-    getTitleDict(str){
+    getTitleDict(str) {
 
-        if(str === "nl")
+        if (str === "nl")
             return "The Netherlands"
 
         return str
@@ -260,6 +261,7 @@ class Treemap extends Component {
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
+
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -282,7 +284,16 @@ class Treemap extends Component {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
+
+
             breadCrums = this.getTitleDict(breadCrums)
+
+            if (this.props.data.name === "region/none") {
+                this.reset = true
+            }
+            else {
+                this.reset = false
+            }
 
 
         }
@@ -294,10 +305,10 @@ class Treemap extends Component {
                     <h1>{breadCrums}</h1>
                     <div className="two-buttons">
                         <div id="single-button">
-                            <Button outline color="primary" onClick={this.setReset.bind(this)}>none</Button>
+                            {buttonZoomOut}
                         </div>
                         <div id="single-button">
-                            {buttonZoomOut}
+                            <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
                         </div>
                     </div>
                     <Legend />
@@ -350,8 +361,6 @@ class Treemap extends Component {
                 continue
 
             let resultJson = data[i]
-            console.log("-----------------------")
-            console.log(resultJson)
 
             //generate row
             this.generateRow(tbody, column, resultJson, data[i]["longitude"], data[i].mark)
@@ -360,16 +369,16 @@ class Treemap extends Component {
 
     }
 
-/**
-Only show the facilities with the required stuff */
+    /**
+    Only show the facilities with the required stuff */
     checkInformationFilters(node) {
         let required = this.props.filters.information
 
-        if(required && required.length > 0){ //check if all checked are included 
+        if (required && required.length > 0) { //check if all checked are included 
 
-            for(let i = 0; i < required.length; i++){
+            for (let i = 0; i < required.length; i++) {
 
-                if(["capacity", "minimumHeightInMeters"].indexOf(required[i]) > -1){// special treatment
+                if (["capacity", "minimumHeightInMeters"].indexOf(required[i]) > -1) {// special treatment
                     // if empty return true
                 }
             }
@@ -382,61 +391,64 @@ Only show the facilities with the required stuff */
 
     }
 
-    setReset(){
+    setReset() {
 
-        if(this.props.setReset){
+        if (this.props.setReset) {
             this.props.setReset();
         }
     }
 
-    handleMouseOverTd(inp, d){
+    handleMouseOverTd(inp, d) {
         var div = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 1)
-        .style("left", (d.y+120) + "px")
-        .style("top", (d.x-20) + "px")
-        .html(
-			"<div>" + inp + "</div>"
-		);
-
-    }
-
-    createTextTool(text){
- 
-    /*    var div = d3.select("body").append("div").html(text)
             .attr("class", "tooltip")
             .style("opacity", 1)
-            .style("left", (d.y+120) + "px")
-            .style("top", (d.x-20) + "px")
-		
+            .style("left", (d.y + 120) + "px")
+            .style("top", (d.x - 20) + "px")
+            .html(
+                "<div>" + inp + "</div>"
+            );
 
-
-    return  div*/
     }
-     generateRow(tbody, columns, data, longitude, mark = "") {
 
-       // data = JSON.parse(data)
+    createTextTool(text) {
+
+        /*    var div = d3.select("body").append("div").html(text)
+                .attr("class", "tooltip")
+                .style("opacity", 1)
+                .style("left", (d.y+120) + "px")
+                .style("top", (d.x-20) + "px")
+        	
+    
+    
+        return  div*/
+    }
+    generateRow(tbody, columns, data, longitude, mark = "") {
+
+        // data = JSON.parse(data)
         let tr = tbody.append('tr')
         let v = ""
-        let thiss = this 
+        let thiss = this
 
-        if(!data){
+        if (!data) {
             return
         }
 
         for (let j = 0; j < columns.length; j++) {
             let classN = ""
             if (columns[j] === "name") {
-                
+
                 classN += " heatCellName"//normal cell
                 classN += " nameBorder" + mark
                 tr.append('td')
                     .attr("class", classN)
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
+                    .append('a')
+                    .attr("href", "http://127.0.0.1:8000/parkingdata/html/" + data["uuid"])
+                    .attr("target", "_blank")
                     .text(data[columns[j]])
-                    // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
-    
+                // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
+
 
             }
             else if (columns[j] === "longitude") {

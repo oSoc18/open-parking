@@ -150,6 +150,7 @@ class Dashboard extends Component {
   componentWillReceiveProps(nextProps){
 
     let name = this.state.treemapData["name"]
+
     let levelIndex = this.level
     let level =  levels[levelIndex] + "/"
     let summaryStr = this.level === 3 ? "" : "summary/"
@@ -157,12 +158,12 @@ class Dashboard extends Component {
     let sub = level  + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
 
-    console.log(url)
 let thiss = this
     fetch(url)
     .then(response => response.json())
     .then(json => {
 
+  
       //this.handleFilters is not used until a solution is found
       //json = thiss.filterEntries(json)
       thiss.setTreeMap(json, city)
@@ -189,12 +190,11 @@ let thiss = this
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
-    console.log(url)
+
     let thiss = this
     fetch(url)
       .then(response => response.json())
       .then(json => {
-
         //this.handleFilters is not used until a solution is found
         //json = thiss.filterEntries(json)
         thiss.setTreeMap(json, city)
@@ -208,6 +208,13 @@ let thiss = this
 
       for(let visF of this.props.filters.visFacilities){
         params += "&" + visF + "=true"
+      }
+    }
+
+
+    if(this.props.filters.information){ 
+      for(let key in this.props.filters.information){
+        params += "&" + key + "=" + this.props.filters.information[key]
       }
     }
     
@@ -225,7 +232,7 @@ let thiss = this
 
   filterEntries(parkings) {
     
-    let newParkings = parkings
+  /*  let newParkings = parkings
 
     let city = parkings["name"]
     if (this.level === LEVEL_ENUM.city) {
@@ -242,8 +249,8 @@ let thiss = this
       newParkings["name"] = city
       
 
-    }
-    return newParkings
+    }*/
+    return parkings
   }
 
   allFieldsIncluded(parking) {
@@ -473,12 +480,17 @@ let thiss = this
     return this.state.treemapData
   }
 
-  onDezoom(val = 1) {
-    this.level = this.level - val
+  onDezoom(val = false) {
+    if(val === false && this.level !== 0){
+    this.level = this.level - 1
+
+    }
     let prev = null
 
-    if (this.noLocation) {
-      this.level = 0; // back to whole overview
+    
+
+    if (val === true) {
+      this.level = this.state.stackedTree.length - 1; // back to whole overview
     }
 
 

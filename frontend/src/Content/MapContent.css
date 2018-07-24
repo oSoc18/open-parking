@@ -54,7 +54,7 @@
     text-align: left;
 }
 
-.legend-field .legend-label{
+.legend-label{
     margin: 5px;
     font-weight: bold;
     font-family: 'Montserrat', Helvetica, sans-serif;
@@ -90,7 +90,13 @@
     background: #d7191c;
   }
 
+  .purple {
+    background: #762a83;
+  }
 
+#details-button{
+    float: right;
+}
 
 .switch-field{
     position: fixed;

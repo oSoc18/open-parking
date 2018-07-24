@@ -4,6 +4,20 @@
     position: fixed;
     top: 60px;
     right: 20px;
+    float: right;
+    z-index: 400;
+    width: 310px;
+    height: 50px;
+    text-align: left;
+}
+
+.legend-field-map{
+
+    background: white;
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    float: right;
     z-index: 400;
     width: 510px;
     height: 50px;
@@ -44,6 +58,10 @@
   
   .red {
     background: #d7191c;
+  }
+
+  .purple {
+    background: #762a83;
   }
 
   /* Tooltip styling */
