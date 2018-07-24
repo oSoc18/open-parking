@@ -200,7 +200,7 @@ class SideBar extends Component {
                 </div>
 
                 <h4 className="title">Information</h4>
-                <div>
+                <div class="three-states-group">
                     <label for="capacity">Capacity</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
@@ -208,7 +208,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     <label for="tariffs">Tariffs</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
@@ -216,7 +216,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true" /></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     <label for="restrictions">Restrictions</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false" /></label>
@@ -224,7 +224,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     <label for="openingTimes">Opening Times</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
@@ -232,7 +232,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     <label for="contactPersons">Contact Person</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
@@ -240,7 +240,7 @@ class SideBar extends Component {
                         <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
                     </div>
                 </div>
-                <div>
+                <div class="three-states-group">
                     <label for="accessPoints">Access point</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>

@@ -144,7 +144,7 @@ def generic_summary_view(field_name, lower_field_name, area_name, get_params):
         "openingTimes": ("openingTimes", True),
         "contactPersons": ("contactPersons", True),
         "accessPoint": ("accessPoint", True),
-        "noDynamic": ("dynamicDataUrl__isnull", True),
+        "dynamic": ("dynamicDataUrl__isnull", False),
         "private": ("limitedAccess", True)
     }
 
