@@ -167,7 +167,7 @@ class SideBar extends Component {
                 <h1 className="title">Open Parking</h1>
                 <img id="logo" src={LogoImg} alt="logo" width="31" height="40"></img>
                 <hr></hr>
-                <h4 className="title">Visible facilities</h4>
+                <h4 className="title">Facility Types</h4>
                 <div>
                     <input class="styled-checkbox" type="checkbox" id="parkAndRide" name="parkAndRide"
                         value="parkAndRide" onChange={this.handleVisibleFacilities} defaultChecked={true} />
@@ -199,7 +199,7 @@ class SideBar extends Component {
                     <label for="otherPlaces">Other places</label>
                 </div>
 
-                <h4 className="title">Information</h4>
+                <h4 className="title">Filter Information</h4>
                 <div class="text-right">
                     <span class="faicons" data-tooltip="Remove data with unavailable attribute" data-tooltip-position="top"><i class="fa fa-times"></i></span>
                     <span class="faicons" data-tooltip="Show all data" data-tooltip-position="top"><i class="fa fa-minus"></i></span>
@@ -262,7 +262,7 @@ class SideBar extends Component {
                     </div>
                 </div>
 
-                <h4 className="title">Extra</h4>
+                <h4 className="title">Ownership</h4>
 
                 <div>
                     <input class="styled-checkbox-extra" type="checkbox" id="private" name="private"
