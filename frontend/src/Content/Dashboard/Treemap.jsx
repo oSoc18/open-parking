@@ -33,7 +33,7 @@ class Treemap extends Component {
         fieldsDict["longitude"] = "location"
         fieldsDict["tariffs"] = "tarrifs"
         fieldsDict["contactPersons"] = "Contacts"
-        fieldsDict["minimumHeightInMeters"] = "Height restrict. (m)"
+        fieldsDict["minimumHeightInMeters"] = "Height restrict. "
         fieldsDict["capacity"] = "max capacity"
         fieldsDict["openingTimes"] = "opening times"
 
@@ -263,7 +263,7 @@ class Treemap extends Component {
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
-
+        let noButton = null
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -282,10 +282,11 @@ class Treemap extends Component {
                 breadCrums = this.props.data.name
             }
 
-            if (breadCrums !== "Loading data..." && this.props.level > 0) {
+            if (breadCrums !== "Loading data..." && this.props.level > 0 ) {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
+          
 
 
             breadCrums = this.getTitleDict(breadCrums)
@@ -295,6 +296,10 @@ class Treemap extends Component {
             }
             else {
                 this.reset = false
+            }
+
+            if(this.reset !== true){
+                noButton = <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
             }
 
 
@@ -310,7 +315,7 @@ class Treemap extends Component {
                             {buttonZoomOut}
                         </div>
                         <div id="single-button">
-                            <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
+                            { noButton}
                         </div>
                     </div>
                     <Legend />

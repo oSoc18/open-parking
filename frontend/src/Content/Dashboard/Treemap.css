@@ -67,7 +67,7 @@ svg.TreemapData {
 
 .heatMap .table {
    width: 0;
-   max-width: 100%;
+   max-width: 775px;
 }
 
 .table td {
@@ -88,7 +88,7 @@ svg.TreemapData {
 .table .validCell{
     background-color: rgb(86, 180, 233);
     padding: 3px !important;
-    width: 100px;
+    width:100px;
 }
 
 .table .heatCellName {
@@ -96,6 +96,14 @@ svg.TreemapData {
     width: 150px;
     white-space: nowrap; text-overflow:ellipsis; overflow: hidden;
 
+}
+
+.table {
+
+    padding-top: 10px;
+    width: 765px !important;
+    display: block;
+    
 }
 
 thead, tbody, tr, td, th { display: block; }
@@ -184,8 +192,9 @@ div.tooltip {
 .two-buttons{
     position: fixed;
     top: 70px;
-    right: 400px;
+    right: 330px;
     z-index: 400;
+    float: right;
     height: 50px;
     text-align: left;
 }
@@ -193,6 +202,10 @@ div.tooltip {
 #single-button{
     float: left;
     margin-right: 20px;
+}
+
+thead{
+    margin-top: 69px;
 }
 
 .titel-tabel{
