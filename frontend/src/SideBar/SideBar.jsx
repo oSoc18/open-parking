@@ -16,12 +16,14 @@ class SideBar extends Component {
         this.handleVisibleFacilities = this.handleVisibleFacilities.bind(this);
         this.handleInformation = this.handleInformation.bind(this);
         this.handleExtras = this.handleExtras.bind(this);
+
+        //this.handleInformationCapacity = this.handleInformationCapacity.bind(this)
     }
 
     initFilters() {
         let jsn = {};
         this.visibleFacilities = ["parkAndRide", "terrain", "garage", "carpool", "onstreet", "otherPlaces"];
-        this.information = ["capacity", "tariffs", "restrictions", "openingTimes", "contactPersons", "accessPoint"]; // ["capacity", "tariffs", "restrictions", "openingTimes", "contactPersons"];
+        this.information = {}; // {"capacity": "", "tariffs": "", "restrictions": "", "openingTimes":"", "contactPersons":"", "accessPoint":""};
         this.extras = ["noDynamic", "private", "public"];
 
     }
@@ -61,6 +63,7 @@ class SideBar extends Component {
             temp.push(name)
         }
         this.visibleFacilities = temp;
+        console.log(temp)
 
 
 
@@ -94,23 +97,52 @@ class SideBar extends Component {
 
 
     handleInformation(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const target = event.target.children[0];
+        const value = target.value;
         const name = target.name;
         let temp = this.information;
 
+        console.log(name);
+
+        if(value !== "unknown"){
+            temp[name] = value;
+        }else {
+            delete temp[name];
+        }
+
+
+        this.information = temp;
 
 
 
-        var index = temp.indexOf(name);    // <-- Not supported in <IE9
+
+        if (this.props.onChangeInformation)
+            this.props.onChangeInformation(temp)
+
+
+    }
+
+    handleInformationCapacity(event) {
+        const target = event.target;
+        const value = target.value
+        const name = target.name;
+        let temp = this.information;
+        console.log("aaaaaaaaaaaaaaaaaaaa")
+
+
+
+
+        /*var index = temp.indexOf(name);    // <-- Not supported in <IE9
         if (index !== -1) {
             temp.splice(index, 1);
         }
 
         else {
             temp.push(name)
-        }
+        }*/
+        temp[name] = value
         this.information = temp;
+        console.log(this.information)
 
 
 
@@ -175,9 +207,9 @@ class SideBar extends Component {
                            {/*value="capacity" onChange={this.handleInformation}/>*/}
                     <label for="capacity">Capacity</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="capacity" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="capacity" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="capacity" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="capacity" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
                 </div>
                 <div>
@@ -185,9 +217,9 @@ class SideBar extends Component {
                            {/*value="tariffs" onChange={this.handleInformation}/>*/}
                     <label for="tariffs">Tariffs</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="tariffs" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="tariffs" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="tariffs" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="tariffs" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true" /></label>
                     </div>
                 </div>
                 <div>
@@ -195,9 +227,9 @@ class SideBar extends Component {
                            {/*value="restrictions" onChange={this.handleInformation}/>*/}
                     <label for="restrictions">Restrictions</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="restrictions" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="restrictions" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="restrictions" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false" /></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="restrictions" value="unknown" /></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
                     </div>
                 </div>
                 <div>
@@ -205,9 +237,9 @@ class SideBar extends Component {
                            {/*value="openingTimes" onChange={this.handleInformation}/>*/}
                     <label for="openingTimes">Opening Times</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="openingTimes" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="openingTimes" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="openingTimes" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
                     </div>
                 </div>
                 <div>
@@ -215,19 +247,19 @@ class SideBar extends Component {
                            {/*value="contactPersons" onChange={this.handleInformation}/>*/}
                     <label for="contactPersons">Contact Person</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="contactPersons" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="contactPersons" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="contactPersons" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
                     </div>
                 </div>
                 <div>
                     {/*<input class="styled-checkbox" type="checkbox" id="accessPoint" name="accessPoint"*/}
                            {/*value="accessPoint" onChange={this.handleInformation}/>*/}
-                    <label for="accessPoint">Access point</label>
+                    <label for="accessPoints">Access point</label>
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
-                        <label class="btn btn-danger ml-2 mr-2 p-2"><input type="radio" name="accessPoint" autocomplete="off"/></label>
-                        <label class="btn btn-secondary ml-2 mr-2 p-2 active"><input type="radio" name="accessPoint" autocomplete="off" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2"><input type="radio" name="accessPoint" autocomplete="off"/></label>
+                        <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>
+                        <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="unknown" checked/></label>
+                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
                     </div>
                 </div>
 
