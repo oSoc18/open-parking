@@ -194,7 +194,27 @@ for filename in file_list:
     output_json.append({"model": "api.parkingdata",
                         "pk": pk, "fields": fields})
     pk += 1
-    print(pk)
+
+output_json.append({"model": "api.parkingdata", "pk": pk, "fields": {
+    "name": "Oy mate, what are you doing here?",
+    "uuid": "abcdef",
+    "staticDataUrl": "www.google.com",
+    "dynamicDataUrl": "maps.google.com",
+    "limitedAccess": True,
+    "latitude": -27.116667,
+    "longitude": -109.366667,
+    "city": "Somewhere",
+    "province": "Lost",
+    "region": "In the Pacific",
+    "country_code": "m8",
+    "usage": "garage",
+    "accessPoints": True,
+    "capacity": 42,
+    "tariffs": True,
+    "minimumHeightInMeters": 3.1415,
+    "openingTimes": True,
+    "contactPersons": True
+}})
 
 print("Write data to {}...".format(output_filename))
 with open(output_filename, "w") as file:
