@@ -56,6 +56,7 @@ svg.TreemapData {
 .table th{
     padding: 3px !important;
     width: 100px;
+
 }
 
 .nameCell th {
@@ -101,9 +102,18 @@ svg.TreemapData {
 .table {
 
     padding-top: 10px;
-    width: 765px !important;
+    width: 865px !important;
     display: block;
     
+    
+}
+
+.table .inactive {
+    height: 0;
+}
+
+.table .active{
+    height: 78vh;
 }
 
 thead, tbody, tr, td, th { display: block; }

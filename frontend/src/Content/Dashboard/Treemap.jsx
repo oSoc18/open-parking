@@ -25,17 +25,18 @@ class Treemap extends Component {
         this.reset = false
         this.goPrev = this.goPrev.bind(this)
         //this.root = d3.hierarchy(data);
-        this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
+        this.requiredAttr = ["accessPoints", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes", "dynamicDataUrl"]
 
     }
 
     initFieldsDict() {
-        fieldsDict["longitude"] = "location"
+        fieldsDict["accessPoints"] = "Access point"
         fieldsDict["tariffs"] = "tarrifs"
         fieldsDict["contactPersons"] = "Contacts"
         fieldsDict["minimumHeightInMeters"] = "Height restrict. "
         fieldsDict["capacity"] = "max capacity"
         fieldsDict["openingTimes"] = "opening times"
+        fieldsDict["dynamicDataUrl"] = "Dynamic Url"
 
     }
 
@@ -264,6 +265,7 @@ class Treemap extends Component {
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
         let noButton = null
+        let active = this.level === 3 ? "active" : "inactive"
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -321,7 +323,7 @@ class Treemap extends Component {
                     <Legend />
                 </div>
 
-                <div className="dashboard-table">
+                <div className="dashboard-table {active}">
                     <Table className="heatMap" width={0} />
                 </div>
 
@@ -478,6 +480,11 @@ class Treemap extends Component {
                 else {
                     classN += " invalidCell"  // is this field in the json?
                 }
+
+                if(columns[j] === "dynamicDataUrl" && classN === "validCell"){
+                    v = "<a href='" + v + "'>" + "Available" + "</a>"
+                }
+
                 tr.append('td')
                     .attr("class", classN)
                     .text(v)
