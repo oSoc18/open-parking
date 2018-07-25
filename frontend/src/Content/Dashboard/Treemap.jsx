@@ -125,8 +125,11 @@ class Treemap extends Component {
                     }
                     return dataname;
                 }
-                else
-                    return ""
+                else{
+                    let value = d.data.value !== 0 ? d.data.value : ""
+                    
+                    return "" + value
+                }
             })
     }
 
