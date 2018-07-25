@@ -456,7 +456,7 @@ class Treemap extends Component {
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
                     .append('a')
-                    .attr("href", "http://127.0.0.1:8000/parkingdata/html/" + data["uuid"])
+                    .attr("href", "http://api.openparking.nl/parkingdata/html/" + data["uuid"])
                     .attr("target", "_blank")
                     .text(data[columns[j]])
                 // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})

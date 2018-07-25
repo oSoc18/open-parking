@@ -115,7 +115,7 @@ class Dashboard extends Component {
         let resultJson = null
         classN += " heatCell"//colored heatcell
         // get json 
-         fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/" + node["uuid"])
+         fetch(/*node["staticDataUrl"]*/ "http://api.openparking.nl/parkingdata/request/staticurl/" + node["uuid"])
           .then(response => response.json())
           .then(json => {
             resultJson = json
@@ -158,7 +158,7 @@ class Dashboard extends Component {
         let summaryStr = this.level === 3 ? "" : "summary/"
         let city = this.level === 3 ? name : null // no summary of city
         let sub = level  + name
-        let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+        let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
         console.log(url)
     
     let thiss = this
@@ -186,7 +186,7 @@ class Dashboard extends Component {
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
 
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
 
 
 let thiss = this
@@ -221,7 +221,7 @@ let thiss = this
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
   
     this.currentName = summaryStr + sub
     let thiss = this
@@ -361,7 +361,7 @@ let thiss = this
     let allP = []
 
     for (let i = 1; i < 0; i++) {
-      let url = "http://localhost:8000/parkingdata"
+      let url = "http://api.openparking.nl/parkingdata"
       let resultJson = null
       url += "/id/" + i + "?format=json"
       await fetch(url)
@@ -414,7 +414,7 @@ let thiss = this
     
     
         let thiss = this
-        let url = "http://localhost:8000/parkingdata/" + req + "?" + this.getParameters()
+        let url = "http://api.openparking.nl/parkingdata/" + req + "?" + this.getParameters()
         let resultJson = null
         fetch(url)
           .then(response => response.json())
@@ -434,7 +434,7 @@ let thiss = this
 
 
     let thiss = this
-    let url = "http://localhost:8000/parkingdata/summary/country/nl/" + "?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/summary/country/nl/" + "?" + this.getParameters()
     let resultJson = null
     fetch(url)
       .then(response => response.json())
@@ -446,7 +446,7 @@ let thiss = this
   }
 
   handleFilters(json) {
-    let url = "http://localhost:8000/parkingdata/country/nl/" + "?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/country/nl/" + "?" + this.getParameters()
     let thiss = this
 
     fetch(url)
@@ -562,7 +562,7 @@ let thiss = this
     if (this.state.stackedTree.length > 0) {
       let temp = this.state.stackedTree
       prev = temp.pop()
-      let url = "http://localhost:8000/parkingdata/" + prev + "/?" + this.getParameters()
+      let url = "http://api.openparking.nl/parkingdata/" + prev + "/?" + this.getParameters()
       let thiss = this
       console.log(url)
       this.currentName = prev
