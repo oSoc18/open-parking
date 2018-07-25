@@ -148,7 +148,35 @@ class Dashboard extends Component {
     return (v !== "[]")
   }
 
-  componentWillReceiveProps(nextProps){
+  /*componentDidUpdate(){
+
+
+    let name = this.state.treemapData["name"]
+    
+        let levelIndex = this.level
+        let level =  levels[levelIndex] + "/"
+        let summaryStr = this.level === 3 ? "" : "summary/"
+        let city = this.level === 3 ? name : null // no summary of city
+        let sub = level  + name
+        let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+        console.log(url)
+    
+    let thiss = this
+        fetch(url)
+        .then(response => response.json())
+        .then(json => {
+    
+      
+          //this.handleFilters is not used until a solution is found
+          //json = thiss.filterEntries(json)
+          thiss.setTreeMap(json, city)
+        })
+  }*/
+  componentDidUpdate(nextProps){
+
+    if(this.props === nextProps)
+      return
+
 
     let name = this.state.treemapData["name"]
 
@@ -157,7 +185,9 @@ class Dashboard extends Component {
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
+
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+
 
 let thiss = this
     fetch(url)
@@ -330,6 +360,7 @@ let thiss = this
 
   }
 
+  
   generateTable() {
     return
     var table = d3.select('.heatMap')
