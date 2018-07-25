@@ -9,14 +9,10 @@ import privateIcon from './images/private-legend.png';
 
 class MapContent extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-
     componentWillReceiveProps(nextProps) {
         let main = this;
         if (nextProps.filters !== this.props.filters) {
-            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + this.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+            $.getJSON("http://api.openparking.nl/parkingdata/rectangle/" + this.map.getBounds().toBBoxString() + "/?format=json", function (json) {
                 let facilities = json;
                 main.filterMarkers(facilities, main.cluster);
             });
@@ -24,12 +20,6 @@ class MapContent extends Component {
         }
     }
 
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.filters !== this.props.filters) {
-            // this.filterMarkers(this.facilities, this.cluster)
-        }
-    }
 
     renderMap() {
         let map = L.map('mapid', {
@@ -46,6 +36,7 @@ class MapContent extends Component {
     filter(markersToAdd, i) {
         let main = this;
 
+        //Ownership filters
         if (!main.extra.includes("private") && markersToAdd[i].limitedAccess === true) {
             delete markersToAdd[i];
             return;
@@ -54,6 +45,7 @@ class MapContent extends Component {
             delete markersToAdd[i];
             return;
         }
+        //Facility type filters
         if (markersToAdd[i].usage !== null) {
             if (!main.vis.includes("parkAndRide") && markersToAdd[i].usage === "park and ride") {
                 delete markersToAdd[i];
@@ -84,6 +76,7 @@ class MapContent extends Component {
             return;
         }
 
+        //information filters
         if (this.inf["capacity"] === "false") {
             console.log("ararar")
         }
@@ -141,6 +134,7 @@ class MapContent extends Component {
     }
 
     filterMarkers(facilities, cluster) {
+        //Array prototype additions
         Array.prototype.clean = function (deleteValue) {
             for (let i = 0; i < this.length; i++) {
                 if (this[i] === deleteValue) {
@@ -150,13 +144,13 @@ class MapContent extends Component {
             }
             return this;
         };
-
         Array.prototype.diff = function (a) {
             return this.filter(function (i) {
                 return a.indexOf(i) < 0;
             });
         };
 
+        //instantiate icons
         let ParkingIcon = L.Icon.extend({
             options: {
                 iconSize: [36, 36],
@@ -164,13 +158,6 @@ class MapContent extends Component {
                 popupAnchor: [0, -36]
             }
         });
-
-        this.vis = this.props.filters.visFacilities;
-        this.inf = this.props.filters.information;
-        this.extra = this.props.filters.extras;
-
-        console.log(this.inf);
-
         let goodIcon = new ParkingIcon({ iconUrl: require('./images/parking-good.png') });
         let averageIcon = new ParkingIcon({ iconUrl: require('./images/parking-average.png') });
         let badIcon = new ParkingIcon({ iconUrl: require('./images/parking-bad.png') });
@@ -178,6 +165,11 @@ class MapContent extends Component {
         let privateGoodIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-good.png') });
         let privateBadIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-bad.png') });
         let privateAverageIcon = new ParkingIcon({ iconUrl: require('./images/parking-private-average.png') });
+
+        //get variables of filters
+        this.vis = this.props.filters.visFacilities;
+        this.inf = this.props.filters.information;
+        this.extra = this.props.filters.extras;
 
         let main = this;
 
@@ -188,29 +180,25 @@ class MapContent extends Component {
         }
         markersToAdd.clean(undefined);
 
-        // let array1 = markersToAdd.map((a) => [a.latitude, a.longitude]);
-        // let array2 = cluster.getLayers().map((a) => [a._latlng.lat, a._latlng.lng]);
-        // console.log(array1.diff(array2));
-
         let markers = [];
         markersToAdd.forEach(function (facility) {
             let mark = L.marker([facility.latitude, facility.longitude]);
+            //set popup text
             mark.bindPopup();
-
             mark.on("popupopen", function () {
                 let popup = "<b>" + facility.name + "</b><br>Loading data...";
                 mark.getPopup().setContent(popup);
+
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.usage !== "onstreet") {
-                    if (facility.dyna !== undefined || facility.dynamicDataUrl !== null) {
+                    if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
                         if(facility.limitedAccess === false) {
-                            $.getJSON("http://127.0.0.1:8000/parkingdata/dynamicdata/" + facility.uuid + "/", function (data) {
+                            $.getJSON("http://api.openparking.nl/parkingdata/dynamicdata/" + facility.uuid + "/", function (data) {
                                 if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
                                     popup += "<br>Vacant spaces: " + data.parkingFacilityDynamicInformation.facilityActualStatus.vacantSpaces;
                                 }
                                 popup += main.getStaticString(facility);
                                 mark.getPopup().setContent(popup);
-
                             });
                         }else{
                             popup+=main.getStaticString(facility);
@@ -226,6 +214,7 @@ class MapContent extends Component {
 
                 }
             });
+            //set the icon
             if (facility.limitedAccess === false) {
                 if (facility.mark !== "onstreet") {
                     if (facility.mark === "bad") {
@@ -247,8 +236,10 @@ class MapContent extends Component {
                     mark.setIcon(privateGoodIcon);
                 }
             }
+            //add markers to array
             markers.push(mark);
         });
+        //add array to cluster
         cluster.addLayers(markers);
 
 
@@ -264,7 +255,7 @@ class MapContent extends Component {
             "<br />Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
             "<br />Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
             "<br />Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
-            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://127.0.0.1:8000/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
+            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://api.openparking.nl/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
 
     }
 
@@ -284,8 +275,6 @@ class MapContent extends Component {
     }
 
     componentDidMount() {
-
-        this.loaded = true;
         this.map = this.renderMap();
         let main = this;
         let facilities = [];
@@ -297,7 +286,7 @@ class MapContent extends Component {
         $("#layers div input").prop("checked", true);
 
 
-        $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+        $.getJSON("http://api.openparking.nl/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
             facilities = json;
             main.filterMarkers(facilities, cluster);
 
@@ -305,7 +294,7 @@ class MapContent extends Component {
 
 
         this.map.on("moveend", function () {
-            $.getJSON("http://127.0.0.1:8000/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
+            $.getJSON("http://api.openparking.nl/parkingdata/rectangle/" + main.map.getBounds().toBBoxString() + "/?format=json", function (json) {
 
                 facilities = json;
                 main.filterMarkers(facilities, cluster);
