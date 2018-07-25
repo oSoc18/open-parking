@@ -210,7 +210,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2"  onClick={this.handleInformation}><input type="radio" name="capacity" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active"   onClick={this.handleInformation}><input type="radio" name="capacity" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="capacity" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -218,7 +218,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="tariffs" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="tariffs" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -226,7 +226,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="restrictions" value="unknown"/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="restrictions" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -234,7 +234,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="openingTimes" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -242,7 +242,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="contactPersons" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -250,7 +250,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" data-tooltip-position="top" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="accessPoints" value="true"/></label>
                     </div>
                 </div>
                 <div class="three-states-group">
@@ -258,7 +258,7 @@ class SideBar extends Component {
                     <div class="btn-group-sm btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-danger ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="false"/></label>
                         <label class="btn btn-secondary ml-2 mr-2 p-2 active" onClick={this.handleInformation}><input type="radio" name="dynamic" value="unknown" checked/></label>
-                        <label class="btn btn-success ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="true"/></label>
+                        <label class="btn btn-info ml-2 mr-2 p-2" onClick={this.handleInformation}><input type="radio" name="dynamic" value="true"/></label>
                     </div>
                 </div>
 
