@@ -164,7 +164,7 @@ class Dashboard extends Component {
     let thiss = this
         fetch(url)
         .then(response => response.json())
-        .then(json => {
+        .then(json => { 
     
       
           //this.handleFilters is not used until a solution is found
@@ -197,6 +197,7 @@ let thiss = this
   
       //this.handleFilters is not used until a solution is found
       //json = thiss.filterEntries(json)
+      console.log(" json " + JSON.stringify(json))
       thiss.setTreeMap(json, city)
     })
   }
@@ -264,8 +265,23 @@ let thiss = this
 
   filterEntries(parkings) {
     
+    let newParkings = parkings
+  if(this.level !== 4){
+    newParkings = parkings["children"].filter(parking => { 
+
+      let notEmpty = false
+      for(let i = 0; i < parking["children"].length; i++){
+        if(parking["children"][i] === 0){
+          return true
+        }
+      }
+      return false
+    })
+  }
   /*  let newParkings = parkings
 
+  if(this.level !=== 4)
+  let newParkings = parkings.filter(parking )
     let city = parkings["name"]
     if (this.level === LEVEL_ENUM.city) {
       //foreach filter
@@ -553,7 +569,6 @@ let thiss = this
       fetch(url)
         .then(response => response.json())
         .then(json => {
-          console.log(json)
           //this.handleFilters is not used until a solution is found
           //json = thiss.filterEntries(json)
           //thiss.setTreeMap(json, city)
