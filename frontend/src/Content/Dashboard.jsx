@@ -68,6 +68,7 @@ class Dashboard extends Component {
 
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
     this.state = ({ level: 0, treemapData: null, stackedTree: [] })  // default = land
+    this.currentName = "summary/country/nl"
   }
 
   componentDidMount() {
@@ -175,7 +176,7 @@ let thiss = this
 
 
     let tempHistory = this.state.stackedTree
-    tempHistory.push(this.state.treemapData)
+ 
 
     if (forceLevel) {
       this.level = 3
@@ -185,12 +186,13 @@ let thiss = this
     if("region/none" === name){
         level = ""
     } 
-
+    tempHistory.push(this.currentName)
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
     let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
-
+  
+    this.currentName = summaryStr + sub
     let thiss = this
     fetch(url)
       .then(response => response.json())
@@ -361,6 +363,21 @@ let thiss = this
     }
   }
 
+  setNodesTreemapZoom(req) {
+    
+    
+        let thiss = this
+        let url = "http://localhost:8000/parkingdata/" + req + "?" + this.getParameters()
+        let resultJson = null
+        fetch(url)
+          .then(response => response.json())
+          .then(json => {
+            // json = thiss.handleFilters(json)
+            thiss.setTreeMap(json)
+          })
+    
+      }
+
   getTreemapNode() { }
 
   /**
@@ -455,7 +472,7 @@ let thiss = this
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
     let getTable = this.getTable()
-
+    console.log(this.state.stackedTree)
     return (
 
 
@@ -481,7 +498,7 @@ let thiss = this
   }
 
   onDezoom(val = false) {
-    if(val === false && this.level !== 0){
+    if(val === false && this.level !== 0){ // only lower level if level > 0
     this.level = this.level - 1
 
     }
@@ -493,14 +510,28 @@ let thiss = this
       this.level = this.state.stackedTree.length - 1; // back to whole overview
     }
 
+    
 
     if (this.state.stackedTree.length > 0) {
       let temp = this.state.stackedTree
       prev = temp.pop()
-      this.setState({
-        treemapData: prev,
-        stackedTree: temp
-      })
+      let url = "http://localhost:8000/parkingdata/" + prev + "/?" + this.getParameters()
+      let thiss = this
+      console.log(url)
+      this.currentName = prev
+      fetch(url)
+        .then(response => response.json())
+        .then(json => {
+          console.log(json)
+          //this.handleFilters is not used until a solution is found
+          //json = thiss.filterEntries(json)
+          //thiss.setTreeMap(json, city)
+          this.setState({
+            treemapData:json,
+            stackedTree: temp
+          })
+        })
+     
     }
   }
 
