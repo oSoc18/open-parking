@@ -191,7 +191,7 @@ class MapContent extends Component {
 
                 popup = "<b>" + facility.name + "</b>";
                 if (facility.usage !== "onstreet") {
-                    if (facility.dynamicDataUrl !== undefined || facility.dynamicDataUrl !== null) {
+                    if (facility.dynamicDataUrl !== undefined && facility.dynamicDataUrl !== null) {
                         if(facility.limitedAccess === false) {
                             $.getJSON("http://api.openparking.nl/parkingdata/dynamicdata/" + facility.uuid + "/", function (data) {
                                 if (data.parkingFacilityDynamicInformation !== undefined && data.parkingFacilityDynamicInformation.facilityActualStatus.parkingCapacity !== undefined) {
