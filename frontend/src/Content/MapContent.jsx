@@ -215,25 +215,28 @@ class MapContent extends Component {
                 }
             });
             //set the icon
-            if (facility.limitedAccess === false) {
-                if (facility.mark !== "onstreet") {
-                    if (facility.mark === "bad") {
-                        mark.setIcon(badIcon);
-                    } else if (facility.mark === "average") {
-                        mark.setIcon(averageIcon);
+            //Disregard easter egg marker
+            if (facility.uuid !== "abcdef") {
+                if (facility.limitedAccess === false) {
+                    if (facility.mark !== "onstreet") {
+                        if (facility.mark === "bad") {
+                            mark.setIcon(badIcon);
+                        } else if (facility.mark === "average") {
+                            mark.setIcon(averageIcon);
+                        } else {
+                            mark.setIcon(goodIcon);
+                        }
                     } else {
-                        mark.setIcon(goodIcon);
+                        mark.setIcon(onStreetIcon);
                     }
                 } else {
-                    mark.setIcon(onStreetIcon);
-                }
-            } else {
-                if (facility.mark === "bad") {
-                    mark.setIcon(privateBadIcon);
-                } else if (facility.mark === "average") {
-                    mark.setIcon(privateAverageIcon);
-                } else {
-                    mark.setIcon(privateGoodIcon);
+                    if (facility.mark === "bad") {
+                        mark.setIcon(privateBadIcon);
+                    } else if (facility.mark === "average") {
+                        mark.setIcon(privateAverageIcon);
+                    } else {
+                        mark.setIcon(privateGoodIcon);
+                    }
                 }
             }
             //add markers to array
@@ -247,16 +250,25 @@ class MapContent extends Component {
     }
 
     getStaticString(facility) {
-        return "<br>Limited API access: " + facility.limitedAccess +
+        let retString = "";
+        if (facility.uuid !== "abcdef") {
+        retString += "<br>Limited API access: " + facility.limitedAccess +
             "<br />Location on map: (" + facility.latitude + ", " + facility.longitude + ")" +
-            "<br />Capacity: " + (facility.capacity ? "Available - " + facility.capacity : "<span class='text-danger'><b>No Capacity available</b></span>") +
+            "<br />Capacity: " + (facility.capacity ? "Available (" + facility.capacity + ")" : "<span class='text-danger'><b>No Capacity available</b></span>") +
             "<br />Tariffs: " + (facility.tariffs ? "Available" : "<span class='text-danger'><b>No Tariffs available</b></span>") +
-            "<br />Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available - " + facility.minimumHeightInMeters : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
+            "<br />Min. height in meters: " + (facility.minimumHeightInMeters !== null ? "Available (" + facility.minimumHeightInMeters + ")" : "<span class='text-danger'><b>No parking restrictions available</b></span>") +
             "<br />Opening Hours: " + (facility.openingTimes ? "Available" : "<span class='text-danger'><b>No opening hours available</b></span>") +
             "<br />Contact Person: " + (facility.contactPersons ? "Available" : "<span class='text-danger'><b>No contact persons available</b></span>") +
             "<br />Access points: " + (facility.accessPoints ? "Available" : "<span class='text-danger'><b>No Access points available</b></span>") +
             "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='http://api.openparking.nl/parkingdata/html/" + facility.uuid + "'>Go To Details</a>";
-
+        } else {
+            retString += "<br />Developed during Open Summer of Code 2018" +
+            "<br /><br />Markers by <br />" + "<div>Icons made by <a href='http://www.freepik.com' title='Freepik'>Freepik</a> from " +
+                "<a href='https://www.flaticon.com/' title='Flaticon'>www.flaticon.com</a> is licensed by " +
+                "<a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0' target='_blank'>CC 3.0 BY</a></div>" +
+            "<br /><br /><a target='_blank' class='btn-sm btn-info detailButton' href='https://osoc18.github.io/open-parking/#team'>Our team</a>";
+        }
+        return retString;
     }
 
     updateHeatmapPoints(facilities) {
