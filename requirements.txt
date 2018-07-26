@@ -4,3 +4,4 @@ shapely
 django-cors-headers
 coreapi
 requests
+gunicorn
