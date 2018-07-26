@@ -1,0 +1,158 @@
+.headshot-detail img {
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 992px)
+#mainNav .navbar-shrink .navbar-brand{
+    color: #eb8500!important;
+}
+
+
+#mainNav .navbar-brand {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #eb8500!important;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+}
+
+.headshot-detail .student-social {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+i.fas {
+    font-family: 'FontAwesome';
+	margin-left: 10px;
+}
+
+i.fas.fa-linkedin {
+}
+
+i.fas.fa-github {
+}
+
+.u-padding-x-large--tb {
+    padding: 4rem 0 !important;
+}
+
+.grid-x {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.headshot-gallery {
+    text-align: center;
+}
+
+.u-padding-x-large--tb {
+    padding: 4rem 0 !important;
+}
+
+.u-padding-x-large--tb.headshot-gallery {
+}
+
+.align-center {
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.grid-x {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.grid-x>.small-6 {
+    width: 50%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: "Open Sans",sans-serif;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #1e1d36;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+article{
+	margin-top: 30px;
+}
+
+.bg-primary {
+    background-color: #91bfdb!important;
+}
+
+.btn-primary {
+    background-color: #eb8500;
+    border-color: #eb8500;
+}
+
+hr {
+    max-width: 100px;
+    border-width: 3px;
+    border-color: #eb8500;
+}
+
+.bg-dark {
+    background-color: #212529!important;
+}
+
+
+element.style {
+}
+.headshot-detail a i.fa-linkedin {
+    position: relative;
+    top: -0.1rem;
+    left: 0.05rem;
+}
+i.fas.fa-linkedin {
+	display: block;
+	
+}
+.headshot-detail a i {
+    font-size: 1.5rem;
+
+}
+i.fas {
+    font-family: 'FontAwesome';
+}
+em, i {
+    font-style: italic;
+    line-height: inherit;
+}
+i {
+    font-style: normal !important;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+user agent stylesheet
+i, cite, em, var, address, dfn {
+    font-style: italic;
+}
+
+btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+    color: #fff;
+    background-color: #eb8500!important;
+	
+}
+
+
+#black-text{
+	font-weight: bold;
+}
+
+footer{background-color:#fff;padding:3rem 0 3rem}
+
+
+
