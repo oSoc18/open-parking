@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './Landing.css'
 
 class Landing extends Component {
 
@@ -15,7 +16,7 @@ class Landing extends Component {
 
     render() {
         return (
-            <div>
+            <div className="forceOverflow">
         <nav className="navbar navbar-expand-lg fixed-top" id="mainNav">
         <div className="container">
           <a className="navbar-brand js-scroll-trigger" href="#page-top">Open Parking</a>
@@ -38,13 +39,13 @@ class Landing extends Component {
       <header className="masthead text-center text-white d-flex">
         <div className="container my-auto">
           <div className="row">
-            <div className="col-lg-10 mx-auto">
+            <div className="col-lg-10 ">
               <h1 className="text-uppercase">
-                <strong>Open Parking</strong>
+                <strong style={{textAlign: "Center"}}>Open Parking</strong>
               </h1>
               <hr/>
             </div>
-            <div className="col-lg-8 mx-auto">
+            <div className=" mx-auto">
             <div className="overlay-field">
               <p id="black-text" className="text-faded mb-5 ">Visualizing the availibility of Dutch parking data</p>
               </div>
@@ -54,8 +55,8 @@ class Landing extends Component {
         </div>
       </header>
   
-      <section className="bg-primary" id="about">
-        <div className="container">
+      <section className="bg-primary fullHeight" id="about">
+        <div className="container ">
           <div className="row">
             <div className="col-lg-8 mx-auto text-center">
               <h2 className="section-heading text-white">What is this project?</h2>
@@ -63,7 +64,7 @@ class Landing extends Component {
               <p className="text-faded mb-4">Open Parking is a web-visualisation of parking data in the Netherlands. Cities, private companies and other interested parties can easily find out which city provides the best data and which cities/facilities are lacking in that department. With this web-visualisation, we can also show the many uses of open data.
                   The user will be able to easily check real-time data about parking facilities all over the Netherlands and search for the data of specific parking facilities.
               </p>
-              <a className="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
+
             </div>
           </div>
         </div>
@@ -142,13 +143,7 @@ class Landing extends Component {
       <script src="js/creative.min.js"></script>
   
     
-      <footer>
-  
-          <div className="container text-center">
-          <p>www.openparking.nl</p> 
-          </div>
-      
-      </footer>
+   
       </div>)
     }
 
