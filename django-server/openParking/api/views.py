@@ -40,7 +40,7 @@ def get_filtered_facilities(get_params):
 
     possible_usages = []
     filter_params = {"usage__in": possible_usages}
-    exclude_params = {}
+    exclude_queryset = Q()
     for name, value in get_params.items():
         if name in usage_mapping and json.loads(value):
             possible_usages.append(usage_mapping[name])
@@ -49,8 +49,8 @@ def get_filtered_facilities(get_params):
             if json.loads(value):
                 filter_params[query_name] = query_value
             else:
-                exclude_params[query_name] = query_value
-    return  ParkingData.objects.filter(**filter_params).exclude(**exclude_params)
+                exclude_queryset |= Q(**{query_name: query_value})
+    return  ParkingData.objects.filter(**filter_params).exclude(exclude_queryset)
 
 class IdView(generics.RetrieveAPIView):
     """Gets the data of a parking by its database ID."""

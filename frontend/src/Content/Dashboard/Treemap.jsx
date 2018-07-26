@@ -25,17 +25,18 @@ class Treemap extends Component {
         this.reset = false
         this.goPrev = this.goPrev.bind(this)
         //this.root = d3.hierarchy(data);
-        this.requiredAttr = ["longitude", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes"]
+        this.requiredAttr = ["accessPoints", "tariffs", "contactPersons", "minimumHeightInMeters", "capacity", "openingTimes", "dynamicDataUrl"]
 
     }
 
     initFieldsDict() {
-        fieldsDict["longitude"] = "location"
+        fieldsDict["accessPoints"] = "Access point"
         fieldsDict["tariffs"] = "tarrifs"
         fieldsDict["contactPersons"] = "Contacts"
-        fieldsDict["minimumHeightInMeters"] = "Height restrict. (m)"
+        fieldsDict["minimumHeightInMeters"] = "Height restrict. "
         fieldsDict["capacity"] = "max capacity"
         fieldsDict["openingTimes"] = "opening times"
+        fieldsDict["dynamicDataUrl"] = "Dynamic Url"
 
     }
 
@@ -124,8 +125,11 @@ class Treemap extends Component {
                     }
                     return dataname;
                 }
-                else
-                    return ""
+                else{
+                    let value = d.data.value !== 0 ? d.data.value : ""
+                    
+                    return "" + value
+                }
             })
     }
 
@@ -253,6 +257,8 @@ class Treemap extends Component {
 
         if (str === "nl")
             return "The Netherlands"
+        else if (str === "region/none")
+            return "Facilities with no location"
 
         return str
 
@@ -261,7 +267,8 @@ class Treemap extends Component {
 
         let breadCrums = "Loading data..."
         let buttonZoomOut = null
-
+        let noButton = null
+        let active = this.level === 3 ? "active" : "inactive"
 
         if (this.props.data /*&& this.props.level && this.props.level !== 3*/) {
 
@@ -280,10 +287,11 @@ class Treemap extends Component {
                 breadCrums = this.props.data.name
             }
 
-            if (breadCrums !== "Loading data..." && this.props.level > 0) {
+            if (breadCrums !== "Loading data..." && this.props.level > 0 ) {
                 buttonZoomOut = (<Button outline color="primary" onClick={this.goPrev}>Zoom out</Button>)
             }
 
+          
 
 
             breadCrums = this.getTitleDict(breadCrums)
@@ -293,6 +301,10 @@ class Treemap extends Component {
             }
             else {
                 this.reset = false
+            }
+
+            if(this.reset !== true){
+                noButton = <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
             }
 
 
@@ -308,13 +320,13 @@ class Treemap extends Component {
                             {buttonZoomOut}
                         </div>
                         <div id="single-button">
-                            <Button outline color="primary" onClick={this.setReset.bind(this)}>no location</Button>
+                            { noButton}
                         </div>
                     </div>
                     <Legend />
                 </div>
 
-                <div className="dashboard-table">
+                <div className="dashboard-table {active}">
                     <Table className="heatMap" width={0} />
                 </div>
 
@@ -444,7 +456,7 @@ class Treemap extends Component {
                     .attr("data-tip", "")
                     .attr("data-for", data[columns[j]])
                     .append('a')
-                    .attr("href", "http://127.0.0.1:8000/parkingdata/html/" + data["uuid"])
+                    .attr("href", "http://api.openparking.nl/parkingdata/html/" + data["uuid"])
                     .attr("target", "_blank")
                     .text(data[columns[j]])
                 // .on("mouseover", d => {thiss.handleMouseOverTd(data[columns[j]], this)})
@@ -471,6 +483,11 @@ class Treemap extends Component {
                 else {
                     classN += " invalidCell"  // is this field in the json?
                 }
+
+                if(columns[j] === "dynamicDataUrl" && classN === "validCell"){
+                    v = "<a href='" + v + "'>" + "Available" + "</a>"
+                }
+
                 tr.append('td')
                     .attr("class", classN)
                     .text(v)

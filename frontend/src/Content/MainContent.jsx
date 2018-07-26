@@ -31,6 +31,7 @@ class MainContent extends Component {
     if(tab === "dash"){
       contentVis = <Dashboard filters={this.props.filters}/>
     }
+    console.log(this.props.filters)
 
 
     return (

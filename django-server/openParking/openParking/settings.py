@@ -26,7 +26,7 @@ with open(os.path.join(BASE_DIR, "secret_key.txt")) as secret_key_file:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "144.76.217.39", "api.openparking.nl"]
 
 
 # Application definition

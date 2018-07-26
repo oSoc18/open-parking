@@ -68,6 +68,7 @@ class Dashboard extends Component {
 
     this.requiredAttr = ["longitude", "tariffs", "contactPersons", "parkingRestrictions", "capacity", "openingTimes"]
     this.state = ({ level: 0, treemapData: null, stackedTree: [] })  // default = land
+    this.currentName = "summary/country/nl"
   }
 
   componentDidMount() {
@@ -114,7 +115,7 @@ class Dashboard extends Component {
         let resultJson = null
         classN += " heatCell"//colored heatcell
         // get json 
-         fetch(/*node["staticDataUrl"]*/ "http://localhost:8000/parkingdata/request/staticurl/" + node["uuid"])
+         fetch(/*node["staticDataUrl"]*/ "http://api.openparking.nl/parkingdata/request/staticurl/" + node["uuid"])
           .then(response => response.json())
           .then(json => {
             resultJson = json
@@ -133,10 +134,6 @@ class Dashboard extends Component {
               .attr("class", classN)
               .text(v)
           });
-
-
-
-
       }
     } // close for
   }
@@ -147,7 +144,35 @@ class Dashboard extends Component {
     return (v !== "[]")
   }
 
-  componentWillReceiveProps(nextProps){
+  /*componentDidUpdate(){
+
+
+    let name = this.state.treemapData["name"]
+    
+        let levelIndex = this.level
+        let level =  levels[levelIndex] + "/"
+        let summaryStr = this.level === 3 ? "" : "summary/"
+        let city = this.level === 3 ? name : null // no summary of city
+        let sub = level  + name
+        let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+        console.log(url)
+    
+    let thiss = this
+        fetch(url)
+        .then(response => response.json())
+        .then(json => { 
+    
+      
+          //this.handleFilters is not used until a solution is found
+          //json = thiss.filterEntries(json)
+          thiss.setTreeMap(json, city)
+        })
+  }*/
+  componentDidUpdate(nextProps){
+
+    if(this.props === nextProps)
+      return
+
 
     let name = this.state.treemapData["name"]
 
@@ -156,7 +181,9 @@ class Dashboard extends Component {
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+
+    let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+
 
 let thiss = this
     fetch(url)
@@ -166,6 +193,7 @@ let thiss = this
   
       //this.handleFilters is not used until a solution is found
       //json = thiss.filterEntries(json)
+      console.log(" json " + JSON.stringify(json))
       thiss.setTreeMap(json, city)
     })
   }
@@ -175,7 +203,7 @@ let thiss = this
 
 
     let tempHistory = this.state.stackedTree
-    tempHistory.push(this.state.treemapData)
+ 
 
     if (forceLevel) {
       this.level = 3
@@ -185,12 +213,13 @@ let thiss = this
     if("region/none" === name){
         level = ""
     } 
-
+    tempHistory.push(this.currentName)
     let summaryStr = this.level === 3 ? "" : "summary/"
     let city = this.level === 3 ? name : null // no summary of city
     let sub = level  + name
-    let url = "http://localhost:8000/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
-
+    let url = "http://api.openparking.nl/parkingdata/" + summaryStr + sub + "/?" + this.getParameters()
+  
+    this.currentName = summaryStr + sub
     let thiss = this
     fetch(url)
       .then(response => response.json())
@@ -232,8 +261,23 @@ let thiss = this
 
   filterEntries(parkings) {
     
+    let newParkings = parkings
+  if(this.level !== 4){
+    newParkings = parkings["children"].filter(parking => { 
+
+      let notEmpty = false
+      for(let i = 0; i < parking["children"].length; i++){
+        if(parking["children"][i] === 0){
+          return true
+        }
+      }
+      return false
+    })
+  }
   /*  let newParkings = parkings
 
+  if(this.level !=== 4)
+  let newParkings = parkings.filter(parking )
     let city = parkings["name"]
     if (this.level === LEVEL_ENUM.city) {
       //foreach filter
@@ -313,7 +357,7 @@ let thiss = this
     let allP = []
 
     for (let i = 1; i < 0; i++) {
-      let url = "http://localhost:8000/parkingdata"
+      let url = "http://api.openparking.nl/parkingdata"
       let resultJson = null
       url += "/id/" + i + "?format=json"
       await fetch(url)
@@ -328,6 +372,7 @@ let thiss = this
 
   }
 
+  
   generateTable() {
     return
     var table = d3.select('.heatMap')
@@ -361,6 +406,21 @@ let thiss = this
     }
   }
 
+  setNodesTreemapZoom(req) {
+    
+    
+        let thiss = this
+        let url = "http://api.openparking.nl/parkingdata/" + req + "?" + this.getParameters()
+        let resultJson = null
+        fetch(url)
+          .then(response => response.json())
+          .then(json => {
+            // json = thiss.handleFilters(json)
+            thiss.setTreeMap(json)
+          })
+    
+      }
+
   getTreemapNode() { }
 
   /**
@@ -370,7 +430,7 @@ let thiss = this
 
 
     let thiss = this
-    let url = "http://localhost:8000/parkingdata/summary/country/nl/" + "?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/summary/country/nl/" + "?" + this.getParameters()
     let resultJson = null
     fetch(url)
       .then(response => response.json())
@@ -382,7 +442,7 @@ let thiss = this
   }
 
   handleFilters(json) {
-    let url = "http://localhost:8000/parkingdata/country/nl/" + "?" + this.getParameters()
+    let url = "http://api.openparking.nl/parkingdata/country/nl/" + "?" + this.getParameters()
     let thiss = this
 
     fetch(url)
@@ -455,7 +515,7 @@ let thiss = this
     // get the six (if selected) headers
     // show data or show a red (NOT AVAILABLE)
     let getTable = this.getTable()
-
+    console.log(this.state.stackedTree)
     return (
 
 
@@ -481,7 +541,7 @@ let thiss = this
   }
 
   onDezoom(val = false) {
-    if(val === false && this.level !== 0){
+    if(val === false && this.level !== 0){ // only lower level if level > 0
     this.level = this.level - 1
 
     }
@@ -493,14 +553,27 @@ let thiss = this
       this.level = this.state.stackedTree.length - 1; // back to whole overview
     }
 
+    
 
     if (this.state.stackedTree.length > 0) {
       let temp = this.state.stackedTree
       prev = temp.pop()
-      this.setState({
-        treemapData: prev,
-        stackedTree: temp
-      })
+      let url = "http://api.openparking.nl/parkingdata/" + prev + "/?" + this.getParameters()
+      let thiss = this
+      console.log(url)
+      this.currentName = prev
+      fetch(url)
+        .then(response => response.json())
+        .then(json => {
+          //this.handleFilters is not used until a solution is found
+          //json = thiss.filterEntries(json)
+          //thiss.setTreeMap(json, city)
+          this.setState({
+            treemapData:json,
+            stackedTree: temp
+          })
+        })
+     
     }
   }
 
