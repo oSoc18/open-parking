@@ -134,10 +134,6 @@ class Dashboard extends Component {
               .attr("class", classN)
               .text(v)
           });
-
-
-
-
       }
     } // close for
   }
