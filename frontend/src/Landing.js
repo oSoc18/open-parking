@@ -2,6 +2,17 @@ import React, { Component } from 'react';
 
 class Landing extends Component {
 
+    constructor(props){
+        super(props);
+        this.setMap = this.setMap.bind(this)
+    }
+    setMap(){
+        console.log(this.props)
+        if(this.props.onProceed){
+            this.props.onProceed()
+        }
+    }
+
     render() {
         return (
             <div>
@@ -37,7 +48,7 @@ class Landing extends Component {
             <div className="overlay-field">
               <p id="black-text" className="text-faded mb-5 ">Visualizing the availibility of Dutch parking data</p>
               </div>
-              <a className="btn btn-primary btn-xl js-scroll-trigger" href="#about">Explore the data</a>
+              <a className="btn btn-primary btn-xl js-scroll-trigger" onClick={this.setMap}>Explore the data</a>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Landing from './Landing'
 import SideBar from './SideBar/SideBar';
 import MainContent from './Content/MainContent'
 import MainNav from './MainNav/MainNav';
@@ -16,6 +17,7 @@ class App extends Component {
                     information: {},
                     extras: ["noDynamic", "private", "public"]
   }
+
   }
 
   onChangeVisFacilities(values){
@@ -35,8 +37,14 @@ class App extends Component {
       })
   }
 
+  goMap(){
+    this.setState({ "mainContent": "map"
+
+    })
+  }
 
   render() {
+    let thiss = this;
     let content = 
    ( <div>
             <SideBar onChangeVisFacilities={this.onChangeVisFacilities.bind(this)} onChangeInformation={this.onChangeInformation.bind(this)} onChangeExtras={this.onChangeExtras.bind(this)} />
@@ -45,7 +53,7 @@ class App extends Component {
             </div>)
 
     if(this.state.mainContent === "init"){
-      content = <Landing/>
+      content = <Landing onProceed={this.goMap.bind(this)  }/>
     }
     return (
       <div className="App">
